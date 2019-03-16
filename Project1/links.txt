@@ -1,10 +1,7 @@
 https://github.com/antoniocsoares/tdin-feup/tree/master/trabalho1
 https://github.com/mgpsp/TDIN-FEUP
 https://github.com/jpamorim/feup-tdin/tree/master/Assignment%201
-https://github.com/dteixeira/feup-mieic-tdin-sushi-restaurant/tree/master/Projects
 https://github.com/joaoacsoares/TDIN/tree/master/project1
-https://github.com/leonardo-faria/TDIN1
-https://github.com/joaodealmeida/tdin-pos
 https://github.com/susanaventura/TDIN_pedidosrestauracao
 https://github.com/andrelago13/TDIN-IRC
 https://github.com/Orpheuz/TDIN-Restaurant-Intranet
