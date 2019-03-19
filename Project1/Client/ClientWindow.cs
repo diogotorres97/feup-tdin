@@ -18,7 +18,7 @@ public partial class ClientWindow : Form
         RemotingConfiguration.Configure("Client.exe.config", false);
         InitializeComponent();
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        items = _restaurantServer.GetList();
+        items = _restaurantServer.GetListOfOrders();
         evRepeater = new AlterEventRepeater();
         evRepeater.AlterEvent += new AlterDelegate(DoAlterations);
         _restaurantServer.AlterEvent += new AlterDelegate(evRepeater.Repeater);
@@ -43,7 +43,7 @@ public partial class ClientWindow : Form
         {
             case Operation.New:
                 lvAdd = new LVAddDelegate(itemListView.Items.Add);
-                ListViewItem lvItem = new ListViewItem(new string[] {order.Id.ToString(), order.Name, order.Comment});
+                ListViewItem lvItem = new ListViewItem(new string[] {order.Id.ToString(), order.State.ToString()});
                 BeginInvoke(lvAdd, new object[] {lvItem});
                 break;
             case Operation.Change:
@@ -58,7 +58,7 @@ public partial class ClientWindow : Form
         foreach (ListViewItem lvI in itemListView.Items)
             if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Id)
             {
-                lvI.SubItems[2].Text = it.Comment;
+                lvI.SubItems[2].Text = it.State.ToString();
                 break;
             }
     }
@@ -69,7 +69,7 @@ public partial class ClientWindow : Form
     {
         foreach (Order it in items)
         {
-            ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.Name, it.Comment});
+            ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.State.ToString()});
             itemListView.Items.Add(lvItem);
         }
     }
@@ -99,7 +99,7 @@ public partial class ClientWindow : Form
             return;
         }
 
-        Order it = new Order(nameTB.Text, null);
+        Order it = new Order(new Product("",0,ProductType.Drink),1,1 );
         _restaurantServer.AddOrder(it);
         nameTB.Text = "";
     }
