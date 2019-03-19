@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
 
-public class PrinterController: MarshalByRefObject
+public class PrinterController
 {
     private IRestaurantSingleton _restaurantServer;
 
