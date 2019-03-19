@@ -6,7 +6,7 @@ using System.Threading;
 public class Table
 {
     private static int _nextId;
-    private uint Id { get; set; }
+    private uint Id { get; }
     private bool Availability { get; set; }
 
     public Table()
@@ -21,7 +21,7 @@ public class Order
 {
     private static int _nextId;
 
-    public uint Id { get; set; }
+    public uint Id { get; }
 
     private Product Product { get; set; }
 
@@ -38,7 +38,6 @@ public class Order
     public Order(Product product, float quantity, uint tableId)
     {
         Id = (uint) Interlocked.Increment(ref _nextId);
-        ;
         Product = product;
         Quantity = quantity;
         State = OrderState.NotPicked;
@@ -52,7 +51,7 @@ public class Order
 public class Product
 {
     private static int _nextId;
-    private uint Id { get; set; }
+    private uint Id { get; }
     private string Description { get; set; }
     private double Price { get; set; }
 

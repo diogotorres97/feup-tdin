@@ -74,7 +74,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         NotifyClients(Operation.New, order);
     }
 
-    public void ChangeStatusOrder(int orderId) //TODO: Check limits like if Ready cannot turn to InPreparation
+    public void ChangeStatusOrder(int orderId)
     {
         Order order = null;
 
@@ -82,7 +82,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         {
             if (ord.Id == orderId)
             {
-                ord.State++;
+                ord.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
                 order = ord;
                 break;
             }

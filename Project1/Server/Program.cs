@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.Remoting;
 
-class Program
+internal static class Program
 {
-    static void Main(string[] args)
+    private static void Main()
     {
         RemotingConfiguration.Configure("Server.exe.config", false);
         Console.WriteLine("Press Return to terminate.");
