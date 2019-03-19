@@ -22,7 +22,7 @@ public class PaymentController
 
     public void AddOrder(uint tableId, uint productId, uint quantity)
     {
-        Order ord = new Order(Products[(int) productId - 1], quantity, tableId);
+        Order ord = new Order(_restaurantServer.GetNextOrderId(), Products[(int) productId - 1], quantity, tableId);
         _restaurantServer.AddOrder(ord);
     }
 

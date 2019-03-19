@@ -24,8 +24,6 @@ public class Table
 [Serializable]
 public class Order
 {
-    private static int _nextId;
-
     public uint Id { get; }
 
     public Product Product { get; set; }
@@ -40,9 +38,9 @@ public class Order
 
     private DateTime Date { get; set; }
 
-    public Order(Product product, float quantity, uint tableId)
+    public Order(uint id, Product product, float quantity, uint tableId)
     {
-        Id = (uint) Interlocked.Increment(ref _nextId);
+        Id = id;
         Product = product;
         Quantity = quantity;
         State = OrderState.NotPicked;
@@ -53,7 +51,8 @@ public class Order
 
     public override string ToString()
     {
-        return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State + " table #" +
+        return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State +
+               " table #" +
                TableId;
     }
 }
@@ -110,6 +109,7 @@ public interface IRestaurantSingleton
 {
     event AlterDelegate AlterEvent;
 
+    uint GetNextOrderId();
     List<Order> GetListOfOrders();
 
     List<Table> GetListOfTables();

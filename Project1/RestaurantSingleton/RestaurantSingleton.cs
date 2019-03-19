@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
 public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 {
+    
+    private static int _nextOrderId;
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
@@ -51,6 +52,10 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return null;
     }
 
+    public uint GetNextOrderId()
+    {
+        return (uint) Interlocked.Increment(ref _nextOrderId);
+    }
     public List<Order> GetListOfOrders()
     {
         Console.WriteLine("GetListOfOrders() called.");
