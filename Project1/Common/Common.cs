@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -14,6 +13,11 @@ public class Table
     {
         Id = (uint) Interlocked.Increment(ref _nextId);
         Availability = true;
+    }
+
+    public override string ToString()
+    {
+        return "[Table]: #" + Id + " Availability: " + Availability;
     }
 }
 
@@ -46,6 +50,12 @@ public class Order
         TableId = tableId;
         Date = DateTime.Now;
     }
+
+    public override string ToString()
+    {
+        return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State + " table #" +
+               TableId;
+    }
 }
 
 [Serializable]
@@ -65,6 +75,12 @@ public class Product
         Price = price;
         Type = type;
     }
+
+    // Override toString function
+    public override string ToString()
+    {
+        return "Product #" + Id + " Description: " + Description + " Unit Price: " + Price + " € Type: " + Type;
+    }
 }
 
 public enum ProductType
@@ -78,7 +94,8 @@ public enum OrderState
     NotPicked,
     InPreparation,
     Ready,
-    Delivered
+    Delivered,
+    Paid
 } // TODO: DELIVERED??
 
 public enum Operation
