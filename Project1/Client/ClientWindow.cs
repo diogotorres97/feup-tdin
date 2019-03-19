@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.Remoting;
 using System.Windows.Forms;
 
 public partial class ClientWindow : Form
 {
-    IListSingleton listServer;
+    ClientController _clientController;
     AlterEventRepeater evRepeater;
-    ArrayList items;
 
     delegate ListViewItem LVAddDelegate(ListViewItem lvItem);
 
-    delegate void ChCommDelegate(Item item);
+    delegate void ChCommDelegate(Order order);
 
     public ClientWindow()
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        _clientController = new ClientController();
         InitializeComponent();
-        listServer = (IListSingleton) RemoteNew.New(typeof(IListSingleton));
-        items = listServer.GetList();
         evRepeater = new AlterEventRepeater();
-        evRepeater.alterEvent += new AlterDelegate(DoAlterations);
-        listServer.alterEvent += new AlterDelegate(evRepeater.Repeater);
+        evRepeater.AlterEvent += new AlterDelegate(DoAlterations);
+        _clientController.AddAlterEvent(new AlterDelegate(evRepeater.Repeater));
     }
+
 
     /* The client is also a remote object. The Server calls remotely the AlterEvent handler  *
      * Infinite lifetime                                                                     */
@@ -32,9 +29,10 @@ public partial class ClientWindow : Form
         return null;
     }
 
+
     /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
 
-    public void DoAlterations(Operation op, Item item)
+    public void DoAlterations(Operation op, Order order)
     {
         LVAddDelegate lvAdd;
         ChCommDelegate chComm;
@@ -43,22 +41,22 @@ public partial class ClientWindow : Form
         {
             case Operation.New:
                 lvAdd = new LVAddDelegate(itemListView.Items.Add);
-                ListViewItem lvItem = new ListViewItem(new string[] {item.Type.ToString(), item.Name, item.Comment});
+                ListViewItem lvItem = new ListViewItem(new string[] {order.Id.ToString(), order.State.ToString()});
                 BeginInvoke(lvAdd, new object[] {lvItem});
                 break;
             case Operation.Change:
-                chComm = new ChCommDelegate(ChangeAItem);
-                BeginInvoke(chComm, new object[] {item});
+                chComm = new ChCommDelegate(ChangeAnOrder);
+                BeginInvoke(chComm, new object[] {order});
                 break;
         }
     }
 
-    private void ChangeAItem(Item it)
+    private void ChangeAnOrder(Order it)
     {
         foreach (ListViewItem lvI in itemListView.Items)
-            if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Type)
+            if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Id)
             {
-                lvI.SubItems[2].Text = it.Comment;
+                lvI.SubItems[2].Text = it.State.ToString();
                 break;
             }
     }
@@ -67,17 +65,19 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_Load(object sender, EventArgs e)
     {
-        foreach (Item it in items)
+        ArrayList orders = _clientController.orders;
+
+        foreach (Order it in orders)
         {
-            ListViewItem lvItem = new ListViewItem(new string[] {it.Type.ToString(), it.Name, it.Comment});
+            ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.State.ToString()});
             itemListView.Items.Add(lvItem);
         }
     }
 
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-        listServer.alterEvent -= new AlterDelegate(evRepeater.Repeater);
-        evRepeater.alterEvent -= new AlterDelegate(DoAlterations);
+        _clientController.RemoveAlterEvent(new AlterDelegate(evRepeater.Repeater));
+        evRepeater.AlterEvent -= new AlterDelegate(DoAlterations);
     }
 
     private void changeCommentButton_Click(object sender, EventArgs e)
@@ -87,7 +87,7 @@ public partial class ClientWindow : Form
             int type = Convert.ToInt32(itemListView.SelectedItems[0].SubItems[0].Text);
             CommentDlg commDlg = new CommentDlg();
             if (commDlg.ShowDialog(this) == DialogResult.OK)
-                listServer.ChangeComment(type, commDlg.comment);
+                _clientController.ChangeStatusOrder((uint) type);
         }
     }
 
@@ -99,37 +99,12 @@ public partial class ClientWindow : Form
             return;
         }
 
-        Item it = new Item(listServer.GetNewType(), nameTB.Text, null);
-        listServer.AddItem(it);
+        _clientController.AddOrder();
         nameTB.Text = "";
     }
 
     private void closeButton_Click(object sender, EventArgs e)
     {
         Application.Exit();
-    }
-}
-
-/* Mechanism for instanciating a remote object through its interface, using the config file */
-
-class RemoteNew
-{
-    private static Hashtable types = null;
-
-    private static void InitTypeTable()
-    {
-        types = new Hashtable();
-        foreach (WellKnownClientTypeEntry entry in RemotingConfiguration.GetRegisteredWellKnownClientTypes())
-            types.Add(entry.ObjectType, entry);
-    }
-
-    public static object New(Type type)
-    {
-        if (types == null)
-            InitTypeTable();
-        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) types[type];
-        if (entry == null)
-            throw new RemotingException("Type not found!");
-        return RemotingServices.Connect(type, entry.ObjectUrl);
     }
 }

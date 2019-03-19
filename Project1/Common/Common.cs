@@ -1,67 +1,118 @@
 ﻿using System;
 using System.Collections;
+using System.Threading;
 
 [Serializable]
-public class Item
+public class Table
 {
-    int type;
-    public string Name { get; set; }
-    public string Comment { get; set; }
+    private static int _nextId;
+    private uint Id { get; }
+    private bool Availability { get; set; }
 
-    public Item() : this(0, "", "")
+    public Table()
     {
-    }
-
-    public Item(int type, string name, string comment)
-    {
-        Type = type;
-        Name = name;
-        Comment = comment;
-    }
-
-    public int Type
-    {
-        get { return type; }
-        set
-        {
-            if (value < 0)
-                type = 999;
-            else
-                type = value;
-        }
+        Id = (uint) Interlocked.Increment(ref _nextId);
+        Availability = true;
     }
 }
+
+[Serializable]
+public class Order
+{
+    private static int _nextId;
+
+    public uint Id { get; }
+
+    private Product Product { get; set; }
+
+    private float Quantity { get; set; }
+
+    public OrderState State { get; set; }
+
+    private bool PaymentDone { get; set; } //TODO: Check if it will be necessary!!!! 
+
+    private uint TableId { get; set; }
+
+    private DateTime Date { get; set; }
+
+    public Order(Product product, float quantity, uint tableId)
+    {
+        Id = (uint) Interlocked.Increment(ref _nextId);
+        Product = product;
+        Quantity = quantity;
+        State = OrderState.NotPicked;
+        PaymentDone = false;
+        TableId = tableId;
+        Date = DateTime.Now;
+    }
+}
+
+[Serializable]
+public class Product
+{
+    private static int _nextId;
+    private uint Id { get; }
+    private string Description { get; set; }
+    private double Price { get; set; }
+
+    private ProductType Type { get; set; }
+
+    public Product(string description, double price, ProductType type)
+    {
+        Id = (uint) Interlocked.Increment(ref _nextId);
+        Description = description;
+        Price = price;
+        Type = type;
+    }
+}
+
+public enum ProductType
+{
+    Drink,
+    Dish
+}
+
+public enum OrderState
+{
+    NotPicked,
+    InPreparation,
+    Ready,
+    Delivered
+} // TODO: DELIVERED??
 
 public enum Operation
 {
     New,
-    Change
+    Change // TODO: Join Print and Payment or create two different operations
 }
 
-public delegate void AlterDelegate(Operation op, Item item);
+public delegate void AlterDelegate(Operation op, Order order);
 
-public interface IListSingleton
+public interface IRestaurantSingleton
 {
-    event AlterDelegate alterEvent;
+    event AlterDelegate AlterEvent;
 
-    ArrayList GetList();
-    int GetNewType();
-    void AddItem(Item item);
-    void ChangeComment(int type, string comment);
+    ArrayList GetListOfOrders();
+
+    ArrayList GetListOfTables();
+
+    ArrayList GetListOfProducts();
+
+    void AddOrder(Order order);
+    void ChangeStatusOrder(uint orderId);
 }
 
 public class AlterEventRepeater : MarshalByRefObject
 {
-    public event AlterDelegate alterEvent;
+    public event AlterDelegate AlterEvent;
 
     public override object InitializeLifetimeService()
     {
         return null;
     }
 
-    public void Repeater(Operation op, Item item)
+    public void Repeater(Operation op, Order order)
     {
-        if (alterEvent != null)
-            alterEvent(op, item);
+        AlterEvent?.Invoke(op, order);
     }
 }

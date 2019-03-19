@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiningRoom", "DiningRoom\DiningRoom.csproj", "{162BBA21-4E0C-43E3-B8F6-66DBB2E67E81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListSingleton", "ListSingleton\ListSingleton.csproj", "{75AC72CE-C1E7-4876-BBC2-BDE6D6396A5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantSingleton", "RestaurantSingleton\RestaurantSingleton.csproj", "{75AC72CE-C1E7-4876-BBC2-BDE6D6396A5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment", "Payment\Payment.csproj", "{8BECCAE7-3884-4C5A-A84F-9535A5F462FA}"
 EndProject

@@ -61,6 +61,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientController.cs" />
     <Compile Include="ClientWindow.cs">
       <SubType>Form</SubType>
     </Compile>

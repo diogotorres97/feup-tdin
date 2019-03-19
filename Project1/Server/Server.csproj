@@ -71,9 +71,9 @@
       <Project>{9EE38943-7392-407F-A4EA-E4A695ED532A}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ListSingleton\ListSingleton.csproj">
-      <Project>{75AC72CE-C1E7-4876-BBC2-BDE6D6396A5E}</Project>
-      <Name>ListSingleton</Name>
+    <ProjectReference Include="..\RestaurantSingleton\RestaurantSingleton.csproj">
+      <Project>{75ac72ce-c1e7-4876-bbc2-bde6d6396a5e}</Project>
+      <Name>RestaurantSingleton</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
