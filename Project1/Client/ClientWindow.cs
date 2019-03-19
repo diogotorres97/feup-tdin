@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 public partial class ClientWindow : Form
@@ -65,7 +66,7 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_Load(object sender, EventArgs e)
     {
-        ArrayList orders = _clientController.Orders;
+        List<Order> orders = _clientController.Orders;
 
         foreach (Order it in orders)
         {

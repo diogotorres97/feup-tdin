@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 {
-    private ArrayList _orderList;
-    private ArrayList _tableList;
-    private ArrayList _productList;
+    private List<Order> _orderList;
+    private List<Table> _tableList;
+    private List<Product> _productList;
     public event AlterDelegate AlterEvent;
 
     //TODO: Será que preciso dos id's incremental das classes aqui?
@@ -14,14 +15,14 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     public RestaurantSingleton()
     {
         Console.WriteLine("Constructor called.");
-        _orderList = new ArrayList();
+        _orderList = new List<Order>();
         CreateTables(10);
         CreateProducts();
     }
 
     private void CreateTables(uint numberOfTables)
     {
-        _tableList = new ArrayList();
+        _tableList = new List<Table>();
         for (int i = 0; i < numberOfTables; i++)
         {
             _tableList.Add(new Table());
@@ -30,7 +31,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 
     private void CreateProducts()
     {
-        _productList = new ArrayList
+        _productList = new List<Product>
         {
             new Product("Water", 1, ProductType.Drink),
             new Product("Coca-Cola", 2, ProductType.Drink),
@@ -50,19 +51,19 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return null;
     }
 
-    public ArrayList GetListOfOrders()
+    public List<Order> GetListOfOrders()
     {
         Console.WriteLine("GetListOfOrders() called.");
         return _orderList;
     }
 
-    public ArrayList GetListOfTables()
+    public List<Table> GetListOfTables()
     {
         Console.WriteLine("GetListOfTables() called.");
         return _tableList;
     }
 
-    public ArrayList GetListOfProducts()
+    public List<Product> GetListOfProducts()
     {
         Console.WriteLine("GetListOfProducts() called.");
         return _productList;

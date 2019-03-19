@@ -3,34 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
 
-public class ClientController
+public class BarKitchenController
 {
     private IRestaurantSingleton _restaurantServer;
 
+    private ProductType _productType;
     public List<Order> Orders { get; }
-    public List<Product> Products { get; }
-    public List<Table> Tables { get; }
 
-    public ClientController()
+    public BarKitchenController(ProductType productType)
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        _productType = productType;
+        RemotingConfiguration.Configure("BarKitchen.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
         Orders = _restaurantServer.GetListOfOrders();
-        Products = _restaurantServer.GetListOfProducts();
-        Tables = _restaurantServer.GetListOfTables();
     }
 
-    public void AddOrder(uint tableId, uint productId, uint quantity)
+    public List<Order> getListOfOrdersByState(OrderState orderState)
     {
-        Order ord = new Order(Products[(int) productId - 1], quantity, tableId);
-        _restaurantServer.AddOrder(ord);
+        return Orders.FindAll(order => order.State == orderState && order.Product.Type == _productType);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
         _restaurantServer.ChangeStatusOrder(orderId);
     }
-
 
     public void AddAlterEvent(AlterDelegate alterEvent)
     {

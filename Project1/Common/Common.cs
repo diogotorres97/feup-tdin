@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 [Serializable]
@@ -23,7 +24,7 @@ public class Order
 
     public uint Id { get; }
 
-    private Product Product { get; set; }
+    public Product Product { get; set; }
 
     private float Quantity { get; set; }
 
@@ -55,7 +56,7 @@ public class Product
     public string Description { get; set; }
     private double Price { get; set; }
 
-    private ProductType Type { get; set; }
+    public ProductType Type { get; set; }
 
     public Product(string description, double price, ProductType type)
     {
@@ -92,11 +93,11 @@ public interface IRestaurantSingleton
 {
     event AlterDelegate AlterEvent;
 
-    ArrayList GetListOfOrders();
+    List<Order> GetListOfOrders();
 
-    ArrayList GetListOfTables();
+    List<Table> GetListOfTables();
 
-    ArrayList GetListOfProducts();
+    List<Product> GetListOfProducts();
 
     void AddOrder(Order order);
     void ChangeStatusOrder(uint orderId);
