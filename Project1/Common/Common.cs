@@ -51,8 +51,8 @@ public class Order
 public class Product
 {
     private static int _nextId;
-    private uint Id { get; }
-    private string Description { get; set; }
+    public uint Id { get; }
+    public string Description { get; set; }
     private double Price { get; set; }
 
     private ProductType Type { get; set; }

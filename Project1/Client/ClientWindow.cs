@@ -4,20 +4,20 @@ using System.Windows.Forms;
 
 public partial class ClientWindow : Form
 {
-    ClientController _clientController;
-    AlterEventRepeater evRepeater;
+    private ClientController _clientController;
+    private AlterEventRepeater _evRepeater;
 
-    delegate ListViewItem LVAddDelegate(ListViewItem lvItem);
+    private delegate ListViewItem LvAddDelegate(ListViewItem lvItem);
 
-    delegate void ChCommDelegate(Order order);
+    private delegate void ChCommDelegate(Order order);
 
     public ClientWindow()
     {
         _clientController = new ClientController();
         InitializeComponent();
-        evRepeater = new AlterEventRepeater();
-        evRepeater.AlterEvent += new AlterDelegate(DoAlterations);
-        _clientController.AddAlterEvent(new AlterDelegate(evRepeater.Repeater));
+        _evRepeater = new AlterEventRepeater();
+        _evRepeater.AlterEvent += DoAlterations;
+        _clientController.AddAlterEvent(_evRepeater.Repeater);
     }
 
 
@@ -34,19 +34,19 @@ public partial class ClientWindow : Form
 
     public void DoAlterations(Operation op, Order order)
     {
-        LVAddDelegate lvAdd;
+        LvAddDelegate lvAdd;
         ChCommDelegate chComm;
 
         switch (op)
         {
             case Operation.New:
-                lvAdd = new LVAddDelegate(itemListView.Items.Add);
-                ListViewItem lvItem = new ListViewItem(new string[] {order.Id.ToString(), order.State.ToString()});
-                BeginInvoke(lvAdd, new object[] {lvItem});
+                lvAdd = itemListView.Items.Add;
+                ListViewItem lvItem = new ListViewItem(new[] {order.Id.ToString(), order.State.ToString()});
+                BeginInvoke(lvAdd, lvItem);
                 break;
             case Operation.Change:
-                chComm = new ChCommDelegate(ChangeAnOrder);
-                BeginInvoke(chComm, new object[] {order});
+                chComm = ChangeAnOrder;
+                BeginInvoke(chComm, order);
                 break;
         }
     }
@@ -65,19 +65,19 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_Load(object sender, EventArgs e)
     {
-        ArrayList orders = _clientController.orders;
+        ArrayList orders = _clientController.Orders;
 
         foreach (Order it in orders)
         {
-            ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.State.ToString()});
+            ListViewItem lvItem = new ListViewItem(new[] {it.Id.ToString(), it.State.ToString()});
             itemListView.Items.Add(lvItem);
         }
     }
 
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-        _clientController.RemoveAlterEvent(new AlterDelegate(evRepeater.Repeater));
-        evRepeater.AlterEvent -= new AlterDelegate(DoAlterations);
+        _clientController.RemoveAlterEvent(_evRepeater.Repeater);
+        _evRepeater.AlterEvent -= DoAlterations;
     }
 
     private void changeCommentButton_Click(object sender, EventArgs e)
@@ -99,7 +99,7 @@ public partial class ClientWindow : Form
             return;
         }
 
-        _clientController.AddOrder();
+        _clientController.AddOrder(1,1,5);
         nameTB.Text = "";
     }
 

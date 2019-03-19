@@ -1,24 +1,35 @@
 using System;
 using System.Collections;
 using System.Runtime.Remoting;
-using System.Windows.Forms;
 
 public class ClientController
 {
-    IRestaurantSingleton _restaurantServer;
-    public AlterEventRepeater AlterEvent { get; set; }
-    public ArrayList orders { get; }
+    private IRestaurantSingleton _restaurantServer;
 
-    delegate ListViewItem LVAddDelegate(ListViewItem lvItem);
-
-    delegate void ChCommDelegate(Order order);
+    public ArrayList Orders { get; }
+    public ArrayList Products { get; }
+    public ArrayList Tables { get; }
 
     public ClientController()
     {
         RemotingConfiguration.Configure("Client.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        orders = _restaurantServer.GetListOfOrders();
+        Orders = _restaurantServer.GetListOfOrders();
+        Products = _restaurantServer.GetListOfProducts();
+        Tables = _restaurantServer.GetListOfTables();
     }
+
+    public void AddOrder(uint tableId, uint productId, uint quantity)
+    {
+        Order ord = new Order((Product) Products[(int) productId - 1], quantity, tableId);
+        _restaurantServer.AddOrder(ord);
+    }
+
+    public void ChangeStatusOrder(uint orderId)
+    {
+        _restaurantServer.ChangeStatusOrder(orderId);
+    }
+
 
     public void AddAlterEvent(AlterDelegate alterEvent)
     {
@@ -29,37 +40,26 @@ public class ClientController
     {
         _restaurantServer.AlterEvent -= alterEvent;
     }
-
-    public void ChangeStatusOrder(uint orderId)
-    {
-        _restaurantServer.ChangeStatusOrder(orderId);
-    }
-
-    public void AddOrder()
-    {
-        Order it = new Order(new Product("", 0, ProductType.Drink), 1, 1);
-        _restaurantServer.AddOrder(it);
-    }
 }
 
-/* Mechanism for instanciating a remote object through its interface, using the config file */
+/* Mechanism for instantiating a remote object through its interface, using the config file */
 
-class RemoteNew
+static class RemoteNew
 {
-    private static Hashtable types = null;
+    private static Hashtable _types;
 
     private static void InitTypeTable()
     {
-        types = new Hashtable();
+        _types = new Hashtable();
         foreach (WellKnownClientTypeEntry entry in RemotingConfiguration.GetRegisteredWellKnownClientTypes())
-            types.Add(entry.ObjectType, entry);
+            _types.Add(entry.ObjectType, entry);
     }
 
     public static object New(Type type)
     {
-        if (types == null)
+        if (_types == null)
             InitTypeTable();
-        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) types[type];
+        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) _types[type];
         if (entry == null)
             throw new RemotingException("Type not found!");
         return RemotingServices.Connect(type, entry.ObjectUrl);
