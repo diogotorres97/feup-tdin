@@ -99,7 +99,7 @@ public interface IRestaurantSingleton
     ArrayList GetListOfProducts();
 
     void AddOrder(Order order);
-    void ChangeStatusOrder(int orderId);
+    void ChangeStatusOrder(uint orderId);
 }
 
 public class AlterEventRepeater : MarshalByRefObject

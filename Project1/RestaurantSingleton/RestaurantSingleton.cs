@@ -74,7 +74,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         NotifyClients(Operation.New, order);
     }
 
-    public void ChangeStatusOrder(int orderId)
+    public void ChangeStatusOrder(uint orderId)
     {
         Order order = null;
 

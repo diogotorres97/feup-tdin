@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.Remoting;
 using System.Windows.Forms;
 
 public partial class ClientWindow : Form
 {
-    IRestaurantSingleton _restaurantServer;
+    ClientController _clientController;
     AlterEventRepeater evRepeater;
-    ArrayList items;
 
     delegate ListViewItem LVAddDelegate(ListViewItem lvItem);
 
@@ -15,14 +13,13 @@ public partial class ClientWindow : Form
 
     public ClientWindow()
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        _clientController = new ClientController();
         InitializeComponent();
-        _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        items = _restaurantServer.GetListOfOrders();
         evRepeater = new AlterEventRepeater();
         evRepeater.AlterEvent += new AlterDelegate(DoAlterations);
-        _restaurantServer.AlterEvent += new AlterDelegate(evRepeater.Repeater);
+        _clientController.AddAlterEvent(new AlterDelegate(evRepeater.Repeater));
     }
+
 
     /* The client is also a remote object. The Server calls remotely the AlterEvent handler  *
      * Infinite lifetime                                                                     */
@@ -31,6 +28,7 @@ public partial class ClientWindow : Form
     {
         return null;
     }
+
 
     /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
 
@@ -47,13 +45,13 @@ public partial class ClientWindow : Form
                 BeginInvoke(lvAdd, new object[] {lvItem});
                 break;
             case Operation.Change:
-                chComm = new ChCommDelegate(ChangeAItem);
+                chComm = new ChCommDelegate(ChangeAnOrder);
                 BeginInvoke(chComm, new object[] {order});
                 break;
         }
     }
 
-    private void ChangeAItem(Order it)
+    private void ChangeAnOrder(Order it)
     {
         foreach (ListViewItem lvI in itemListView.Items)
             if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Id)
@@ -67,7 +65,9 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_Load(object sender, EventArgs e)
     {
-        foreach (Order it in items)
+        ArrayList orders = _clientController.orders;
+
+        foreach (Order it in orders)
         {
             ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.State.ToString()});
             itemListView.Items.Add(lvItem);
@@ -76,7 +76,7 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-        _restaurantServer.AlterEvent -= new AlterDelegate(evRepeater.Repeater);
+        _clientController.RemoveAlterEvent(new AlterDelegate(evRepeater.Repeater));
         evRepeater.AlterEvent -= new AlterDelegate(DoAlterations);
     }
 
@@ -87,7 +87,7 @@ public partial class ClientWindow : Form
             int type = Convert.ToInt32(itemListView.SelectedItems[0].SubItems[0].Text);
             CommentDlg commDlg = new CommentDlg();
             if (commDlg.ShowDialog(this) == DialogResult.OK)
-                _restaurantServer.ChangeStatusOrder(type);
+                _clientController.ChangeStatusOrder((uint) type);
         }
     }
 
@@ -99,37 +99,12 @@ public partial class ClientWindow : Form
             return;
         }
 
-        Order it = new Order(new Product("",0,ProductType.Drink),1,1 );
-        _restaurantServer.AddOrder(it);
+        _clientController.AddOrder();
         nameTB.Text = "";
     }
 
     private void closeButton_Click(object sender, EventArgs e)
     {
         Application.Exit();
-    }
-}
-
-/* Mechanism for instanciating a remote object through its interface, using the config file */
-
-class RemoteNew
-{
-    private static Hashtable types = null;
-
-    private static void InitTypeTable()
-    {
-        types = new Hashtable();
-        foreach (WellKnownClientTypeEntry entry in RemotingConfiguration.GetRegisteredWellKnownClientTypes())
-            types.Add(entry.ObjectType, entry);
-    }
-
-    public static object New(Type type)
-    {
-        if (types == null)
-            InitTypeTable();
-        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) types[type];
-        if (entry == null)
-            throw new RemotingException("Type not found!");
-        return RemotingServices.Connect(type, entry.ObjectUrl);
     }
 }
