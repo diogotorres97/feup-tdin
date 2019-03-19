@@ -5,23 +5,23 @@ using System.Windows.Forms;
 
 public partial class ClientWindow : Form
 {
-    IListSingleton listServer;
+    IRestaurantSingleton _restaurantServer;
     AlterEventRepeater evRepeater;
     ArrayList items;
 
     delegate ListViewItem LVAddDelegate(ListViewItem lvItem);
 
-    delegate void ChCommDelegate(Item item);
+    delegate void ChCommDelegate(Order order);
 
     public ClientWindow()
     {
         RemotingConfiguration.Configure("Client.exe.config", false);
         InitializeComponent();
-        listServer = (IListSingleton) RemoteNew.New(typeof(IListSingleton));
-        items = listServer.GetList();
+        _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
+        items = _restaurantServer.GetList();
         evRepeater = new AlterEventRepeater();
-        evRepeater.alterEvent += new AlterDelegate(DoAlterations);
-        listServer.alterEvent += new AlterDelegate(evRepeater.Repeater);
+        evRepeater.AlterEvent += new AlterDelegate(DoAlterations);
+        _restaurantServer.AlterEvent += new AlterDelegate(evRepeater.Repeater);
     }
 
     /* The client is also a remote object. The Server calls remotely the AlterEvent handler  *
@@ -34,7 +34,7 @@ public partial class ClientWindow : Form
 
     /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
 
-    public void DoAlterations(Operation op, Item item)
+    public void DoAlterations(Operation op, Order order)
     {
         LVAddDelegate lvAdd;
         ChCommDelegate chComm;
@@ -43,20 +43,20 @@ public partial class ClientWindow : Form
         {
             case Operation.New:
                 lvAdd = new LVAddDelegate(itemListView.Items.Add);
-                ListViewItem lvItem = new ListViewItem(new string[] {item.Type.ToString(), item.Name, item.Comment});
+                ListViewItem lvItem = new ListViewItem(new string[] {order.Id.ToString(), order.Name, order.Comment});
                 BeginInvoke(lvAdd, new object[] {lvItem});
                 break;
             case Operation.Change:
                 chComm = new ChCommDelegate(ChangeAItem);
-                BeginInvoke(chComm, new object[] {item});
+                BeginInvoke(chComm, new object[] {order});
                 break;
         }
     }
 
-    private void ChangeAItem(Item it)
+    private void ChangeAItem(Order it)
     {
         foreach (ListViewItem lvI in itemListView.Items)
-            if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Type)
+            if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Id)
             {
                 lvI.SubItems[2].Text = it.Comment;
                 break;
@@ -67,17 +67,17 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_Load(object sender, EventArgs e)
     {
-        foreach (Item it in items)
+        foreach (Order it in items)
         {
-            ListViewItem lvItem = new ListViewItem(new string[] {it.Type.ToString(), it.Name, it.Comment});
+            ListViewItem lvItem = new ListViewItem(new string[] {it.Id.ToString(), it.Name, it.Comment});
             itemListView.Items.Add(lvItem);
         }
     }
 
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-        listServer.alterEvent -= new AlterDelegate(evRepeater.Repeater);
-        evRepeater.alterEvent -= new AlterDelegate(DoAlterations);
+        _restaurantServer.AlterEvent -= new AlterDelegate(evRepeater.Repeater);
+        evRepeater.AlterEvent -= new AlterDelegate(DoAlterations);
     }
 
     private void changeCommentButton_Click(object sender, EventArgs e)
@@ -87,7 +87,7 @@ public partial class ClientWindow : Form
             int type = Convert.ToInt32(itemListView.SelectedItems[0].SubItems[0].Text);
             CommentDlg commDlg = new CommentDlg();
             if (commDlg.ShowDialog(this) == DialogResult.OK)
-                listServer.ChangeComment(type, commDlg.comment);
+                _restaurantServer.ChangeStatusOrder(type);
         }
     }
 
@@ -99,8 +99,8 @@ public partial class ClientWindow : Form
             return;
         }
 
-        Item it = new Item(listServer.GetNewType(), nameTB.Text, null);
-        listServer.AddItem(it);
+        Order it = new Order(nameTB.Text, null);
+        _restaurantServer.AddOrder(it);
         nameTB.Text = "";
     }
 
