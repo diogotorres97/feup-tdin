@@ -8,7 +8,7 @@ public class BarKitchenController
     private IRestaurantSingleton _restaurantServer;
 
     private ProductType _productType;
-    public List<Order> Orders { get; }
+    private List<Order> Orders { get; }
 
     public BarKitchenController(ProductType productType)
     {

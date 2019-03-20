@@ -7,7 +7,7 @@ public class Table
 {
     private static int _nextId;
     public uint Id { get; }
-    private bool Availability { get; set; }
+    public bool Availability { get; set; }
 
     public Table()
     {
@@ -37,7 +37,7 @@ public class Order
 
     public OrderState State { get; set; }
 
-    private uint TableId { get; set; }
+    public uint TableId { get; set; }
 
     private DateTime Date { get; set; }
 
@@ -105,6 +105,7 @@ public enum Operation
 }
 
 public delegate void AlterOrderDelegate(Operation op, Order order);
+
 public delegate void AlterTableDelegate(Operation op, Table table);
 
 public interface IRestaurantSingleton
@@ -119,7 +120,10 @@ public interface IRestaurantSingleton
 
     List<Product> GetListOfProducts();
 
-    void AddOrder(Order order);
+    List<Order> ConsultTable(uint tableId);
+
+    void AddOrder(uint tableId, uint productId, uint quantity);
+
     void ChangeStatusOrder(uint orderId);
     void ChangeAvailabilityTable(uint tableId);
 }

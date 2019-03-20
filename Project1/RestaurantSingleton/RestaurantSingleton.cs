@@ -4,7 +4,6 @@ using System.Threading;
 
 public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 {
-    
     private static int _nextOrderId;
     private List<Order> _orderList;
     private List<Table> _tableList;
@@ -55,6 +54,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     {
         return (uint) Interlocked.Increment(ref _nextOrderId);
     }
+
     public List<Order> GetListOfOrders()
     {
         Console.WriteLine("GetListOfOrders() called.");
@@ -73,8 +73,24 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return _productList;
     }
 
-    public void AddOrder(Order order)
+    public List<Order> ConsultTable(uint tableId)
     {
+        return _orderList.FindAll(order => order.TableId == tableId && order.State != OrderState.Paid);
+    }
+
+    public void AddOrder(uint tableId, uint productId, uint quantity)
+    {
+        Product productRequested = _productList.Find(product => product.Id == productId);
+        Order ord = new Order(GetNextOrderId(), productRequested, quantity, tableId);
+        AddOrder(ord);
+    }
+
+    private void AddOrder(Order order)
+    {
+        Table table = _tableList.Find(tab => tab.Id == order.TableId);
+        if (table.Availability)
+            ChangeAvailabilityTable(table);
+
         _orderList.Add(order);
         NotifyOrderClients(Operation.New, order);
     }
@@ -99,6 +115,11 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     public void ChangeAvailabilityTable(uint tableId)
     {
         Table table = _tableList.Find(tab => tab.Id == tableId);
+        ChangeAvailabilityTable(table);
+    }
+
+    private void ChangeAvailabilityTable(Table table)
+    {
         table.ChangeAvailability();
         NotifyTableClients(Operation.Change, table);
     }
@@ -127,7 +148,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
             }
         }
     }
-    
+
     private void NotifyTableClients(Operation op, Table table)
     {
         if (AlterTableEvent != null)

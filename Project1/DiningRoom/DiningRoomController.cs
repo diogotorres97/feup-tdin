@@ -7,13 +7,13 @@ public class DiningRoomController
 {
     private IRestaurantSingleton _restaurantServer;
 
-    public List<Order> Orders { get; }
+    private List<Order> Orders { get; }
     public List<Product> Products { get; }
-    public List<Table> Tables { get; }
+    private List<Table> Tables { get; }
 
     public DiningRoomController()
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        RemotingConfiguration.Configure("DiningRoom.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
         Orders = _restaurantServer.GetListOfOrders();
         Products = _restaurantServer.GetListOfProducts();
@@ -22,11 +22,15 @@ public class DiningRoomController
 
     public void AddOrder(uint tableId, uint productId, uint quantity)
     {
-        Order ord = new Order(_restaurantServer.GetNextOrderId(), Products[(int) productId - 1], quantity, tableId);
-        _restaurantServer.AddOrder(ord);
+        _restaurantServer.AddOrder(tableId, productId, quantity);
     }
 
-    public void ChangeStatusOrder(uint orderId)
+    public List<Order> ConsultTable(uint tableId)
+    {
+        return _restaurantServer.ConsultTable(tableId);
+    }
+
+    public void ChangeStatusOrder(uint orderId) //TODO: Delete this if not implements DELIVERED State
     {
         _restaurantServer.ChangeStatusOrder(orderId);
     }
@@ -40,7 +44,7 @@ public class DiningRoomController
     {
         _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }
-    
+
     public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
     {
         _restaurantServer.AlterTableEvent += alterTableEvent;
