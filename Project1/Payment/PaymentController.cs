@@ -7,17 +7,27 @@ public class PaymentController
 {
     private IRestaurantSingleton _restaurantServer;
 
-    public List<Order> Orders { get; }
+    private List<Order> Orders { get; }
     public List<Product> Products { get; }
-    public List<Table> Tables { get; }
+    private List<Table> Tables { get; }
 
     public PaymentController()
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        RemotingConfiguration.Configure("Payment.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
         Orders = _restaurantServer.GetListOfOrders();
         Products = _restaurantServer.GetListOfProducts();
         Tables = _restaurantServer.GetListOfTables();
+    }
+
+    public void AddOrder(uint tableId, uint productId, uint quantity)
+    {
+        _restaurantServer.AddOrder(tableId, productId, quantity);
+    }
+
+    public List<Order> ConsultTable(uint tableId)
+    {
+        return _restaurantServer.ConsultTable(tableId);
     }
 
     public void ChangeStatusOrder(uint orderId)
@@ -25,15 +35,24 @@ public class PaymentController
         _restaurantServer.ChangeStatusOrder(orderId);
     }
 
-
-    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void RemoveOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent -= alterOrderEvent;
+    }
+
+    public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent += alterTableEvent;
+    }
+
+    public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent -= alterTableEvent;
     }
 }
 
@@ -59,4 +78,4 @@ static class RemoteNew
             throw new RemotingException("Type not found!");
         return RemotingServices.Connect(type, entry.ObjectUrl);
     }
-}
+}}

@@ -97,18 +97,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 
     public void ChangeStatusOrder(uint orderId)
     {
-        Order order = null;
-
-        foreach (Order ord in _orderList)
-        {
-            if (ord.Id == orderId)
-            {
-                ord.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
-                order = ord;
-                break;
-            }
-        }
-
+        Order order = _orderList.Find(ord => ord.Id == orderId);
+        order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
         NotifyOrderClients(Operation.Change, order);
     }
 
@@ -122,6 +112,26 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     {
         table.ChangeAvailability();
         NotifyTableClients(Operation.Change, table);
+    }
+
+    public void DoPayment(uint tableId)
+    {
+        List<Order> ordersToPay = ConsultTable(tableId);
+
+        //Change State of each order to Paid
+        ordersToPay.ForEach(order =>
+        {
+            order.State = OrderState.Paid;
+            NotifyOrderClients(Operation.Change, order);
+        });
+
+        //Change Availability of Table to True
+        ChangeAvailabilityTable(tableId);
+
+        //Print the Invoice
+
+        //Delete ordersPaid
+        _orderList.RemoveAll(ordersToPay.Contains);
     }
 
     private void NotifyOrderClients(Operation op, Order order)
