@@ -30,16 +30,31 @@ public class ClientController
     {
         _restaurantServer.ChangeStatusOrder(orderId);
     }
-
-
-    public void AddAlterEvent(AlterDelegate alterEvent)
+    
+    public void ChangeAvailabilityTable(uint tableId)
     {
-        _restaurantServer.AlterEvent += alterEvent;
+        _restaurantServer.ChangeAvailabilityTable(tableId);
     }
 
-    public void RemoveAlterEvent(AlterDelegate alterEvent)
+
+    public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent -= alterEvent;
+        _restaurantServer.AlterOrderEvent += alterOrderEvent;
+    }
+
+    public void RemoveOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
+    {
+        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
+    }
+    
+    public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent += alterTableEvent;
+    }
+
+    public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent -= alterTableEvent;
     }
 }
 

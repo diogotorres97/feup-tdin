@@ -32,14 +32,14 @@ public class StatisticsController
     }
 
 
-    public void AddAlterEvent(AlterDelegate alterEvent)
+    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent += alterEvent;
+        _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void RemoveAlterEvent(AlterDelegate alterEvent)
+    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent -= alterEvent;
+        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }
 }
 

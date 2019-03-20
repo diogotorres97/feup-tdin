@@ -9,9 +9,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
-    public event AlterDelegate AlterEvent;
-
-    //TODO: Será que preciso dos id's incremental das classes aqui?
+    public event AlterOrderDelegate AlterOrderEvent;
+    public event AlterTableDelegate AlterTableEvent;
 
     public RestaurantSingleton()
     {
@@ -77,7 +76,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     public void AddOrder(Order order)
     {
         _orderList.Add(order);
-        NotifyClients(Operation.New, order);
+        NotifyOrderClients(Operation.New, order);
     }
 
     public void ChangeStatusOrder(uint orderId)
@@ -94,16 +93,23 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
             }
         }
 
-        NotifyClients(Operation.Change, order);
+        NotifyOrderClients(Operation.Change, order);
     }
 
-    private void NotifyClients(Operation op, Order order)
+    public void ChangeAvailabilityTable(uint tableId)
     {
-        if (AlterEvent != null)
-        {
-            Delegate[] invkList = AlterEvent.GetInvocationList();
+        Table table = _tableList.Find(tab => tab.Id == tableId);
+        table.ChangeAvailability();
+        NotifyTableClients(Operation.Change, table);
+    }
 
-            foreach (AlterDelegate handler in invkList)
+    private void NotifyOrderClients(Operation op, Order order)
+    {
+        if (AlterOrderEvent != null)
+        {
+            Delegate[] invkList = AlterOrderEvent.GetInvocationList();
+
+            foreach (AlterOrderDelegate handler in invkList)
             {
                 new Thread(() =>
                 {
@@ -114,7 +120,32 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
                     }
                     catch (Exception)
                     {
-                        AlterEvent -= handler;
+                        AlterOrderEvent -= handler;
+                        Console.WriteLine("Exception: Removed an event handler");
+                    }
+                }).Start();
+            }
+        }
+    }
+    
+    private void NotifyTableClients(Operation op, Table table)
+    {
+        if (AlterTableEvent != null)
+        {
+            Delegate[] invkList = AlterTableEvent.GetInvocationList();
+
+            foreach (AlterTableDelegate handler in invkList)
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        handler(op, table);
+                        Console.WriteLine("Invoking event handler");
+                    }
+                    catch (Exception)
+                    {
+                        AlterTableEvent -= handler;
                         Console.WriteLine("Exception: Removed an event handler");
                     }
                 }).Start();

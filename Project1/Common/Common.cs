@@ -6,7 +6,7 @@ using System.Threading;
 public class Table
 {
     private static int _nextId;
-    private uint Id { get; }
+    public uint Id { get; }
     private bool Availability { get; set; }
 
     public Table()
@@ -18,6 +18,11 @@ public class Table
     public override string ToString()
     {
         return "[Table]: #" + Id + " Availability: " + Availability;
+    }
+
+    public void ChangeAvailability()
+    {
+        Availability = !Availability;
     }
 }
 
@@ -32,8 +37,6 @@ public class Order
 
     public OrderState State { get; set; }
 
-    private bool PaymentDone { get; set; } //TODO: Check if it will be necessary!!!! 
-
     private uint TableId { get; set; }
 
     private DateTime Date { get; set; }
@@ -44,7 +47,6 @@ public class Order
         Product = product;
         Quantity = quantity;
         State = OrderState.NotPicked;
-        PaymentDone = false;
         TableId = tableId;
         Date = DateTime.Now;
     }
@@ -64,7 +66,6 @@ public class Product
     public uint Id { get; }
     public string Description { get; set; }
     private double Price { get; set; }
-
     public ProductType Type { get; set; }
 
     public Product(string description, double price, ProductType type)
@@ -103,11 +104,13 @@ public enum Operation
     Change // TODO: Join Print and Payment or create two different operations
 }
 
-public delegate void AlterDelegate(Operation op, Order order);
+public delegate void AlterOrderDelegate(Operation op, Order order);
+public delegate void AlterTableDelegate(Operation op, Table table);
 
 public interface IRestaurantSingleton
 {
-    event AlterDelegate AlterEvent;
+    event AlterOrderDelegate AlterOrderEvent;
+    event AlterTableDelegate AlterTableEvent;
 
     uint GetNextOrderId();
     List<Order> GetListOfOrders();
@@ -118,11 +121,12 @@ public interface IRestaurantSingleton
 
     void AddOrder(Order order);
     void ChangeStatusOrder(uint orderId);
+    void ChangeAvailabilityTable(uint tableId);
 }
 
-public class AlterEventRepeater : MarshalByRefObject
+public class AlterOrderEventRepeater : MarshalByRefObject
 {
-    public event AlterDelegate AlterEvent;
+    public event AlterOrderDelegate AlterOrderEvent;
 
     public override object InitializeLifetimeService()
     {
@@ -131,6 +135,21 @@ public class AlterEventRepeater : MarshalByRefObject
 
     public void Repeater(Operation op, Order order)
     {
-        AlterEvent?.Invoke(op, order);
+        AlterOrderEvent?.Invoke(op, order);
+    }
+}
+
+public class AlterTableEventRepeater : MarshalByRefObject
+{
+    public event AlterTableDelegate AlterTableEvent;
+
+    public override object InitializeLifetimeService()
+    {
+        return null;
+    }
+
+    public void Repeater(Operation op, Table table)
+    {
+        AlterTableEvent?.Invoke(op, table);
     }
 }
