@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
 
-public class ClientController
+public class StatisticsController
 {
     private IRestaurantSingleton _restaurantServer;
 
@@ -11,7 +11,7 @@ public class ClientController
     public List<Product> Products { get; }
     public List<Table> Tables { get; }
 
-    public ClientController()
+    public StatisticsController()
     {
         RemotingConfiguration.Configure("Client.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));

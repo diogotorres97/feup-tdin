@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace BarKitchen
 {
-    static class Program
+    static class MainClass
     {
         /// <summary>
         /// The main entry point for the application.

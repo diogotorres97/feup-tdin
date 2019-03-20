@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 [Serializable]
@@ -14,16 +14,19 @@ public class Table
         Id = (uint) Interlocked.Increment(ref _nextId);
         Availability = true;
     }
+
+    public override string ToString()
+    {
+        return "[Table]: #" + Id + " Availability: " + Availability;
+    }
 }
 
 [Serializable]
 public class Order
 {
-    private static int _nextId;
-
     public uint Id { get; }
 
-    private Product Product { get; set; }
+    public Product Product { get; set; }
 
     private float Quantity { get; set; }
 
@@ -35,9 +38,9 @@ public class Order
 
     private DateTime Date { get; set; }
 
-    public Order(Product product, float quantity, uint tableId)
+    public Order(uint id, Product product, float quantity, uint tableId)
     {
-        Id = (uint) Interlocked.Increment(ref _nextId);
+        Id = id;
         Product = product;
         Quantity = quantity;
         State = OrderState.NotPicked;
@@ -45,17 +48,24 @@ public class Order
         TableId = tableId;
         Date = DateTime.Now;
     }
+
+    public override string ToString()
+    {
+        return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State +
+               " table #" +
+               TableId;
+    }
 }
 
 [Serializable]
 public class Product
 {
     private static int _nextId;
-    private uint Id { get; }
-    private string Description { get; set; }
+    public uint Id { get; }
+    public string Description { get; set; }
     private double Price { get; set; }
 
-    private ProductType Type { get; set; }
+    public ProductType Type { get; set; }
 
     public Product(string description, double price, ProductType type)
     {
@@ -63,6 +73,12 @@ public class Product
         Description = description;
         Price = price;
         Type = type;
+    }
+
+    // Override toString function
+    public override string ToString()
+    {
+        return "Product #" + Id + " Description: " + Description + " Unit Price: " + Price + " € Type: " + Type;
     }
 }
 
@@ -77,7 +93,8 @@ public enum OrderState
     NotPicked,
     InPreparation,
     Ready,
-    Delivered
+    Delivered,
+    Paid
 } // TODO: DELIVERED??
 
 public enum Operation
@@ -92,11 +109,12 @@ public interface IRestaurantSingleton
 {
     event AlterDelegate AlterEvent;
 
-    ArrayList GetListOfOrders();
+    uint GetNextOrderId();
+    List<Order> GetListOfOrders();
 
-    ArrayList GetListOfTables();
+    List<Table> GetListOfTables();
 
-    ArrayList GetListOfProducts();
+    List<Product> GetListOfProducts();
 
     void AddOrder(Order order);
     void ChangeStatusOrder(uint orderId);
