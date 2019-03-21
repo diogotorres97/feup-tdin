@@ -13,21 +13,31 @@ public class StatisticsController
 
     public StatisticsController()
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
+        RemotingConfiguration.Configure("Statistics.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
         Orders = _restaurantServer.GetListOfOrders();
         Products = _restaurantServer.GetListOfProducts();
         Tables = _restaurantServer.GetListOfTables();
     }
 
-    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void RemoveOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent -= alterOrderEvent;
+    }
+
+    public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent += alterTableEvent;
+    }
+
+    public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent -= alterTableEvent;
     }
 }
 
