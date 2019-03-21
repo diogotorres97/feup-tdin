@@ -6,8 +6,8 @@ using System.Threading;
 public class Table
 {
     private static int _nextId;
-    private uint Id { get; }
-    private bool Availability { get; set; }
+    public uint Id { get; }
+    public bool Availability { get; set; }
 
     public Table()
     {
@@ -19,6 +19,11 @@ public class Table
     {
         return "[Table]: #" + Id + " Availability: " + Availability;
     }
+
+    public void ChangeAvailability()
+    {
+        Availability = !Availability;
+    }
 }
 
 [Serializable]
@@ -28,13 +33,11 @@ public class Order
 
     public Product Product { get; set; }
 
-    private float Quantity { get; set; }
+    public float Quantity { get; set; }
 
     public OrderState State { get; set; }
 
-    private bool PaymentDone { get; set; } //TODO: Check if it will be necessary!!!! 
-
-    private uint TableId { get; set; }
+    public uint TableId { get; set; }
 
     private DateTime Date { get; set; }
 
@@ -44,7 +47,6 @@ public class Order
         Product = product;
         Quantity = quantity;
         State = OrderState.NotPicked;
-        PaymentDone = false;
         TableId = tableId;
         Date = DateTime.Now;
     }
@@ -63,8 +65,7 @@ public class Product
     private static int _nextId;
     public uint Id { get; }
     public string Description { get; set; }
-    private double Price { get; set; }
-
+    public double Price { get; set; }
     public ProductType Type { get; set; }
 
     public Product(string description, double price, ProductType type)
@@ -103,26 +104,36 @@ public enum Operation
     Change // TODO: Join Print and Payment or create two different operations
 }
 
-public delegate void AlterDelegate(Operation op, Order order);
+public delegate void AlterOrderDelegate(Operation op, Order order);
+
+public delegate void AlterTableDelegate(Operation op, Table table);
+
+public delegate void PrintDelegate(uint tableId, List<Order> orders);
 
 public interface IRestaurantSingleton
 {
-    event AlterDelegate AlterEvent;
-
-    uint GetNextOrderId();
+    event AlterOrderDelegate AlterOrderEvent;
+    event AlterTableDelegate AlterTableEvent;
+    event PrintDelegate PrintEvent;
     List<Order> GetListOfOrders();
 
     List<Table> GetListOfTables();
 
     List<Product> GetListOfProducts();
 
-    void AddOrder(Order order);
+    List<Order> ConsultTable(uint tableId);
+
+    void AddOrder(uint tableId, uint productId, uint quantity);
+
     void ChangeStatusOrder(uint orderId);
+    void ChangeAvailabilityTable(uint tableId);
+
+    void DoPayment(uint tableId);
 }
 
-public class AlterEventRepeater : MarshalByRefObject
+public class AlterOrderEventRepeater : MarshalByRefObject
 {
-    public event AlterDelegate AlterEvent;
+    public event AlterOrderDelegate AlterOrderEvent;
 
     public override object InitializeLifetimeService()
     {
@@ -131,6 +142,36 @@ public class AlterEventRepeater : MarshalByRefObject
 
     public void Repeater(Operation op, Order order)
     {
-        AlterEvent?.Invoke(op, order);
+        AlterOrderEvent?.Invoke(op, order);
+    }
+}
+
+public class AlterTableEventRepeater : MarshalByRefObject
+{
+    public event AlterTableDelegate AlterTableEvent;
+
+    public override object InitializeLifetimeService()
+    {
+        return null;
+    }
+
+    public void Repeater(Operation op, Table table)
+    {
+        AlterTableEvent?.Invoke(op, table);
+    }
+}
+
+public class PrintEventRepeater : MarshalByRefObject
+{
+    public event PrintDelegate PrintEvent;
+
+    public override object InitializeLifetimeService()
+    {
+        return null;
+    }
+
+    public void Repeater(uint tableId, List<Order> orders)
+    {
+        PrintEvent?.Invoke(tableId, orders);
     }
 }

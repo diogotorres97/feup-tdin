@@ -8,7 +8,7 @@ public class BarKitchenController
     private IRestaurantSingleton _restaurantServer;
 
     private ProductType _productType;
-    public List<Order> Orders { get; }
+    private List<Order> Orders { get; }
 
     public BarKitchenController(ProductType productType)
     {
@@ -28,14 +28,14 @@ public class BarKitchenController
         _restaurantServer.ChangeStatusOrder(orderId);
     }
 
-    public void AddAlterEvent(AlterDelegate alterEvent)
+    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent += alterEvent;
+        _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void RemoveAlterEvent(AlterDelegate alterEvent)
+    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent -= alterEvent;
+        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }
 }
 

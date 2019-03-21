@@ -4,14 +4,13 @@ using System.Threading;
 
 public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 {
-    
     private static int _nextOrderId;
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
-    public event AlterDelegate AlterEvent;
-
-    //TODO: Será que preciso dos id's incremental das classes aqui?
+    public event AlterOrderDelegate AlterOrderEvent;
+    public event AlterTableDelegate AlterTableEvent;
+    public event PrintDelegate PrintEvent;
 
     public RestaurantSingleton()
     {
@@ -56,6 +55,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     {
         return (uint) Interlocked.Increment(ref _nextOrderId);
     }
+
     public List<Order> GetListOfOrders()
     {
         Console.WriteLine("GetListOfOrders() called.");
@@ -74,36 +74,75 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return _productList;
     }
 
-    public void AddOrder(Order order)
+    public List<Order> ConsultTable(uint tableId)
     {
+        return _orderList.FindAll(order => order.TableId == tableId && order.State != OrderState.Paid);
+    }
+
+    public void AddOrder(uint tableId, uint productId, uint quantity)
+    {
+        Product productRequested = _productList.Find(product => product.Id == productId);
+        Order ord = new Order(GetNextOrderId(), productRequested, quantity, tableId);
+        AddOrder(ord);
+    }
+
+    private void AddOrder(Order order)
+    {
+        Table table = _tableList.Find(tab => tab.Id == order.TableId);
+        if (table.Availability)
+            ChangeAvailabilityTable(table);
+
         _orderList.Add(order);
-        NotifyClients(Operation.New, order);
+        NotifyOrderClients(Operation.New, order);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
-        Order order = null;
-
-        foreach (Order ord in _orderList)
-        {
-            if (ord.Id == orderId)
-            {
-                ord.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
-                order = ord;
-                break;
-            }
-        }
-
-        NotifyClients(Operation.Change, order);
+        Order order = _orderList.Find(ord => ord.Id == orderId);
+        order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
+        NotifyOrderClients(Operation.Change, order);
     }
 
-    private void NotifyClients(Operation op, Order order)
+    public void ChangeAvailabilityTable(uint tableId)
     {
-        if (AlterEvent != null)
-        {
-            Delegate[] invkList = AlterEvent.GetInvocationList();
+        Table table = _tableList.Find(tab => tab.Id == tableId);
+        ChangeAvailabilityTable(table);
+    }
 
-            foreach (AlterDelegate handler in invkList)
+    private void ChangeAvailabilityTable(Table table)
+    {
+        table.ChangeAvailability();
+        NotifyTableClients(Operation.Change, table);
+    }
+
+    public void DoPayment(uint tableId)
+    {
+        List<Order> ordersToPay = ConsultTable(tableId);
+
+        //Change State of each order to Paid
+        ordersToPay.ForEach(order =>
+        {
+            order.State = OrderState.Paid;
+            NotifyOrderClients(Operation.Change, order);
+        });
+
+        //Change Availability of Table to True
+        ChangeAvailabilityTable(tableId);
+
+        //Print the Invoice
+        NotifyPrinter(tableId, ordersToPay);
+
+        //Delete ordersPaid
+        _orderList.RemoveAll(ordersToPay.Contains);
+    }
+
+    private void NotifyOrderClients(Operation op, Order order)
+    {
+        if (AlterOrderEvent != null)
+        {
+            Delegate[] invkList = AlterOrderEvent.GetInvocationList();
+
+            foreach (AlterOrderDelegate handler in invkList)
             {
                 new Thread(() =>
                 {
@@ -114,7 +153,57 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
                     }
                     catch (Exception)
                     {
-                        AlterEvent -= handler;
+                        AlterOrderEvent -= handler;
+                        Console.WriteLine("Exception: Removed an event handler");
+                    }
+                }).Start();
+            }
+        }
+    }
+
+    private void NotifyTableClients(Operation op, Table table)
+    {
+        if (AlterTableEvent != null)
+        {
+            Delegate[] invkList = AlterTableEvent.GetInvocationList();
+
+            foreach (AlterTableDelegate handler in invkList)
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        handler(op, table);
+                        Console.WriteLine("Invoking event handler");
+                    }
+                    catch (Exception)
+                    {
+                        AlterTableEvent -= handler;
+                        Console.WriteLine("Exception: Removed an event handler");
+                    }
+                }).Start();
+            }
+        }
+    }
+
+    private void NotifyPrinter(uint tableId, List<Order> orders)
+    {
+        if (PrintEvent != null)
+        {
+            Delegate[] invkList = PrintEvent.GetInvocationList();
+
+            foreach (PrintDelegate handler in invkList)
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        handler(tableId, orders);
+                        Console.WriteLine("Invoking event handler");
+                    }
+                    catch (Exception)
+                    {
+                        PrintEvent -= handler;
                         Console.WriteLine("Exception: Removed an event handler");
                     }
                 }).Start();

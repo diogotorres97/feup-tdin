@@ -20,26 +20,14 @@ public class StatisticsController
         Tables = _restaurantServer.GetListOfTables();
     }
 
-    public void AddOrder(uint tableId, uint productId, uint quantity)
+    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        Order ord = new Order(_restaurantServer.GetNextOrderId(), Products[(int) productId - 1], quantity, tableId);
-        _restaurantServer.AddOrder(ord);
+        _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void ChangeStatusOrder(uint orderId)
+    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.ChangeStatusOrder(orderId);
-    }
-
-
-    public void AddAlterEvent(AlterDelegate alterEvent)
-    {
-        _restaurantServer.AlterEvent += alterEvent;
-    }
-
-    public void RemoveAlterEvent(AlterDelegate alterEvent)
-    {
-        _restaurantServer.AlterEvent -= alterEvent;
+        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }
 }
 

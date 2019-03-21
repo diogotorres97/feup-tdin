@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public partial class ClientWindow : Form
 {
     private ClientController _clientController;
-    private AlterEventRepeater _evRepeater;
+    private AlterOrderEventRepeater _evRepeater;
 
     private delegate ListViewItem LvAddDelegate(ListViewItem lvItem);
 
@@ -16,9 +16,9 @@ public partial class ClientWindow : Form
     {
         _clientController = new ClientController();
         InitializeComponent();
-        _evRepeater = new AlterEventRepeater();
-        _evRepeater.AlterEvent += DoAlterations;
-        _clientController.AddAlterEvent(_evRepeater.Repeater);
+        _evRepeater = new AlterOrderEventRepeater();
+        _evRepeater.AlterOrderEvent += DoAlterations;
+        _clientController.AddOrderAlterEvent(_evRepeater.Repeater);
     }
 
 
@@ -77,8 +77,8 @@ public partial class ClientWindow : Form
 
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-        _clientController.RemoveAlterEvent(_evRepeater.Repeater);
-        _evRepeater.AlterEvent -= DoAlterations;
+        _clientController.RemoveOrderAlterEvent(_evRepeater.Repeater);
+        _evRepeater.AlterOrderEvent -= DoAlterations;
     }
 
     private void changeCommentButton_Click(object sender, EventArgs e)
@@ -89,6 +89,9 @@ public partial class ClientWindow : Form
             CommentDlg commDlg = new CommentDlg();
             if (commDlg.ShowDialog(this) == DialogResult.OK)
                 _clientController.ChangeStatusOrder((uint) type);
+            
+            _clientController.ChangeAvailabilityTable(1);
+            _clientController.ChangeAvailabilityTable(3);
         }
     }
 

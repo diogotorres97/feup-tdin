@@ -22,24 +22,38 @@ public class ClientController
 
     public void AddOrder(uint tableId, uint productId, uint quantity)
     {
-        Order ord = new Order(_restaurantServer.GetNextOrderId(), Products[(int) productId - 1], quantity, tableId);
-        _restaurantServer.AddOrder(ord);
+        _restaurantServer.AddOrder(tableId, productId, quantity);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
         _restaurantServer.ChangeStatusOrder(orderId);
     }
-
-
-    public void AddAlterEvent(AlterDelegate alterEvent)
+    
+    public void ChangeAvailabilityTable(uint tableId)
     {
-        _restaurantServer.AlterEvent += alterEvent;
+        _restaurantServer.ChangeAvailabilityTable(tableId);
     }
 
-    public void RemoveAlterEvent(AlterDelegate alterEvent)
+
+    public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
     {
-        _restaurantServer.AlterEvent -= alterEvent;
+        _restaurantServer.AlterOrderEvent += alterOrderEvent;
+    }
+
+    public void RemoveOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
+    {
+        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
+    }
+    
+    public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent += alterTableEvent;
+    }
+
+    public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
+    {
+        _restaurantServer.AlterTableEvent -= alterTableEvent;
     }
 }
 
