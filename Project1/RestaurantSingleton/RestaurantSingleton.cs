@@ -10,6 +10,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Product> _productList;
     public event AlterOrderDelegate AlterOrderEvent;
     public event AlterTableDelegate AlterTableEvent;
+    public event PrintDelegate PrintEvent;
 
     public RestaurantSingleton()
     {
@@ -129,6 +130,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         ChangeAvailabilityTable(tableId);
 
         //Print the Invoice
+        NotifyPrinter(tableId, ordersToPay);
 
         //Delete ordersPaid
         _orderList.RemoveAll(ordersToPay.Contains);
@@ -177,6 +179,31 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
                     catch (Exception)
                     {
                         AlterTableEvent -= handler;
+                        Console.WriteLine("Exception: Removed an event handler");
+                    }
+                }).Start();
+            }
+        }
+    }
+
+    private void NotifyPrinter(uint tableId, List<Order> orders)
+    {
+        if (PrintEvent != null)
+        {
+            Delegate[] invkList = PrintEvent.GetInvocationList();
+
+            foreach (PrintDelegate handler in invkList)
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        handler(tableId, orders);
+                        Console.WriteLine("Invoking event handler");
+                    }
+                    catch (Exception)
+                    {
+                        PrintEvent -= handler;
                         Console.WriteLine("Exception: Removed an event handler");
                     }
                 }).Start();

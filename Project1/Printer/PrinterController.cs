@@ -29,7 +29,7 @@ public class PrinterController
     {
         _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }
-    
+
     public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
     {
         _restaurantServer.AlterTableEvent += alterTableEvent;
@@ -38,6 +38,16 @@ public class PrinterController
     public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
     {
         _restaurantServer.AlterTableEvent -= alterTableEvent;
+    }
+
+    public void AddPrinterEvent(PrintDelegate printEvent)
+    {
+        _restaurantServer.PrintEvent += printEvent;
+    }
+
+    public void RemovePrinterEvent(PrintDelegate printEvent)
+    {
+        _restaurantServer.PrintEvent -= printEvent;
     }
 }
 

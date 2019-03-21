@@ -20,19 +20,14 @@ public class PaymentController
         Tables = _restaurantServer.GetListOfTables();
     }
 
-    public void AddOrder(uint tableId, uint productId, uint quantity)
-    {
-        _restaurantServer.AddOrder(tableId, productId, quantity);
-    }
-
     public List<Order> ConsultTable(uint tableId)
     {
         return _restaurantServer.ConsultTable(tableId);
     }
 
-    public void ChangeStatusOrder(uint orderId)
+    public void DoPayment(uint tableId)
     {
-        _restaurantServer.ChangeStatusOrder(orderId);
+        _restaurantServer.DoPayment(tableId);
     }
 
     public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
@@ -78,4 +73,4 @@ static class RemoteNew
             throw new RemotingException("Type not found!");
         return RemotingServices.Connect(type, entry.ObjectUrl);
     }
-}}
+}

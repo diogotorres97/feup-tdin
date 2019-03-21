@@ -33,7 +33,7 @@ public class Order
 
     public Product Product { get; set; }
 
-    private float Quantity { get; set; }
+    public float Quantity { get; set; }
 
     public OrderState State { get; set; }
 
@@ -65,7 +65,7 @@ public class Product
     private static int _nextId;
     public uint Id { get; }
     public string Description { get; set; }
-    private double Price { get; set; }
+    public double Price { get; set; }
     public ProductType Type { get; set; }
 
     public Product(string description, double price, ProductType type)
@@ -108,12 +108,13 @@ public delegate void AlterOrderDelegate(Operation op, Order order);
 
 public delegate void AlterTableDelegate(Operation op, Table table);
 
+public delegate void PrintDelegate(uint tableId, List<Order> orders);
+
 public interface IRestaurantSingleton
 {
     event AlterOrderDelegate AlterOrderEvent;
     event AlterTableDelegate AlterTableEvent;
-
-    uint GetNextOrderId();
+    event PrintDelegate PrintEvent;
     List<Order> GetListOfOrders();
 
     List<Table> GetListOfTables();
@@ -126,6 +127,8 @@ public interface IRestaurantSingleton
 
     void ChangeStatusOrder(uint orderId);
     void ChangeAvailabilityTable(uint tableId);
+
+    void DoPayment(uint tableId);
 }
 
 public class AlterOrderEventRepeater : MarshalByRefObject
@@ -155,5 +158,20 @@ public class AlterTableEventRepeater : MarshalByRefObject
     public void Repeater(Operation op, Table table)
     {
         AlterTableEvent?.Invoke(op, table);
+    }
+}
+
+public class PrintEventRepeater : MarshalByRefObject
+{
+    public event PrintDelegate PrintEvent;
+
+    public override object InitializeLifetimeService()
+    {
+        return null;
+    }
+
+    public void Repeater(uint tableId, List<Order> orders)
+    {
+        PrintEvent?.Invoke(tableId, orders);
     }
 }

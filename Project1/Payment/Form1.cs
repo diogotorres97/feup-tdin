@@ -6,7 +6,9 @@ namespace Payment
     {
         public Form1()
         {
+            PaymentController paymentController = new PaymentController();
             InitializeComponent();
+            paymentController.DoPayment(1);
         }
     }
 }
