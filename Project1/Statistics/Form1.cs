@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Statistics
@@ -36,19 +35,31 @@ namespace Statistics
 
             _evTableRepeater.OperationEvent -= DoTableAlterations;
             _statisticsController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
-
         }
 
         /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
 
         private static void DoOrderAlterations(Operation op, Order order)
         {
-            Console.WriteLine("[DoAlterations]:  \"{0}\" -  \"{1}\"", op, order);
+            if (order.State != OrderState.Paid) return;
+
+            _statisticsController.TotalSumOfDay += order.Quantity * order.Product.Price;
+
+            float productQuantity = order.Quantity;
+            if (_statisticsController.ProductQuantity.ContainsKey(order.Id))
+                productQuantity += _statisticsController.ProductQuantity[order.Id];
+
+            _statisticsController.ProductQuantity.Add(order.Id, productQuantity);
+
+            Console.WriteLine("[Statistics]: TotalSumOfDay: {0}", _statisticsController.TotalSumOfDay);
         }
 
         private static void DoTableAlterations(Operation op, Table table)
         {
-            Console.WriteLine("[DoTable]:  \"{0}\" -  \"{1}\"", op, table);
+            if (!table.Availability) return;
+
+            _statisticsController.TotalInvoices++;
+            Console.WriteLine("[Statistics]: TotalInvoices: {0}", _statisticsController.TotalInvoices);
         }
     }
 }
