@@ -7,7 +7,7 @@ public class Table
 {
     private static int _nextId;
     public uint Id { get; }
-    public bool Availability { get; set; }
+    public bool Availability { get; private set; }
 
     public Table()
     {
@@ -31,15 +31,15 @@ public class Order
 {
     public uint Id { get; }
 
-    public Product Product { get; set; }
+    public Product Product { get; }
 
-    public float Quantity { get; set; }
+    public float Quantity { get; }
 
     public OrderState State { get; set; }
 
-    public uint TableId { get; set; }
+    public uint TableId { get; }
 
-    private DateTime Date { get; set; }
+    private DateTime Date { get; }
 
     public Order(uint id, Product product, float quantity, uint tableId)
     {
@@ -54,8 +54,7 @@ public class Order
     public override string ToString()
     {
         return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State +
-               " table #" +
-               TableId;
+               " table #" + TableId;
     }
 }
 
@@ -64,9 +63,9 @@ public class Product
 {
     private static int _nextId;
     public uint Id { get; }
-    public string Description { get; set; }
-    public double Price { get; set; }
-    public ProductType Type { get; set; }
+    public string Description { get; }
+    public double Price { get; }
+    public ProductType Type { get; }
 
     public Product(string description, double price, ProductType type)
     {
@@ -76,10 +75,43 @@ public class Product
         Type = type;
     }
 
-    // Override toString function
     public override string ToString()
     {
         return "Product #" + Id + " Description: " + Description + " Unit Price: " + Price + " € Type: " + Type;
+    }
+}
+
+[Serializable]
+public class Invoice
+{
+    private static int _nextId;
+    private uint Id { get; }
+
+    private uint TableId { get; }
+
+    private List<Order> Orders { get; }
+
+    private double TotalInvoice { get; set; }
+
+    public Invoice(uint tableId, List<Order> orders)
+    {
+        Id = (uint) Interlocked.Increment(ref _nextId);
+        TableId = tableId;
+        Orders = orders;
+        TotalInvoice = 0;
+
+        orders.ForEach(order => { TotalInvoice += order.Product.Price * order.Quantity; });
+    }
+
+    public override string ToString()
+    {
+        string printedInvoice = "[Invoice]: " + TableId + "\n";
+
+        Orders.ForEach(order => { printedInvoice += order.ToString() + "\n"; });
+
+        printedInvoice += "[TotalInvoice]: " + TotalInvoice;
+
+        return printedInvoice;
     }
 }
 
@@ -96,82 +128,43 @@ public enum OrderState
     Ready,
     Delivered,
     Paid
-} // TODO: DELIVERED??
+}
 
 public enum Operation
 {
     New,
-    Change // TODO: Join Print and Payment or create two different operations
+    Change,
+    Remove
 }
 
-public delegate void AlterOrderDelegate(Operation op, Order order);
-
-public delegate void AlterTableDelegate(Operation op, Table table);
-
-public delegate void PrintDelegate(uint tableId, List<Order> orders);
+public delegate void OperationDelegate<in T>(Operation op, T obj);
 
 public interface IRestaurantSingleton
 {
-    event AlterOrderDelegate AlterOrderEvent;
-    event AlterTableDelegate AlterTableEvent;
-    event PrintDelegate PrintEvent;
+    event OperationDelegate<Order> OperationOrderEvent;
+    event OperationDelegate<Table> OperationTableEvent;
+    event OperationDelegate<Invoice> PrintEvent;
     List<Order> GetListOfOrders();
-
     List<Table> GetListOfTables();
-
     List<Product> GetListOfProducts();
-
     List<Order> ConsultTable(uint tableId);
-
     void AddOrder(uint tableId, uint productId, uint quantity);
-
     void ChangeStatusOrder(uint orderId);
     void ChangeAvailabilityTable(uint tableId);
-
-    void DoPayment(uint tableId);
+    bool DoPayment(uint tableId);
 }
 
-public class AlterOrderEventRepeater : MarshalByRefObject
+public class OperationEventRepeater<T> : MarshalByRefObject
 {
-    public event AlterOrderDelegate AlterOrderEvent;
+    public event OperationDelegate<T> OperationEvent;
 
     public override object InitializeLifetimeService()
     {
         return null;
     }
 
-    public void Repeater(Operation op, Order order)
+    public void Repeater(Operation op, T obj)
     {
-        AlterOrderEvent?.Invoke(op, order);
-    }
-}
-
-public class AlterTableEventRepeater : MarshalByRefObject
-{
-    public event AlterTableDelegate AlterTableEvent;
-
-    public override object InitializeLifetimeService()
-    {
-        return null;
-    }
-
-    public void Repeater(Operation op, Table table)
-    {
-        AlterTableEvent?.Invoke(op, table);
-    }
-}
-
-public class PrintEventRepeater : MarshalByRefObject
-{
-    public event PrintDelegate PrintEvent;
-
-    public override object InitializeLifetimeService()
-    {
-        return null;
-    }
-
-    public void Repeater(uint tableId, List<Order> orders)
-    {
-        PrintEvent?.Invoke(tableId, orders);
+        OperationEvent?.Invoke(op, obj);
     }
 }

@@ -1,56 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Remoting;
 
-public class StatisticsController
+public class StatisticsController : AbstractController
 {
-    private IRestaurantSingleton _restaurantServer;
+    public uint TotalInvoices;
+    public double TotalSumOfDay;
+    public Dictionary<uint, float> ProductQuantity;
 
-    public List<Order> Orders { get; }
-    public List<Product> Products { get; }
-    public List<Table> Tables { get; }
-
-    public StatisticsController()
+    public StatisticsController() : base("Statistics.exe.config")
     {
-        RemotingConfiguration.Configure("Client.exe.config", false);
-        _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        Orders = _restaurantServer.GetListOfOrders();
-        Products = _restaurantServer.GetListOfProducts();
-        Tables = _restaurantServer.GetListOfTables();
-    }
-
-    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
-    {
-        _restaurantServer.AlterOrderEvent += alterOrderEvent;
-    }
-
-    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
-    {
-        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
-    }
-}
-
-/* Mechanism for instantiating a remote object through its interface, using the config file */
-
-static class RemoteNew
-{
-    private static Hashtable _types;
-
-    private static void InitTypeTable()
-    {
-        _types = new Hashtable();
-        foreach (WellKnownClientTypeEntry entry in RemotingConfiguration.GetRegisteredWellKnownClientTypes())
-            _types.Add(entry.ObjectType, entry);
-    }
-
-    public static object New(Type type)
-    {
-        if (_types == null)
-            InitTypeTable();
-        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) _types[type];
-        if (entry == null)
-            throw new RemotingException("Type not found!");
-        return RemotingServices.Connect(type, entry.ObjectUrl);
+        TotalInvoices = 0;
+        TotalSumOfDay = 0;
+        ProductQuantity = new Dictionary<uint, float>();
     }
 }
