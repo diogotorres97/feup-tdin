@@ -87,11 +87,11 @@ public class Invoice
     private static int _nextId;
     private uint Id { get; }
 
-    public uint TableId { get; }
+    private uint TableId { get; }
 
-    public List<Order> Orders { get; }
+    private List<Order> Orders { get; }
 
-    public double TotalInvoice { get; set; }
+    private double TotalInvoice { get; set; }
 
     public Invoice(uint tableId, List<Order> orders)
     {
@@ -128,34 +128,30 @@ public enum OrderState
     Ready,
     Delivered,
     Paid
-} // TODO: DELIVERED??
+}
 
 public enum Operation
 {
     New,
-    Change
-} //TODO: ADD REMOVED??
+    Change,
+    Remove
+}
 
 public delegate void OperationDelegate<in T>(Operation op, T obj);
 
 public interface IRestaurantSingleton
 {
-    event OperationDelegate<Order> AlterOrderEvent;
-    event OperationDelegate<Table> AlterTableEvent;
+    event OperationDelegate<Order> OperationOrderEvent;
+    event OperationDelegate<Table> OperationTableEvent;
     event OperationDelegate<Invoice> PrintEvent;
     List<Order> GetListOfOrders();
-
     List<Table> GetListOfTables();
-
     List<Product> GetListOfProducts();
-
     List<Order> ConsultTable(uint tableId);
-
     void AddOrder(uint tableId, uint productId, uint quantity);
     void ChangeStatusOrder(uint orderId);
     void ChangeAvailabilityTable(uint tableId);
-
-    void DoPayment(uint tableId);
+    bool DoPayment(uint tableId);
 }
 
 public class OperationEventRepeater<T> : MarshalByRefObject

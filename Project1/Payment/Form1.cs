@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace Payment
 {
@@ -8,7 +9,7 @@ namespace Payment
         {
             PaymentController paymentController = new PaymentController();
             InitializeComponent();
-            paymentController.DoPayment(1);
+            Console.WriteLine(paymentController.DoPayment(1) ? "Paid!" : "Not all orders are ready to pay!");
         }
     }
 }

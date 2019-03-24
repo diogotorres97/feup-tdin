@@ -8,8 +8,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
-    public event OperationDelegate<Order> AlterOrderEvent;
-    public event OperationDelegate<Table> AlterTableEvent;
+    public event OperationDelegate<Order> OperationOrderEvent;
+    public event OperationDelegate<Table> OperationTableEvent;
     public event OperationDelegate<Invoice> PrintEvent;
 
     public RestaurantSingleton()
@@ -51,7 +51,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return null;
     }
 
-    public uint GetNextOrderId()
+    private static uint GetNextOrderId()
     {
         return (uint) Interlocked.Increment(ref _nextOrderId);
     }
@@ -93,14 +93,14 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
             ChangeAvailabilityTable(table);
 
         _orderList.Add(order);
-        NotifyClients(AlterOrderEvent, Operation.New, order);
+        NotifyClients(OperationOrderEvent, Operation.New, order);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
         Order order = _orderList.Find(ord => ord.Id == orderId);
         order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
-        NotifyClients(AlterOrderEvent, Operation.Change, order);
+        NotifyClients(OperationOrderEvent, Operation.Change, order);
     }
 
     public void ChangeAvailabilityTable(uint tableId)
@@ -112,18 +112,21 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private void ChangeAvailabilityTable(Table table)
     {
         table.ChangeAvailability();
-        NotifyClients(AlterTableEvent, Operation.Change, table);
+        NotifyClients(OperationTableEvent, Operation.Change, table);
     }
 
-    public void DoPayment(uint tableId)
+    public bool DoPayment(uint tableId)
     {
         List<Order> ordersToPay = ConsultTable(tableId);
+
+        if (!CheckIfAllOrdersAreDelivered(ordersToPay))
+            return false;
 
         //Change State of each order to Paid
         ordersToPay.ForEach(order =>
         {
             order.State = OrderState.Paid;
-            NotifyClients(AlterOrderEvent, Operation.Change, order);
+            NotifyClients(OperationOrderEvent, Operation.Change, order);
         });
 
         //Change Availability of Table to True
@@ -134,10 +137,16 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 
         //Delete ordersPaid
         _orderList.RemoveAll(ordersToPay.Contains); //TODO: Notify Clients??
+
+        return true;
     }
 
+    private static bool CheckIfAllOrdersAreDelivered(List<Order> ordersToPay)
+    {
+        return !ordersToPay.Exists(order => order.State != OrderState.Delivered);
+    }
 
-    private void NotifyClients<T>(OperationDelegate<T> operationDelegate, Operation op, T obj)
+    private static void NotifyClients<T>(OperationDelegate<T> operationDelegate, Operation op, T obj)
     {
         if (operationDelegate == null) return;
 

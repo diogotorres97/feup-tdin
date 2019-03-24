@@ -22,22 +22,22 @@ public class StatisticsController
 
     public void AddOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.AlterOrderEvent += operationEvent;
+        _restaurantServer.OperationOrderEvent += operationEvent;
     }
 
     public void RemoveOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.AlterOrderEvent -= operationEvent;
+        _restaurantServer.OperationOrderEvent -= operationEvent;
     }
     
     public void AddTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.AlterTableEvent += operationTableEvent;
+        _restaurantServer.OperationTableEvent += operationTableEvent;
     }
 
     public void RemoveTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.AlterTableEvent -= operationTableEvent;
+        _restaurantServer.OperationTableEvent -= operationTableEvent;
     }
 }
 

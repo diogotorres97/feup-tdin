@@ -30,12 +30,12 @@ public class BarKitchenController
 
     public void AddAlterEvent(OperationDelegate<Order> operationOrderEvent)
     {
-        _restaurantServer.AlterOrderEvent += operationOrderEvent;
+        _restaurantServer.OperationOrderEvent += operationOrderEvent;
     }
 
     public void RemoveAlterEvent(OperationDelegate<Order> operationOrderEvent)
     {
-        _restaurantServer.AlterOrderEvent -= operationOrderEvent;
+        _restaurantServer.OperationOrderEvent -= operationOrderEvent;
     }
 }
 

@@ -1,45 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.Remoting;
 
 public class PrinterController
 {
     private IRestaurantSingleton _restaurantServer;
 
-    public List<Order> Orders { get; }
-    public List<Product> Products { get; }
-    public List<Table> Tables { get; }
-
     public PrinterController()
     {
         RemotingConfiguration.Configure("Printer.exe.config", false);
         _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        Orders = _restaurantServer.GetListOfOrders();
-        Products = _restaurantServer.GetListOfProducts();
-        Tables = _restaurantServer.GetListOfTables();
     }
-
-    public void AddOrderAlterEvent(OperationDelegate<Order> operationEvent)
-    {
-        _restaurantServer.AlterOrderEvent += operationEvent;
-    }
-
-    public void RemoveOrderAlterEvent(OperationDelegate<Order> operationEvent)
-    {
-        _restaurantServer.AlterOrderEvent -= operationEvent;
-    }
-    
-    public void AddTableAlterEvent(OperationDelegate<Table> operationTableEvent)
-    {
-        _restaurantServer.AlterTableEvent += operationTableEvent;
-    }
-
-    public void RemoveTableAlterEvent(OperationDelegate<Table> operationTableEvent)
-    {
-        _restaurantServer.AlterTableEvent -= operationTableEvent;
-    }
-
     public void AddPrinterEvent(OperationDelegate<Invoice> printEvent)
     {
         _restaurantServer.PrintEvent += printEvent;

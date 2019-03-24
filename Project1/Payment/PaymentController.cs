@@ -25,29 +25,29 @@ public class PaymentController
         return _restaurantServer.ConsultTable(tableId);
     }
 
-    public void DoPayment(uint tableId)
+    public bool DoPayment(uint tableId)
     {
-        _restaurantServer.DoPayment(tableId);
+        return _restaurantServer.DoPayment(tableId);
     }
 
     public void AddOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.AlterOrderEvent += operationEvent;
+        _restaurantServer.OperationOrderEvent += operationEvent;
     }
 
     public void RemoveOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.AlterOrderEvent -= operationEvent;
+        _restaurantServer.OperationOrderEvent -= operationEvent;
     }
     
     public void AddTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.AlterTableEvent += operationTableEvent;
+        _restaurantServer.OperationTableEvent += operationTableEvent;
     }
 
     public void RemoveTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.AlterTableEvent -= operationTableEvent;
+        _restaurantServer.OperationTableEvent -= operationTableEvent;
     }
 }
 
