@@ -28,12 +28,12 @@ public class BarKitchenController
         _restaurantServer.ChangeStatusOrder(orderId);
     }
 
-    public void AddAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void AddAlterEvent(AlterDelegate<Order> alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent += alterOrderEvent;
     }
 
-    public void RemoveAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void RemoveAlterEvent(AlterDelegate<Order> alterOrderEvent)
     {
         _restaurantServer.AlterOrderEvent -= alterOrderEvent;
     }

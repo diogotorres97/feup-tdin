@@ -8,8 +8,12 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
-    public event AlterOrderDelegate AlterOrderEvent;
-    public event AlterTableDelegate AlterTableEvent;
+    public event AlterDelegate<Order> AlterOrderEvent;
+    public event AlterDelegate<Table> AlterTableEvent;
+    
+    
+//    public event AlterOrderDelegate AlterOrderEvent;
+//    public event AlterTableDelegate AlterTableEvent;
     public event PrintDelegate PrintEvent;
 
     public RestaurantSingleton()
@@ -93,14 +97,16 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
             ChangeAvailabilityTable(table);
 
         _orderList.Add(order);
-        NotifyOrderClients(Operation.New, order);
+        NotifyClients(AlterOrderEvent, Operation.New, order);
+//        NotifyOrderClients(Operation.New, order);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
         Order order = _orderList.Find(ord => ord.Id == orderId);
         order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
-        NotifyOrderClients(Operation.Change, order);
+//        NotifyOrderClients(Operation.Change, order);
+        NotifyClients(AlterOrderEvent, Operation.Change, order);
     }
 
     public void ChangeAvailabilityTable(uint tableId)
@@ -112,7 +118,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private void ChangeAvailabilityTable(Table table)
     {
         table.ChangeAvailability();
-        NotifyTableClients(Operation.Change, table);
+//        NotifyTableClients(Operation.Change, table);
+        NotifyClients(AlterTableEvent, Operation.Change, table);
     }
 
     public void DoPayment(uint tableId)
@@ -123,7 +130,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         ordersToPay.ForEach(order =>
         {
             order.State = OrderState.Paid;
-            NotifyOrderClients(Operation.Change, order);
+//            NotifyOrderClients(Operation.Change, order);
+            NotifyClients(AlterOrderEvent, Operation.Change, order);
         });
 
         //Change Availability of Table to True
@@ -133,58 +141,85 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         NotifyPrinter(tableId, ordersToPay);
 
         //Delete ordersPaid
-        _orderList.RemoveAll(ordersToPay.Contains);
+        _orderList.RemoveAll(ordersToPay.Contains); //TODO: Notify Clients??
     }
 
-    private void NotifyOrderClients(Operation op, Order order)
+    
+    
+    private void NotifyClients<T>(AlterDelegate<T> alterDelegate, Operation op, T obj)
     {
-        if (AlterOrderEvent != null)
+        if (alterDelegate != null)
         {
-            Delegate[] invkList = AlterOrderEvent.GetInvocationList();
+            Delegate[] invkList = alterDelegate.GetInvocationList();
 
-            foreach (AlterOrderDelegate handler in invkList)
+            foreach (AlterDelegate<T> handler in invkList)
             {
                 new Thread(() =>
                 {
                     try
                     {
-                        handler(op, order);
+                        handler(op, obj);
                         Console.WriteLine("Invoking event handler");
                     }
                     catch (Exception)
                     {
-                        AlterOrderEvent -= handler;
+                        alterDelegate -= handler;
                         Console.WriteLine("Exception: Removed an event handler");
                     }
                 }).Start();
             }
         }
     }
-
-    private void NotifyTableClients(Operation op, Table table)
-    {
-        if (AlterTableEvent != null)
-        {
-            Delegate[] invkList = AlterTableEvent.GetInvocationList();
-
-            foreach (AlterTableDelegate handler in invkList)
-            {
-                new Thread(() =>
-                {
-                    try
-                    {
-                        handler(op, table);
-                        Console.WriteLine("Invoking event handler");
-                    }
-                    catch (Exception)
-                    {
-                        AlterTableEvent -= handler;
-                        Console.WriteLine("Exception: Removed an event handler");
-                    }
-                }).Start();
-            }
-        }
-    }
+    
+//    private void NotifyOrderClients(Operation op, Order order)
+//    {
+//        if (AlterOrderEvent != null)
+//        {
+//            Delegate[] invkList = AlterOrderEvent.GetInvocationList();
+//
+//            foreach (AlterOrderDelegate handler in invkList)
+//            {
+//                new Thread(() =>
+//                {
+//                    try
+//                    {
+//                        handler(op, order);
+//                        Console.WriteLine("Invoking event handler");
+//                    }
+//                    catch (Exception)
+//                    {
+//                        AlterOrderEvent -= handler;
+//                        Console.WriteLine("Exception: Removed an event handler");
+//                    }
+//                }).Start();
+//            }
+//        }
+//    }
+//
+//    private void NotifyTableClients(Operation op, Table table)
+//    {
+//        if (AlterTableEvent != null)
+//        {
+//            Delegate[] invkList = AlterTableEvent.GetInvocationList();
+//
+//            foreach (AlterTableDelegate handler in invkList)
+//            {
+//                new Thread(() =>
+//                {
+//                    try
+//                    {
+//                        handler(op, table);
+//                        Console.WriteLine("Invoking event handler");
+//                    }
+//                    catch (Exception)
+//                    {
+//                        AlterTableEvent -= handler;
+//                        Console.WriteLine("Exception: Removed an event handler");
+//                    }
+//                }).Start();
+//            }
+//        }
+//    }
 
     private void NotifyPrinter(uint tableId, List<Order> orders)
     {

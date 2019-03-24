@@ -20,22 +20,22 @@ public class PrinterController
         Tables = _restaurantServer.GetListOfTables();
     }
 
-    public void AddOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void AddOrderAlterEvent(AlterDelegate<Order> alterEvent)
     {
-        _restaurantServer.AlterOrderEvent += alterOrderEvent;
+        _restaurantServer.AlterOrderEvent += alterEvent;
     }
 
-    public void RemoveOrderAlterEvent(AlterOrderDelegate alterOrderEvent)
+    public void RemoveOrderAlterEvent(AlterDelegate<Order> alterEvent)
     {
-        _restaurantServer.AlterOrderEvent -= alterOrderEvent;
+        _restaurantServer.AlterOrderEvent -= alterEvent;
     }
-
-    public void AddTableAlterEvent(AlterTableDelegate alterTableEvent)
+    
+    public void AddTableAlterEvent(AlterDelegate<Table> alterTableEvent)
     {
         _restaurantServer.AlterTableEvent += alterTableEvent;
     }
 
-    public void RemoveTableAlterEvent(AlterTableDelegate alterTableEvent)
+    public void RemoveTableAlterEvent(AlterDelegate<Table> alterTableEvent)
     {
         _restaurantServer.AlterTableEvent -= alterTableEvent;
     }

@@ -104,7 +104,9 @@ public enum Operation
     Change // TODO: Join Print and Payment or create two different operations
 }
 
-public delegate void AlterOrderDelegate(Operation op, Order order);
+public delegate void AlterDelegate<T>(Operation op, T obj);
+
+public delegate void AlterDelegate(Operation op, Order order);
 
 public delegate void AlterTableDelegate(Operation op, Table table);
 
@@ -112,8 +114,12 @@ public delegate void PrintDelegate(uint tableId, List<Order> orders);
 
 public interface IRestaurantSingleton
 {
-    event AlterOrderDelegate AlterOrderEvent;
-    event AlterTableDelegate AlterTableEvent;
+    event AlterDelegate<Order> AlterOrderEvent;
+
+    event AlterDelegate<Table> AlterTableEvent; 
+    
+//    event AlterOrderDelegate AlterOrderEvent;
+//    event AlterTableDelegate AlterTableEvent;
     event PrintDelegate PrintEvent;
     List<Order> GetListOfOrders();
 
@@ -131,35 +137,50 @@ public interface IRestaurantSingleton
     void DoPayment(uint tableId);
 }
 
-public class AlterOrderEventRepeater : MarshalByRefObject
+public class AlterEventRepeater<T> : MarshalByRefObject
 {
-    public event AlterOrderDelegate AlterOrderEvent;
+    public event AlterDelegate<T> AlterEvent;
 
     public override object InitializeLifetimeService()
     {
         return null;
     }
 
-    public void Repeater(Operation op, Order order)
+    public void Repeater(Operation op, T obj)
     {
-        AlterOrderEvent?.Invoke(op, order);
+        AlterEvent?.Invoke(op, obj);
     }
 }
 
-public class AlterTableEventRepeater : MarshalByRefObject
-{
-    public event AlterTableDelegate AlterTableEvent;
-
-    public override object InitializeLifetimeService()
-    {
-        return null;
-    }
-
-    public void Repeater(Operation op, Table table)
-    {
-        AlterTableEvent?.Invoke(op, table);
-    }
-}
+//public class AlterOrderEventRepeater : MarshalByRefObject
+//{
+//    public event AlterOrderDelegate AlterOrderEvent;
+//
+//    public override object InitializeLifetimeService()
+//    {
+//        return null;
+//    }
+//
+//    public void Repeater(Operation op, Order order)
+//    {
+//        AlterOrderEvent?.Invoke(op, order);
+//    }
+//}
+//
+//public class AlterTableEventRepeater : MarshalByRefObject
+//{
+//    public event AlterTableDelegate AlterTableEvent;
+//
+//    public override object InitializeLifetimeService()
+//    {
+//        return null;
+//    }
+//
+//    public void Repeater(Operation op, Table table)
+//    {
+//        AlterTableEvent?.Invoke(op, table);
+//    }
+//}
 
 public class PrintEventRepeater : MarshalByRefObject
 {

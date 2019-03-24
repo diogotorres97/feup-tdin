@@ -3,28 +3,28 @@
 class Program
 {
     private static LoggerController _loggerController;
-    private static AlterOrderEventRepeater _evOrderRepeater;
-    private static AlterTableEventRepeater _evTableRepeater;
+    private static AlterEventRepeater<Order> _evOrderRepeater;
+    private static AlterEventRepeater<Table> _evTableRepeater;
 
     private static void Main()
     {
         _loggerController = new LoggerController();
-        _evOrderRepeater = new AlterOrderEventRepeater();
-        _evOrderRepeater.AlterOrderEvent += DoOrderAlterations;
+        _evOrderRepeater = new AlterEventRepeater<Order>();
+        _evOrderRepeater.AlterEvent += DoOrderAlterations;
         _loggerController.AddOrderAlterEvent(_evOrderRepeater.Repeater);
 
-        _evTableRepeater = new AlterTableEventRepeater();
-        _evTableRepeater.AlterTableEvent += DoTableAlterations;
+        _evTableRepeater = new AlterEventRepeater<Table>();
+        _evTableRepeater.AlterEvent += DoTableAlterations;
         _loggerController.AddTableAlterEvent(_evTableRepeater.Repeater);
 
         Console.WriteLine("[Logger]");
         Console.WriteLine("Press Enter to terminate.");
         Console.ReadLine();
 
-        _evOrderRepeater.AlterOrderEvent -= DoOrderAlterations;
+        _evOrderRepeater.AlterEvent -= DoOrderAlterations;
         _loggerController.RemoveOrderAlterEvent(_evOrderRepeater.Repeater);
 
-        _evTableRepeater.AlterTableEvent -= DoTableAlterations;
+        _evTableRepeater.AlterEvent -= DoTableAlterations;
         _loggerController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
     }
 

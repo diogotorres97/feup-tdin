@@ -4,19 +4,19 @@ using System.Collections.Generic;
 class Program
 {
     private static PrinterController _printerController;
-    private static AlterOrderEventRepeater _evOrderRepeater;
-    private static AlterTableEventRepeater _evTableRepeater;
+    private static AlterEventRepeater<Order> _evOrderRepeater;
+    private static AlterEventRepeater<Table> _evTableRepeater;
     private static PrintEventRepeater _evPrintRepeater;
 
     private static void Main()
     {
         _printerController = new PrinterController();
-        _evOrderRepeater = new AlterOrderEventRepeater();
-        _evOrderRepeater.AlterOrderEvent += DoOrderAlterations;
+        _evOrderRepeater = new AlterEventRepeater<Order>();
+        _evOrderRepeater.AlterEvent += DoOrderAlterations;
         _printerController.AddOrderAlterEvent(_evOrderRepeater.Repeater);
 
-        _evTableRepeater = new AlterTableEventRepeater();
-        _evTableRepeater.AlterTableEvent += DoTableAlterations;
+        _evTableRepeater = new AlterEventRepeater<Table>();
+        _evTableRepeater.AlterEvent += DoTableAlterations;
         _printerController.AddTableAlterEvent(_evTableRepeater.Repeater);
 
         _evPrintRepeater = new PrintEventRepeater();
@@ -27,10 +27,10 @@ class Program
         Console.WriteLine("Press Enter to terminate.");
         Console.ReadLine();
 
-        _evOrderRepeater.AlterOrderEvent -= DoOrderAlterations;
+        _evOrderRepeater.AlterEvent -= DoOrderAlterations;
         _printerController.RemoveOrderAlterEvent(_evOrderRepeater.Repeater);
 
-        _evTableRepeater.AlterTableEvent -= DoTableAlterations;
+        _evTableRepeater.AlterEvent -= DoTableAlterations;
         _printerController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
 
         _evPrintRepeater.PrintEvent -= PrintInvoice;

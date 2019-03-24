@@ -7,8 +7,8 @@ namespace Statistics
     public partial class Form1 : Form
     {
         private static StatisticsController _statisticsController;
-        private static AlterOrderEventRepeater _evOrderRepeater;
-        private static AlterTableEventRepeater _evTableRepeater;
+        private static AlterEventRepeater<Order> _evOrderRepeater;
+        private static AlterEventRepeater<Table> _evTableRepeater;
 
         public Form1()
         {
@@ -19,22 +19,22 @@ namespace Statistics
         private static void InitializeController()
         {
             _statisticsController = new StatisticsController();
-            _evOrderRepeater = new AlterOrderEventRepeater();
-            _evOrderRepeater.AlterOrderEvent += DoOrderAlterations;
+            _evOrderRepeater = new AlterEventRepeater<Order>();
+            _evOrderRepeater.AlterEvent += DoOrderAlterations;
             _statisticsController.AddOrderAlterEvent(_evOrderRepeater.Repeater);
 
-            _evTableRepeater = new AlterTableEventRepeater();
-            _evTableRepeater.AlterTableEvent += DoTableAlterations;
+            _evTableRepeater = new AlterEventRepeater<Table>();
+            _evTableRepeater.AlterEvent += DoTableAlterations;
             _statisticsController.AddTableAlterEvent(_evTableRepeater.Repeater);
 
             Console.WriteLine("[Statistics]");
             Console.WriteLine("Press Enter to terminate.");
             Console.ReadLine();
 
-            _evOrderRepeater.AlterOrderEvent -= DoOrderAlterations;
+            _evOrderRepeater.AlterEvent -= DoOrderAlterations;
             _statisticsController.RemoveOrderAlterEvent(_evOrderRepeater.Repeater);
 
-            _evTableRepeater.AlterTableEvent -= DoTableAlterations;
+            _evTableRepeater.AlterEvent -= DoTableAlterations;
             _statisticsController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
 
         }
