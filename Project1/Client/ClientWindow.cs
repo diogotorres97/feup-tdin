@@ -90,9 +90,6 @@ public partial class ClientWindow : Form
             if (commDlg.ShowDialog(this) == DialogResult.OK)
                 _clientController.ChangeStatusOrder((uint) type);
             
-            _clientController.ChangeAvailabilityTable(1);
-            _clientController.ChangeAvailabilityTable(3);
-            
             _clientController.Orders.ForEach(order => Console.WriteLine(order.ToString()));
             
         }
