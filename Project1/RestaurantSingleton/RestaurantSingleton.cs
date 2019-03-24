@@ -8,13 +8,9 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
-    public event AlterDelegate<Order> AlterOrderEvent;
-    public event AlterDelegate<Table> AlterTableEvent;
-    
-    
-//    public event AlterOrderDelegate AlterOrderEvent;
-//    public event AlterTableDelegate AlterTableEvent;
-    public event PrintDelegate PrintEvent;
+    public event OperationDelegate<Order> AlterOrderEvent;
+    public event OperationDelegate<Table> AlterTableEvent;
+    public event OperationDelegate<Invoice> PrintEvent;
 
     public RestaurantSingleton()
     {
@@ -98,14 +94,12 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
 
         _orderList.Add(order);
         NotifyClients(AlterOrderEvent, Operation.New, order);
-//        NotifyOrderClients(Operation.New, order);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
         Order order = _orderList.Find(ord => ord.Id == orderId);
         order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
-//        NotifyOrderClients(Operation.Change, order);
         NotifyClients(AlterOrderEvent, Operation.Change, order);
     }
 
@@ -118,7 +112,6 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private void ChangeAvailabilityTable(Table table)
     {
         table.ChangeAvailability();
-//        NotifyTableClients(Operation.Change, table);
         NotifyClients(AlterTableEvent, Operation.Change, table);
     }
 
@@ -130,7 +123,6 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         ordersToPay.ForEach(order =>
         {
             order.State = OrderState.Paid;
-//            NotifyOrderClients(Operation.Change, order);
             NotifyClients(AlterOrderEvent, Operation.Change, order);
         });
 
@@ -138,111 +130,34 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         ChangeAvailabilityTable(tableId);
 
         //Print the Invoice
-        NotifyPrinter(tableId, ordersToPay);
+        NotifyClients(PrintEvent, Operation.New, new Invoice(tableId, ordersToPay));
 
         //Delete ordersPaid
         _orderList.RemoveAll(ordersToPay.Contains); //TODO: Notify Clients??
     }
 
-    
-    
-    private void NotifyClients<T>(AlterDelegate<T> alterDelegate, Operation op, T obj)
+
+    private void NotifyClients<T>(OperationDelegate<T> operationDelegate, Operation op, T obj)
     {
-        if (alterDelegate != null)
+        if (operationDelegate == null) return;
+
+        Delegate[] invkList = operationDelegate.GetInvocationList();
+
+        foreach (OperationDelegate<T> handler in invkList)
         {
-            Delegate[] invkList = alterDelegate.GetInvocationList();
-
-            foreach (AlterDelegate<T> handler in invkList)
+            new Thread(() =>
             {
-                new Thread(() =>
+                try
                 {
-                    try
-                    {
-                        handler(op, obj);
-                        Console.WriteLine("Invoking event handler");
-                    }
-                    catch (Exception)
-                    {
-                        alterDelegate -= handler;
-                        Console.WriteLine("Exception: Removed an event handler");
-                    }
-                }).Start();
-            }
-        }
-    }
-    
-//    private void NotifyOrderClients(Operation op, Order order)
-//    {
-//        if (AlterOrderEvent != null)
-//        {
-//            Delegate[] invkList = AlterOrderEvent.GetInvocationList();
-//
-//            foreach (AlterOrderDelegate handler in invkList)
-//            {
-//                new Thread(() =>
-//                {
-//                    try
-//                    {
-//                        handler(op, order);
-//                        Console.WriteLine("Invoking event handler");
-//                    }
-//                    catch (Exception)
-//                    {
-//                        AlterOrderEvent -= handler;
-//                        Console.WriteLine("Exception: Removed an event handler");
-//                    }
-//                }).Start();
-//            }
-//        }
-//    }
-//
-//    private void NotifyTableClients(Operation op, Table table)
-//    {
-//        if (AlterTableEvent != null)
-//        {
-//            Delegate[] invkList = AlterTableEvent.GetInvocationList();
-//
-//            foreach (AlterTableDelegate handler in invkList)
-//            {
-//                new Thread(() =>
-//                {
-//                    try
-//                    {
-//                        handler(op, table);
-//                        Console.WriteLine("Invoking event handler");
-//                    }
-//                    catch (Exception)
-//                    {
-//                        AlterTableEvent -= handler;
-//                        Console.WriteLine("Exception: Removed an event handler");
-//                    }
-//                }).Start();
-//            }
-//        }
-//    }
-
-    private void NotifyPrinter(uint tableId, List<Order> orders)
-    {
-        if (PrintEvent != null)
-        {
-            Delegate[] invkList = PrintEvent.GetInvocationList();
-
-            foreach (PrintDelegate handler in invkList)
-            {
-                new Thread(() =>
+                    handler(op, obj);
+                    Console.WriteLine("Invoking event handler");
+                }
+                catch (Exception)
                 {
-                    try
-                    {
-                        handler(tableId, orders);
-                        Console.WriteLine("Invoking event handler");
-                    }
-                    catch (Exception)
-                    {
-                        PrintEvent -= handler;
-                        Console.WriteLine("Exception: Removed an event handler");
-                    }
-                }).Start();
-            }
+                    operationDelegate -= handler;
+                    Console.WriteLine("Exception: Removed an event handler");
+                }
+            }).Start();
         }
     }
 }

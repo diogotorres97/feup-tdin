@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public partial class ClientWindow : Form
 {
     private ClientController _clientController;
-    private AlterEventRepeater<Order> _evRepeater;
+    private OperationEventRepeater<Order> _evRepeater;
 
     private delegate ListViewItem LvAddDelegate(ListViewItem lvItem);
 
@@ -16,8 +16,8 @@ public partial class ClientWindow : Form
     {
         _clientController = new ClientController();
         InitializeComponent();
-        _evRepeater = new AlterEventRepeater<Order>();
-        _evRepeater.AlterEvent += DoAlterations;
+        _evRepeater = new OperationEventRepeater<Order>();
+        _evRepeater.OperationEvent += DoAlterations;
         _clientController.AddOrderAlterEvent(_evRepeater.Repeater);
     }
 
@@ -78,7 +78,7 @@ public partial class ClientWindow : Form
     private void ClientWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
         _clientController.RemoveOrderAlterEvent(_evRepeater.Repeater);
-        _evRepeater.AlterEvent -= DoAlterations;
+        _evRepeater.OperationEvent -= DoAlterations;
     }
 
     private void changeCommentButton_Click(object sender, EventArgs e)
