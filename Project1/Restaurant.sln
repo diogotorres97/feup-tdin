@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistics", "Statistics\Statistics.csproj", "{A64941A3-C0E0-4260-886F-0E2C3B72EA58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{AC3034AA-AACA-4F21-BF7D-CCAAAD17CE69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{A64941A3-C0E0-4260-886F-0E2C3B72EA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A64941A3-C0E0-4260-886F-0E2C3B72EA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A64941A3-C0E0-4260-886F-0E2C3B72EA58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3034AA-AACA-4F21-BF7D-CCAAAD17CE69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3034AA-AACA-4F21-BF7D-CCAAAD17CE69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3034AA-AACA-4F21-BF7D-CCAAAD17CE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3034AA-AACA-4F21-BF7D-CCAAAD17CE69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
