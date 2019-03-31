@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-public partial class ClientWindow : Form
+public partial class ClientWindow : MetroFramework.Forms.MetroForm
 {
     private ClientController _clientController;
     private OperationEventRepeater<Order> _evRepeater;
