@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace DiningRoom
 {
-    public partial class DiningRoomWindow : MetroFramework.Forms.MetroForm
+    public partial class DiningRoomWindow : Form
     {
         private DiningRoomController _diningRoomController;
 
