@@ -36,7 +36,7 @@
             // changeCommentButton
             // 
             this.changeCommentButton.Location = new System.Drawing.Point(180, 549);
-            this.changeCommentButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.changeCommentButton.Margin = new System.Windows.Forms.Padding(4);
             this.changeCommentButton.Name = "changeCommentButton";
             this.changeCommentButton.Size = new System.Drawing.Size(159, 39);
             this.changeCommentButton.TabIndex = 5;
@@ -47,7 +47,7 @@
             // closeButton
             // 
             this.closeButton.Location = new System.Drawing.Point(499, 549);
-            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(159, 39);
             this.closeButton.TabIndex = 6;
@@ -115,6 +115,7 @@
             this.itemListView.TabIndex = 1;
             this.itemListView.UseCompatibleStateImageBehavior = false;
             this.itemListView.View = System.Windows.Forms.View.Details;
+            this.itemListView.SelectedIndexChanged += new System.EventHandler(this.itemListView_SelectedIndexChanged);
             // 
             // ClientWindow
             // 
@@ -127,7 +128,7 @@
             this.Controls.Add(this.nameTB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.itemListView);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ClientWindow";
             this.Padding = new System.Windows.Forms.Padding(27, 74, 27, 25);
             this.Text = "Client";

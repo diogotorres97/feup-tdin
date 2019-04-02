@@ -76,10 +76,28 @@ namespace DiningRoom
         private void TableButtonClick(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            if (btn != null)
-                MessageBox.Show(string.Format("{0} Clicked", btn.Text));
+            if (btn != null) {
+                //this.Hide();
+                DiningRoomTable form = new DiningRoomTable(btn.Name, _diningRoomController);
+                form.Show();
+            }
 
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+            // Confirm user wants to close
+            switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo)) {
+                case DialogResult.No:
+                    e.Cancel = true;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
