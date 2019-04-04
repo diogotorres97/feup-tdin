@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
-namespace DiningRoom
+namespace Payment
 {
-    public partial class DiningRoomWindow : Form
+    public partial class PaymentWindow : Form
     {
-        private DiningRoomController _diningRoomController;
+        private PaymentController _paymentController;
 
         private OperationEventRepeater<Table> _evTableRepeater;
         private delegate void ChangeTableStateDelegate(Table table);
-
-        public DiningRoomWindow()
+        public PaymentWindow()
         {
-            _diningRoomController = new DiningRoomController();
+            _paymentController = new PaymentController();
             InitializeComponent();
             _evTableRepeater = new OperationEventRepeater<Table>();
             _evTableRepeater.OperationEvent += DoTableAlterations;
-            _diningRoomController.AddTableAlterEvent(_evTableRepeater.Repeater);
+            _paymentController.AddTableAlterEvent(_evTableRepeater.Repeater);
+
         }
 
         public override object InitializeLifetimeService()
@@ -47,15 +46,16 @@ namespace DiningRoom
             LoadTableButtonsList();
         }
 
-        private void DiningRoomWindow_FormClosed(object sender, FormClosedEventArgs e)
+        private void PaymentWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             _evTableRepeater.OperationEvent -= DoTableAlterations;
-            _diningRoomController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
+            _paymentController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
         }
+
 
         private void LoadTableButtonsList()
         {
-            int numTables = _diningRoomController.Tables.Count;
+            int numTables = _paymentController.Tables.Count;
 
             int rowCount = 0, columnCount = 4;
 
@@ -73,7 +73,7 @@ namespace DiningRoom
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(System.Windows.Forms.SizeType.Percent, 100 / columnCount));
             }
 
-            if(rowCount < 3) {
+            if (rowCount < 3) {
                 for (int i = 0; i < rowCount; i++) {
                     tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
                 }
@@ -82,10 +82,10 @@ namespace DiningRoom
                     tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
                 }
             }
-            
 
 
-            foreach(Table t in _diningRoomController.Tables){
+
+            foreach (Table t in _paymentController.Tables) {
                 uint id = t.Id;
                 Button b = new Button {
                     Text = "Table" + id + (t.Availability ? "\nAvailable" : ""),
@@ -97,13 +97,13 @@ namespace DiningRoom
                 tableLayoutPanel1.Controls.Add(b);
             }
 
-            
+
         }
 
         private void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
         {
-            
-            rowCount = (int) Math.Ceiling(numTables / (columnCount * 1.0));
+
+            rowCount = (int)Math.Ceiling(numTables / (columnCount * 1.0));
         }
 
         private void TableButtonClick(object sender, EventArgs e)
@@ -111,7 +111,7 @@ namespace DiningRoom
             Button btn = (Button)sender;
             if (btn != null) {
                 //this.Hide();
-                DiningRoomTable form = new DiningRoomTable(btn.Name, _diningRoomController);
+                PaymentTable form = new PaymentTable(btn.Name, _paymentController);
                 form.Show();
             }
 
@@ -120,8 +120,8 @@ namespace DiningRoom
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-
-            /*if (e.CloseReason == CloseReason.WindowsShutDown) return;
+            /*
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
 
             // Confirm user wants to close
             switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo)) {
@@ -133,6 +133,5 @@ namespace DiningRoom
             }*/
         }
 
-       
     }
 }

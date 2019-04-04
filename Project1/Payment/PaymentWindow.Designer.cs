@@ -1,6 +1,6 @@
-﻿namespace DiningRoom
+﻿namespace Payment
 {
-    partial class DiningRoomWindow
+    partial class PaymentWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -46,16 +46,16 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1160, 720);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // DiningRoomWindow
+            // PaymentWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScrollMargin = new System.Drawing.Size(10, 111);
             this.ClientSize = new System.Drawing.Size(1182, 753);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "DiningRoomWindow";
-            this.Text = "Dinning Room";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DiningRoomWindow_FormClosed);
+            this.Name = "PaymentWindow";
+            this.Text = "PaymentForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PaymentWindow_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 

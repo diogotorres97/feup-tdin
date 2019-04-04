@@ -119,7 +119,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     {
         List<Order> ordersToPay = ConsultTable(tableId);
 
-        if (!CheckIfAllOrdersAreDelivered(ordersToPay))
+        if (ordersToPay.Count == 0 || !CheckIfAllOrdersAreDelivered(ordersToPay))
             return false;
 
         //Change State of each order to Paid
