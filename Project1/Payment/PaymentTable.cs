@@ -50,6 +50,7 @@ namespace Payment
                 case Operation.New:
                     lvAdd = itemListView.Items.Add;
                     ListViewItem lvItem = new ListViewItem(new[] { order.Id.ToString(), order.Product.Description.ToString(), order.Product.Price.ToString(), order.Quantity.ToString(), order.State.ToString() });
+                    lvItem.BackColor = Color.LightSalmon;
                     BeginInvoke(lvAdd, lvItem);
                     break;
                 case Operation.Change:
@@ -68,7 +69,7 @@ namespace Payment
 
         private void ChangeTableAvailability(Table table)
         {
-            if(table.Availability == true)
+            if(table.Availability)
                 this.Close();
         }
 
