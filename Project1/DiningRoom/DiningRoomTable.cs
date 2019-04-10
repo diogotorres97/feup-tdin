@@ -95,7 +95,7 @@ namespace DiningRoom
 
         private void ChangeTableAvailability(Table table)
         {
-            if (table.Availability == true)
+            if (table.Availability)
                 this.Close();
         }
 
@@ -130,7 +130,7 @@ namespace DiningRoom
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-
+            this.Close();
         }
 
         private void btnDeliver_Click(object sender, EventArgs e)
