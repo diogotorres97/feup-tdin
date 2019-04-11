@@ -1,0 +1,25 @@
+Mesmo tema:
+https://github.com/andrelago13/TDIN-DistributedBookstore (MASTER PIECE)
+https://github.com/Arthur26041996/TDINProject2
+https://github.com/claudiolsmonteiro/TDIN2
+https://github.com/Guntler/tdin15/tree/master/TDIN-2
+https://github.com/rodriguestiago0/tdinStore
+https://github.com/LuisTAC/tdin
+https://github.com/miguel-botelho/TDIN_2/tree/master/BookStoreWarehouse
+https://github.com/Misirlou/Tdinbookshop
+https://github.com/RubenCordeiro/tdin-bookshelf (report gg + cagou em C# e javaEE)
+https://github.com/cmcmteixeira/TDIN-STORE
+https://github.com/rjsteixeira/tdin-bookstore (instruçoes no readme)
+https://github.com/sergio-domingues/TDIN-Enterprise
+https://github.com/mgpsp/TDIN-FEUP/tree/master/project%202 ( muito interessante, report + c# + node)
+https://github.com/ccarvalheiro/TDIN-14-15/tree/master/Projeto2
+https://github.com/dteixeira/feup-mieic-tdin-warehouse-manager/tree/master/TDINProject2
+https://github.com/HugoSousa/FEUP-TDIN_books (readme gg)
+
+Outro tema:
+https://github.com/joaodealmeida/tdin-ebanking
+https://github.com/antoniocsoares/tdin-feup/tree/master/trabalho2 (gg report)
+https://github.com/DiogoDuque/TDIN-FEUP/tree/master/TP2 (gg report)
+https://github.com/jpamorim/feup-tdin/tree/master/Assignment%202
+https://github.com/jpsfs/feup-tdin-wcf_silverlight
+https://github.com/LuisEduardoReis/TDIN_OnlineBanking

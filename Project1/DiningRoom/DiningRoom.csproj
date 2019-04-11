@@ -47,14 +47,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiningRoomController.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="DiningRoomTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="DiningRoomTable.Designer.cs">
+      <DependentUpon>DiningRoomTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiningRoomWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiningRoomWindow.Designer.cs">
+      <DependentUpon>DiningRoomWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProductsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProductsDialog.Designer.cs">
+      <DependentUpon>ProductsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DiningRoomTable.resx">
+      <DependentUpon>DiningRoomTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiningRoomWindow.resx">
+      <DependentUpon>DiningRoomWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductsDialog.resx">
+      <DependentUpon>ProductsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

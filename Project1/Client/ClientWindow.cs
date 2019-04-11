@@ -111,4 +111,9 @@ public partial class ClientWindow : Form
     {
         Application.Exit();
     }
+
+    private void itemListView_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
 }

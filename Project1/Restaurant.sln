@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarKitchen", "BarKitchen\BarKitchen.csproj", "{1C679CCB-30A7-44CA-9EAD-AF643EE4F24E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{5E7BBBA5-07B0-4146-88EF-45161D13FB42}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{9EE38943-7392-407F-A4EA-E4A695ED532A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiningRoom", "DiningRoom\DiningRoom.csproj", "{162BBA21-4E0C-43E3-B8F6-66DBB2E67E81}"
@@ -30,10 +28,6 @@ Global
 		{1C679CCB-30A7-44CA-9EAD-AF643EE4F24E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C679CCB-30A7-44CA-9EAD-AF643EE4F24E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C679CCB-30A7-44CA-9EAD-AF643EE4F24E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E7BBBA5-07B0-4146-88EF-45161D13FB42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E7BBBA5-07B0-4146-88EF-45161D13FB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E7BBBA5-07B0-4146-88EF-45161D13FB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E7BBBA5-07B0-4146-88EF-45161D13FB42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9EE38943-7392-407F-A4EA-E4A695ED532A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9EE38943-7392-407F-A4EA-E4A695ED532A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EE38943-7392-407F-A4EA-E4A695ED532A}.Release|Any CPU.ActiveCfg = Release|Any CPU
