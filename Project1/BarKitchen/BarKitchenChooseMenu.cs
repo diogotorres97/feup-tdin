@@ -12,9 +12,9 @@ namespace BarKitchen
 
         private void btnBar_Click(object sender, EventArgs e)
         {
-            BarKitchenController _barKitchenController = new BarKitchenController(ProductType.Drink);
+            BarKitchenController barKitchenController = new BarKitchenController(ProductType.Drink);
             Hide();
-            using (BarKitchenWindow form = new BarKitchenWindow(_barKitchenController))
+            using (BarKitchenWindow form = new BarKitchenWindow(barKitchenController))
             {
                 if (form.ShowDialog() == DialogResult.Cancel)
                 {
@@ -25,9 +25,9 @@ namespace BarKitchen
 
         private void btnKitchen_Click(object sender, EventArgs e)
         {
-            BarKitchenController _barKitchenController = new BarKitchenController(ProductType.Dish);
+            BarKitchenController barKitchenController = new BarKitchenController(ProductType.Dish);
             Hide();
-            using (BarKitchenWindow form = new BarKitchenWindow(_barKitchenController))
+            using (BarKitchenWindow form = new BarKitchenWindow(barKitchenController))
             {
                 if (form.ShowDialog() == DialogResult.Cancel)
                 {

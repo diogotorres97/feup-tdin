@@ -48,14 +48,16 @@ namespace Statistics
             if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id))
             {
                 productQuantity += _statisticsController.ProductQuantity[order.Product.Id];
+                _statisticsController.ProductQuantity[order.Product.Id] = productQuantity;
+                
                 foreach (ListViewItem lvI in productsListView.Items)
                     if (Convert.ToInt32(lvI.SubItems[0].Text) == order.Product.Id)
-                    {
                         lvI.SubItems[4] = new ListViewItem.ListViewSubItem(lvI, productQuantity.ToString());
-                    }
             }
             else
             {
+                _statisticsController.ProductQuantity.Add(order.Product.Id, productQuantity);
+
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
                     order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description,
@@ -63,11 +65,6 @@ namespace Statistics
                 });
                 productsListView.Items.Add(lvItem);
             }
-
-
-            _statisticsController.ProductQuantity.Add(order.Product.Id, productQuantity);
-
-            Console.WriteLine("[Statistics]: TotalSumOfDay: {0}", _statisticsController.TotalSumOfDay);
         }
 
         private void DoTableAlterations(Operation op, Table table)
@@ -76,7 +73,6 @@ namespace Statistics
 
             _statisticsController.TotalInvoices++;
             txtBoxNumInvoices.Text = _statisticsController.TotalInvoices + "";
-            Console.WriteLine("[Statistics]: TotalInvoices: {0}", _statisticsController.TotalInvoices);
         }
 
         private void StatisticsWindow_FormClosed(object sender, FormClosedEventArgs e)
