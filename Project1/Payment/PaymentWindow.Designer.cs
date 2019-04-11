@@ -53,6 +53,8 @@
             this.AutoScrollMargin = new System.Drawing.Size(10, 111);
             this.ClientSize = new System.Drawing.Size(1182, 753);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "PaymentWindow";
             this.Text = "PaymentForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PaymentWindow_FormClosed);

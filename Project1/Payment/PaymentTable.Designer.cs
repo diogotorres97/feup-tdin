@@ -108,6 +108,8 @@
             this.Controls.Add(this.btnPay);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.itemListView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "PaymentTable";
             this.Text = "PaymentTable";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PaymentTable_FormClosed);

@@ -28,9 +28,9 @@
         private void InitializeComponent()
         {
             this.notPickedListView = new System.Windows.Forms.ListView();
-            this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.quantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.state = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
             this.btnPrepare = new System.Windows.Forms.Button();
@@ -166,6 +166,8 @@
             this.Controls.Add(this.btnPrepare);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.notPickedListView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "BarKitchenWindow";
             this.Text = "BarKitchenWindow";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BarKitchenWindow_FormClosed);

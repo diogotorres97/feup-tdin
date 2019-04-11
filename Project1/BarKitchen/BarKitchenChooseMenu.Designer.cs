@@ -58,6 +58,8 @@
             this.ClientSize = new System.Drawing.Size(1182, 753);
             this.Controls.Add(this.btnKitchen);
             this.Controls.Add(this.btnBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "BarKitchenChooseMenu";
             this.Text = "BarKitchenChooseMenu";
             this.ResumeLayout(false);

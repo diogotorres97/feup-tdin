@@ -133,6 +133,8 @@
             this.Controls.Add(this.btnNewOrder);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.itemListView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "DiningRoomTable";
             this.Text = "DiningRoomTable";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DiningRoomTable_FormClosed);

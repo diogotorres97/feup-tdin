@@ -102,7 +102,20 @@ namespace Payment
 
             foreach (Order it in orders) {
                 ListViewItem lvItem = new ListViewItem(new[] { it.Id.ToString(), it.Product.Description.ToString(), it.Product.Price.ToString(), it.Quantity.ToString(), it.State.ToString() });
-                lvItem.BackColor = Color.LightSalmon;
+                switch (it.State) {
+                    case OrderState.NotPicked:
+                        lvItem.BackColor = Color.LightSalmon;
+                        break;
+                    case OrderState.InPreparation:
+                        lvItem.BackColor = Color.Yellow;
+                        break;
+                    case OrderState.Ready:
+                        lvItem.BackColor = Color.LightGreen;
+                        break;
+                    case OrderState.Delivered:
+                        lvItem.BackColor = Color.Cyan;
+                        break;
+                }
                 itemListView.Items.Add(lvItem);
             }
         }

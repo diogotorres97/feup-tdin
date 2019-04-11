@@ -67,7 +67,6 @@
             this.btnConfirm.TabIndex = 4;
             this.btnConfirm.Text = "Confirm";
             this.btnConfirm.UseVisualStyleBackColor = true;
-            
             // 
             // label1
             // 
