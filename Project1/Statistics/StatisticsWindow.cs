@@ -27,12 +27,6 @@ namespace Statistics
             _evTableRepeater = new OperationEventRepeater<Table>();
             _evTableRepeater.OperationEvent += DoTableAlterations;
             _statisticsController.AddTableAlterEvent(_evTableRepeater.Repeater);
-
-            Console.WriteLine("[Statistics]");
-            Console.WriteLine("Press Enter to terminate.");
-            Console.ReadLine();
-
-            
         }
 
         private void InitializeStats()
@@ -51,15 +45,22 @@ namespace Statistics
             txtBoxTotalAmount.Text = _statisticsController.TotalSumOfDay + "";
 
             float productQuantity = order.Quantity;
-            if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id)) {
+            if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id))
+            {
                 productQuantity += _statisticsController.ProductQuantity[order.Product.Id];
                 foreach (ListViewItem lvI in productsListView.Items)
-                    if (Convert.ToInt32(lvI.SubItems[0].Text) == order.Product.Id) {
+                    if (Convert.ToInt32(lvI.SubItems[0].Text) == order.Product.Id)
+                    {
                         lvI.SubItems[4] = new ListViewItem.ListViewSubItem(lvI, productQuantity.ToString());
                     }
-                
-            } else {
-                ListViewItem lvItem = new ListViewItem(new[] { order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description.ToString(), order.Product.Price.ToString(), productQuantity.ToString() });
+            }
+            else
+            {
+                ListViewItem lvItem = new ListViewItem(new[]
+                {
+                    order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description,
+                    order.Product.Price.ToString(), productQuantity.ToString()
+                });
                 productsListView.Items.Add(lvItem);
             }
 
@@ -86,7 +87,5 @@ namespace Statistics
             _evTableRepeater.OperationEvent -= DoTableAlterations;
             _statisticsController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
         }
-
-       
     }
 }

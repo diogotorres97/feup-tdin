@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace DiningRoom
@@ -9,6 +8,7 @@ namespace DiningRoom
         private DiningRoomController _diningRoomController;
 
         private OperationEventRepeater<Table> _evTableRepeater;
+
         private delegate void ChangeTableStateDelegate(Table table);
 
         public DiningRoomWindow()
@@ -33,16 +33,18 @@ namespace DiningRoom
 
         private void ChangeTableAvailability(Table table)
         {
-            foreach (Control ctr in tableLayoutPanel1.Controls) {
-                if (ctr is Button) {
-                    Button btn = ((Button)ctr);
-                    if (btn.Name.Equals(string.Format("btnTable{0}", table.Id)))
+            foreach (Control ctr in tableLayoutPanel1.Controls)
+            {
+                if (ctr is Button)
+                {
+                    Button btn = (Button) ctr;
+                    if (btn.Name.Equals($"btnTable{table.Id}"))
                         btn.Text = "Table" + table.Id + (table.Availability ? "\nAvailable" : "");
                 }
             }
         }
 
-        private void Form1_Load(object sender, System.EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             LoadTableButtonsList();
         }
@@ -68,60 +70,55 @@ namespace DiningRoom
             tableLayoutPanel1.RowStyles.Clear();
 
 
-
-            for (int i = 0; i < columnCount; i++) {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(System.Windows.Forms.SizeType.Percent, 100 / columnCount));
+            for (int i = 0; i < columnCount; i++)
+            {
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / columnCount));
             }
 
-            if(rowCount < 3) {
-                for (int i = 0; i < rowCount; i++) {
-                    tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-                }
-            } else {
-                for (int i = 0; i < rowCount; i++) {
-                    tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            if (rowCount < 3)
+            {
+                for (int i = 0; i < rowCount; i++)
+                {
+                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
                 }
             }
-            
+            else
+            {
+                for (int i = 0; i < rowCount; i++)
+                {
+                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 200F));
+                }
+            }
 
 
-            foreach(Table t in _diningRoomController.Tables){
+            foreach (Table t in _diningRoomController.Tables)
+            {
                 uint id = t.Id;
-                Button b = new Button {
+                Button b = new Button
+                {
                     Text = "Table" + id + (t.Availability ? "\nAvailable" : ""),
-                    Name = string.Format("btnTable{0}", id),
+                    Name = $"btnTable{id}"
                 };
                 b.Click += TableButtonClick;
                 b.Dock = DockStyle.Fill;
                 b.Margin = new Padding(40);
                 tableLayoutPanel1.Controls.Add(b);
             }
-
-            
         }
 
         private void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
         {
-            
             rowCount = (int) Math.Ceiling(numTables / (columnCount * 1.0));
         }
 
         private void TableButtonClick(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-            if (btn != null) {
-                //this.Hide();
+            Button btn = (Button) sender;
+            if (btn != null)
+            {
                 DiningRoomTable form = new DiningRoomTable(btn.Name, _diningRoomController);
                 form.Show();
             }
-
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-        }
-
-       
     }
 }

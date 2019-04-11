@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class BarKitchenController : AbstractController
 {
-    private ProductType _productType;
+    public ProductType _productType;
 
     public BarKitchenController(ProductType productType) : base("BarKitchen.exe.config")
     {

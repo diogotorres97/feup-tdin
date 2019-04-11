@@ -8,7 +8,9 @@ namespace Payment
         private PaymentController _paymentController;
 
         private OperationEventRepeater<Table> _evTableRepeater;
+
         private delegate void ChangeTableStateDelegate(Table table);
+
         public PaymentWindow()
         {
             _paymentController = new PaymentController();
@@ -16,7 +18,6 @@ namespace Payment
             _evTableRepeater = new OperationEventRepeater<Table>();
             _evTableRepeater.OperationEvent += DoTableAlterations;
             _paymentController.AddTableAlterEvent(_evTableRepeater.Repeater);
-
         }
 
         public override object InitializeLifetimeService()
@@ -32,16 +33,18 @@ namespace Payment
 
         private void ChangeTableAvailability(Table table)
         {
-            foreach (Control ctr in tableLayoutPanel1.Controls) {
-                if (ctr is Button) {
-                    Button btn = ((Button)ctr);
-                    if (btn.Name.Equals(string.Format("btnTable{0}", table.Id)))
+            foreach (Control ctr in tableLayoutPanel1.Controls)
+            {
+                if (ctr is Button)
+                {
+                    Button btn = (Button) ctr;
+                    if (btn.Name.Equals($"btnTable{table.Id}"))
                         btn.Text = "Table" + table.Id + (table.Availability ? "\nAvailable" : "");
                 }
             }
         }
 
-        private void Form1_Load(object sender, System.EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             LoadTableButtonsList();
         }
@@ -68,70 +71,55 @@ namespace Payment
             tableLayoutPanel1.RowStyles.Clear();
 
 
-
-            for (int i = 0; i < columnCount; i++) {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(System.Windows.Forms.SizeType.Percent, 100 / columnCount));
+            for (int i = 0; i < columnCount; i++)
+            {
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / columnCount));
             }
 
-            if (rowCount < 3) {
-                for (int i = 0; i < rowCount; i++) {
-                    tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            if (rowCount < 3)
+            {
+                for (int i = 0; i < rowCount; i++)
+                {
+                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
                 }
-            } else {
-                for (int i = 0; i < rowCount; i++) {
-                    tableLayoutPanel1.RowStyles.Add(new RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            }
+            else
+            {
+                for (int i = 0; i < rowCount; i++)
+                {
+                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 200F));
                 }
             }
 
 
-
-            foreach (Table t in _paymentController.Tables) {
+            foreach (Table t in _paymentController.Tables)
+            {
                 uint id = t.Id;
-                Button b = new Button {
+                Button b = new Button
+                {
                     Text = "Table" + id + (t.Availability ? "\nAvailable" : ""),
-                    Name = string.Format("btnTable{0}", id),
+                    Name = $"btnTable{id}"
                 };
                 b.Click += TableButtonClick;
                 b.Dock = DockStyle.Fill;
                 b.Margin = new Padding(40);
                 tableLayoutPanel1.Controls.Add(b);
             }
-
-
         }
 
         private void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
         {
-
-            rowCount = (int)Math.Ceiling(numTables / (columnCount * 1.0));
+            rowCount = (int) Math.Ceiling(numTables / (columnCount * 1.0));
         }
 
         private void TableButtonClick(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-            if (btn != null) {
-                //this.Hide();
+            Button btn = (Button) sender;
+            if (btn != null)
+            {
                 PaymentTable form = new PaymentTable(btn.Name, _paymentController);
                 form.Show();
             }
-
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-            /*
-            if (e.CloseReason == CloseReason.WindowsShutDown) return;
-
-            // Confirm user wants to close
-            switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo)) {
-                case DialogResult.No:
-                    e.Cancel = true;
-                    break;
-                default:
-                    break;
-            }*/
-        }
-
     }
 }
