@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Statistics
@@ -9,6 +10,9 @@ namespace Statistics
         private OperationEventRepeater<Order> _evOrderRepeater;
         private OperationEventRepeater<Table> _evTableRepeater;
 
+        private delegate void SetTextCallback();
+        private delegate ListViewItem LvAddDelegate(ListViewItem lvItem);
+        private delegate void ChangeProductQuantityDelegate(Order order, float quantity);
 
         public StatisticsWindow()
         {
@@ -32,7 +36,6 @@ namespace Statistics
         private void InitializeStats()
         {
             txtBoxNumInvoices.Text = "0";
-            txtBoxTotalAmount.Text = "0";
         }
 
         /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
@@ -41,30 +44,46 @@ namespace Statistics
         {
             if (order.State != OrderState.Paid) return;
 
-            _statisticsController.TotalSumOfDay += order.Quantity * order.Product.Price;
-            txtBoxTotalAmount.Text = _statisticsController.TotalSumOfDay + "";
+            double amount = order.Quantity * order.Product.Price;
+                
+            if (_statisticsController.AmountByDay.ContainsKey(order.Date.ToShortDateString())) {
+                _statisticsController.AmountByDay[order.Date.ToShortDateString()] += amount;
+            } else {
+                _statisticsController.AmountByDay.TryAdd(order.Date.ToShortDateString(), amount);
+            }
+
+            /*_statisticsController.TotalSumOfDay += order.Quantity * order.Product.Price;
+            txtBoxTotalAmount.Text = _statisticsController.TotalSumOfDay + "";*/
 
             float productQuantity = order.Quantity;
             if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id))
             {
                 productQuantity += _statisticsController.ProductQuantity[order.Product.Id];
                 _statisticsController.ProductQuantity[order.Product.Id] = productQuantity;
+
+                ChangeProductQuantityDelegate change = ChangeProductQuantity;
+                BeginInvoke(change, order, productQuantity);
+
                 
-                foreach (ListViewItem lvI in productsListView.Items)
-                    if (Convert.ToInt32(lvI.SubItems[0].Text) == order.Product.Id)
-                        lvI.SubItems[4] = new ListViewItem.ListViewSubItem(lvI, productQuantity.ToString());
             }
             else
             {
-                _statisticsController.ProductQuantity.Add(order.Product.Id, productQuantity);
-
+                _statisticsController.ProductQuantity.TryAdd(order.Product.Id, productQuantity);
+                LvAddDelegate lvAdd = productsListView.Items.Add;
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
                     order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description,
                     order.Product.Price.ToString(), productQuantity.ToString()
                 });
-                productsListView.Items.Add(lvItem);
+                BeginInvoke(lvAdd, lvItem);
             }
+        }
+
+        private void ChangeProductQuantity(Order order, float quantity)
+        {
+            foreach (ListViewItem lvI in productsListView.Items)
+                if (Convert.ToInt32(lvI.SubItems[0].Text) == order.Product.Id)
+                    lvI.SubItems[4] = new ListViewItem.ListViewSubItem(lvI, quantity.ToString());
         }
 
         private void DoTableAlterations(Operation op, Table table)
@@ -72,7 +91,8 @@ namespace Statistics
             if (!table.Availability) return;
 
             _statisticsController.TotalInvoices++;
-            txtBoxNumInvoices.Text = _statisticsController.TotalInvoices + "";
+            SetTextCallback d = new SetTextCallback(setTotalInvoices);
+            BeginInvoke(d);
         }
 
         private void StatisticsWindow_FormClosed(object sender, FormClosedEventArgs e)
@@ -83,5 +103,21 @@ namespace Statistics
             _evTableRepeater.OperationEvent -= DoTableAlterations;
             _statisticsController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
         }
+
+        private void btnViewAmountByDay_Click(object sender, EventArgs e)
+        {
+            using (AmountByDayDialog form = new AmountByDayDialog(_statisticsController.AmountByDay)) {
+                if (form.ShowDialog() == DialogResult.OK) {
+                    
+                }
+            }
+        }
+
+        private void setTotalInvoices()
+        {
+            txtBoxNumInvoices.Text = _statisticsController.TotalInvoices + "";
+        }
+
+        
     }
 }

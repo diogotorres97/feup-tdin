@@ -30,14 +30,13 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.txtBoxNumInvoices = new System.Windows.Forms.TextBox();
-            this.txtBoxTotalAmount = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.productsListView = new System.Windows.Forms.ListView();
             this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.count = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnViewAmountByDay = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -56,23 +55,6 @@
             this.txtBoxNumInvoices.Name = "txtBoxNumInvoices";
             this.txtBoxNumInvoices.Size = new System.Drawing.Size(100, 22);
             this.txtBoxNumInvoices.TabIndex = 1;
-            // 
-            // txtBoxTotalAmount
-            // 
-            this.txtBoxTotalAmount.Enabled = false;
-            this.txtBoxTotalAmount.Location = new System.Drawing.Point(618, 129);
-            this.txtBoxTotalAmount.Name = "txtBoxTotalAmount";
-            this.txtBoxTotalAmount.Size = new System.Drawing.Size(100, 22);
-            this.txtBoxTotalAmount.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(349, 134);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 17);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Total amount of the day";
             // 
             // productsListView
             // 
@@ -117,21 +99,30 @@
             this.count.Text = "Count";
             this.count.Width = 160;
             // 
+            // btnViewAmountByDay
+            // 
+            this.btnViewAmountByDay.Location = new System.Drawing.Point(352, 125);
+            this.btnViewAmountByDay.Name = "btnViewAmountByDay";
+            this.btnViewAmountByDay.Size = new System.Drawing.Size(159, 33);
+            this.btnViewAmountByDay.TabIndex = 5;
+            this.btnViewAmountByDay.Text = "View Amount by Day";
+            this.btnViewAmountByDay.UseVisualStyleBackColor = true;
+            this.btnViewAmountByDay.Click += new System.EventHandler(this.btnViewAmountByDay_Click);
+            // 
             // StatisticsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.btnViewAmountByDay);
             this.Controls.Add(this.productsListView);
-            this.Controls.Add(this.txtBoxTotalAmount);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.txtBoxNumInvoices);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StatisticsWindow_FormClosed);
             this.MaximizeBox = false;
             this.Name = "StatisticsWindow";
             this.Text = "Statistics";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StatisticsWindow_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,14 +132,13 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtBoxNumInvoices;
-        private System.Windows.Forms.TextBox txtBoxTotalAmount;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListView productsListView;
         private System.Windows.Forms.ColumnHeader id;
         private System.Windows.Forms.ColumnHeader type;
         private System.Windows.Forms.ColumnHeader name;
         private System.Windows.Forms.ColumnHeader price;
         private System.Windows.Forms.ColumnHeader count;
+        private System.Windows.Forms.Button btnViewAmountByDay;
     }
 }
 

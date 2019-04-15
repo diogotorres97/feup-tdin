@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 412);
+            this.ClientSize = new System.Drawing.Size(542, 413);
             this.Controls.Add(this.numQuantity);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtBoxPrice);

@@ -39,7 +39,7 @@ public class Order
 
     public uint TableId { get; }
 
-    private DateTime Date { get; }
+    public DateTime Date { get; }
 
     public Order(uint id, Product product, float quantity, uint tableId)
     {

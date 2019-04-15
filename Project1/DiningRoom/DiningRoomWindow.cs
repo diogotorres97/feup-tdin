@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DiningRoom
@@ -6,15 +7,21 @@ namespace DiningRoom
     public partial class DiningRoomWindow : Form
     {
         private DiningRoomController _diningRoomController;
-
+        private OperationEventRepeater<Order> _evOrderRepeater;
         private OperationEventRepeater<Table> _evTableRepeater;
 
         private delegate void ChangeTableStateDelegate(Table table);
+        private delegate void MakeTableDeliverableDelegate(uint id);
 
         public DiningRoomWindow()
         {
             _diningRoomController = new DiningRoomController();
             InitializeComponent();
+
+            _evOrderRepeater = new OperationEventRepeater<Order>();
+            _evOrderRepeater.OperationEvent += DoOrderAlterations;
+            _diningRoomController.AddOrderAlterEvent(_evOrderRepeater.Repeater);
+
             _evTableRepeater = new OperationEventRepeater<Table>();
             _evTableRepeater.OperationEvent += DoTableAlterations;
             _diningRoomController.AddTableAlterEvent(_evTableRepeater.Repeater);
@@ -25,10 +32,42 @@ namespace DiningRoom
             return null;
         }
 
+        private void DoOrderAlterations(Operation op, Order order)
+        {
+            switch (op) {
+               
+                case Operation.Change:
+                    MakeTableDeliverableDelegate changeTable = MakeTableDeliverable;
+                    BeginInvoke(changeTable, order.TableId);
+                    break;
+            }
+        }
+
         private void DoTableAlterations(Operation op, Table table)
         {
             ChangeTableStateDelegate changeState = ChangeTableAvailability;
             BeginInvoke(changeState, table);
+            
+        }
+
+        private void MakeTableDeliverable(uint id)
+        {
+            List<Order> orders = _diningRoomController.ConsultTable(id);
+            string deliverables = "";
+
+            foreach (Order it in orders) {
+                if (it.State == OrderState.Ready)
+                    deliverables = "\nDeliverables";
+            }
+
+            foreach (Control ctr in tableLayoutPanel1.Controls) {
+                if (ctr is Button) {
+                    Button btn = (Button)ctr;
+                    if (btn.Name.Equals($"btnTable{id}"))
+
+                        btn.Text = "Table" + id + deliverables;
+                }
+            }
         }
 
         private void ChangeTableAvailability(Table table)
@@ -39,6 +78,7 @@ namespace DiningRoom
                 {
                     Button btn = (Button) ctr;
                     if (btn.Name.Equals($"btnTable{table.Id}"))
+
                         btn.Text = "Table" + table.Id + (table.Availability ? "\nAvailable" : "");
                 }
             }
