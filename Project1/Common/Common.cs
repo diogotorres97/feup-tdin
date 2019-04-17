@@ -33,7 +33,7 @@ public class Order
 
     public Product Product { get; }
 
-    public float Quantity { get; }
+    public double Quantity { get; }
 
     public OrderState State { get; set; }
 
@@ -41,7 +41,7 @@ public class Order
 
     public DateTime Date { get; }
 
-    public Order(uint id, Product product, float quantity, uint tableId)
+    public Order(uint id, Product product, double quantity, uint tableId)
     {
         Id = id;
         Product = product;

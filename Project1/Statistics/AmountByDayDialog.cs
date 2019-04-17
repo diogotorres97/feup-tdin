@@ -1,39 +1,30 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Statistics
 {
     public partial class AmountByDayDialog : Form
     {
-        private ConcurrentDictionary<string, double> _AmountByDay;
-        public AmountByDayDialog(ConcurrentDictionary<string, double> AmountByDay)
+        private ConcurrentDictionary<string, double> _amountByDay;
+
+        public AmountByDayDialog(ConcurrentDictionary<string, double> amountByDay)
         {
             InitializeComponent();
-            _AmountByDay = AmountByDay;
+            _amountByDay = amountByDay;
             InitializeAmountsList();
         }
 
         private void InitializeAmountsList()
         {
-            foreach (KeyValuePair<string, double> it in _AmountByDay) {
+            foreach (KeyValuePair<string, double> it in _amountByDay)
+            {
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
-                    it.Key.ToString(), it.Value.ToString()
+                    it.Key, it.Value.ToString()
                 });
                 listViewAmountByDay.Items.Add(lvItem);
             }
         }
-
-
-
-
     }
 }
