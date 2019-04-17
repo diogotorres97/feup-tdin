@@ -33,7 +33,7 @@ public class Order
 
     public Product Product { get; }
 
-    public float Quantity { get; }
+    public double Quantity { get; }
 
     public OrderState State { get; set; }
 
@@ -41,7 +41,7 @@ public class Order
 
     public DateTime Date { get; }
 
-    public Order(uint id, Product product, float quantity, uint tableId)
+    public Order(uint id, Product product, double quantity, uint tableId)
     {
         Id = id;
         Product = product;
@@ -54,7 +54,7 @@ public class Order
     public override string ToString()
     {
         return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State +
-               " table #" + TableId;
+               " Table #" + TableId;
     }
 }
 
@@ -89,9 +89,11 @@ public class Invoice
 
     private uint TableId { get; }
 
-    private List<Order> Orders { get; }
+    public List<Order> Orders { get; }
 
-    private double TotalInvoice { get; set; }
+    public double TotalInvoice { get; set; }
+
+    public DateTime Date { get; }
 
     public Invoice(uint tableId, List<Order> orders)
     {
@@ -99,13 +101,14 @@ public class Invoice
         TableId = tableId;
         Orders = orders;
         TotalInvoice = 0;
+        Date = DateTime.Now;
 
         orders.ForEach(order => { TotalInvoice += order.Product.Price * order.Quantity; });
     }
 
     public override string ToString()
     {
-        string printedInvoice = "[Invoice]: " + TableId + "\n";
+        string printedInvoice = "[Invoice]: #" + TableId + "  Date: " + Date.ToString("G") + "\n";
 
         Orders.ForEach(order => { printedInvoice += order.ToString() + "\n"; });
 
@@ -147,6 +150,7 @@ public interface IRestaurantSingleton
     List<Order> GetListOfOrders();
     List<Table> GetListOfTables();
     List<Product> GetListOfProducts();
+    List<Invoice> GetListOfInvoices();
     List<Order> ConsultTable(uint tableId);
     void AddOrder(uint tableId, uint productId, uint quantity);
     void ChangeStatusOrder(uint orderId);

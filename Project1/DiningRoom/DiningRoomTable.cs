@@ -59,6 +59,10 @@ namespace DiningRoom
                     ChangeStateDelegate changeState = ChangeAnOrder;
                     BeginInvoke(changeState, order);
                     break;
+                case Operation.Remove:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(op), op, null);
             }
         }
 
@@ -85,6 +89,12 @@ namespace DiningRoom
                         case OrderState.Delivered:
                             lvI.BackColor = Color.Cyan;
                             break;
+                        case OrderState.NotPicked:
+                            break;
+                        case OrderState.Paid:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
 
                     break;
@@ -112,15 +122,15 @@ namespace DiningRoom
         {
             List<Order> orders = _diningRoomController.ConsultTable(_tableId);
 
-            foreach (Order it in orders)
+            orders.ForEach(order =>
             {
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
-                    it.Id.ToString(), it.Product.Description, it.Product.Price.ToString(),
-                    it.Quantity.ToString(), it.State.ToString()
+                    order.Id.ToString(), order.Product.Description, order.Product.Price.ToString(),
+                    order.Quantity.ToString(), order.State.ToString()
                 });
 
-                switch (it.State)
+                switch (order.State)
                 {
                     case OrderState.NotPicked:
                         lvItem.BackColor = Color.LightSalmon;
@@ -134,10 +144,14 @@ namespace DiningRoom
                     case OrderState.Delivered:
                         lvItem.BackColor = Color.Cyan;
                         break;
+                    case OrderState.Paid:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 itemListView.Items.Add(lvItem);
-            }
+            });
         }
 
         private void DiningRoomTable_FormClosed(object sender, FormClosedEventArgs e)

@@ -20,8 +20,7 @@ namespace DiningRoom
 
         private void InitializeProductsList()
         {
-            foreach (Product it in _products)
-                cmbBoxProducts.Items.Add(it.Description);
+            _products.ForEach(product => cmbBoxProducts.Items.Add(product.Description));
 
             cmbBoxProducts.SelectedIndex = 0;
         }

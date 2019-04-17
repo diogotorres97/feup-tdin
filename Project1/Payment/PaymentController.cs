@@ -6,6 +6,6 @@ public class PaymentController : AbstractController
 
     public bool DoPayment(uint tableId)
     {
-        return _restaurantServer.DoPayment(tableId);
+        return RestaurantServer.DoPayment(tableId);
     }
 }

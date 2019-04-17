@@ -6,11 +6,11 @@ public class PrinterController : AbstractController
 
     public void AddPrinterEvent(OperationDelegate<Invoice> printEvent)
     {
-        _restaurantServer.PrintEvent += printEvent;
+        RestaurantServer.PrintEvent += printEvent;
     }
 
     public void RemovePrinterEvent(OperationDelegate<Invoice> printEvent)
     {
-        _restaurantServer.PrintEvent -= printEvent;
+        RestaurantServer.PrintEvent -= printEvent;
     }
 }

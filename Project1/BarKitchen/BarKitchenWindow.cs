@@ -46,6 +46,10 @@ namespace BarKitchen
                     ChangeStateDelegate changeState = ChangeAnOrder;
                     BeginInvoke(changeState, order);
                     break;
+                case Operation.Remove:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(op), op, null);
             }
         }
 
@@ -55,7 +59,7 @@ namespace BarKitchen
                 if (Convert.ToInt32(lvI.SubItems[0].Text) == it.Id)
                 {
                     inPreparationListView.Items.Remove(lvI);
-                    break;
+                    return;
                 }
 
             foreach (ListViewItem lvI in notPickedListView.Items)
@@ -64,7 +68,7 @@ namespace BarKitchen
                     notPickedListView.Items.Remove(lvI);
                     lvI.SubItems[3] = new ListViewItem.ListViewSubItem(lvI, it.State.ToString());
                     inPreparationListView.Items.Add(lvI);
-                    break;
+                    return;
                 }
         }
 
@@ -91,19 +95,23 @@ namespace BarKitchen
             List<Order> notPickedOrders = _barKitchenController.GetListOfOrdersByState(OrderState.NotPicked);
             List<Order> inPreparationOrders = _barKitchenController.GetListOfOrdersByState(OrderState.InPreparation);
 
-            foreach (Order it in notPickedOrders)
+            notPickedOrders.ForEach(order =>
             {
                 ListViewItem lvItem = new ListViewItem(new[]
-                    {it.Id.ToString(), it.Product.Description, it.Quantity.ToString(), it.State.ToString()});
+                {
+                    order.Id.ToString(), order.Product.Description, order.Quantity.ToString(), order.State.ToString()
+                });
                 notPickedListView.Items.Add(lvItem);
-            }
+            });
 
-            foreach (Order it in inPreparationOrders)
+            inPreparationOrders.ForEach(order =>
             {
                 ListViewItem lvItem = new ListViewItem(new[]
-                    {it.Id.ToString(), it.Product.Description, it.Quantity.ToString(), it.State.ToString()});
+                {
+                    order.Id.ToString(), order.Product.Description, order.Quantity.ToString(), order.State.ToString()
+                });
                 inPreparationListView.Items.Add(lvItem);
-            }
+            });
         }
 
         private void BarKitchenWindow_FormClosed(object sender, FormClosedEventArgs e)
