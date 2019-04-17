@@ -97,7 +97,7 @@ namespace DiningRoom
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    return;
+                    break;
                 }
         }
 
