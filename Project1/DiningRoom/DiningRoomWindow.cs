@@ -11,6 +11,7 @@ namespace DiningRoom
         private OperationEventRepeater<Table> _evTableRepeater;
 
         private delegate void ChangeTableStateDelegate(Table table);
+
         private delegate void MakeTableDeliverableDelegate(uint id);
 
         public DiningRoomWindow()
@@ -34,12 +35,18 @@ namespace DiningRoom
 
         private void DoOrderAlterations(Operation op, Order order)
         {
-            switch (op) {
-               
+            switch (op)
+            {
                 case Operation.Change:
                     MakeTableDeliverableDelegate changeTable = MakeTableDeliverable;
                     BeginInvoke(changeTable, order.TableId);
                     break;
+                case Operation.New:
+                    break;
+                case Operation.Remove:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(op), op, null);
             }
         }
 
@@ -47,7 +54,6 @@ namespace DiningRoom
         {
             ChangeTableStateDelegate changeState = ChangeTableAvailability;
             BeginInvoke(changeState, table);
-            
         }
 
         private void MakeTableDeliverable(uint id)
@@ -55,17 +61,21 @@ namespace DiningRoom
             List<Order> orders = _diningRoomController.ConsultTable(id);
             string deliverables = "";
 
-            foreach (Order it in orders) {
-                if (it.State == OrderState.Ready)
-                    deliverables = "\nDeliverables";
-            }
+            bool existOrdersReady = orders.Exists(order => order.State == OrderState.Ready);
 
-            foreach (Control ctr in tableLayoutPanel1.Controls) {
-                if (ctr is Button) {
-                    Button btn = (Button)ctr;
+            if (existOrdersReady)
+                deliverables = "\nDeliverables";
+
+            foreach (Control ctr in tableLayoutPanel1.Controls)
+            {
+                if (ctr is Button)
+                {
+                    Button btn = (Button) ctr;
                     if (btn.Name.Equals($"btnTable{id}"))
-
+                    {
                         btn.Text = "Table" + id + deliverables;
+                        break;
+                    }
                 }
             }
         }
@@ -78,8 +88,10 @@ namespace DiningRoom
                 {
                     Button btn = (Button) ctr;
                     if (btn.Name.Equals($"btnTable{table.Id}"))
-
+                    {
                         btn.Text = "Table" + table.Id + (table.Availability ? "\nAvailable" : "");
+                        break;
+                    }
                 }
             }
         }
@@ -146,7 +158,7 @@ namespace DiningRoom
             }
         }
 
-        private void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
+        private static void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
         {
             rowCount = (int) Math.Ceiling(numTables / (columnCount * 1.0));
         }
@@ -154,11 +166,9 @@ namespace DiningRoom
         private void TableButtonClick(object sender, EventArgs e)
         {
             Button btn = (Button) sender;
-            if (btn != null)
-            {
-                DiningRoomTable form = new DiningRoomTable(btn.Name, _diningRoomController);
-                form.Show();
-            }
+            if (btn == null) return;
+            DiningRoomTable form = new DiningRoomTable(btn.Name, _diningRoomController);
+            form.Show();
         }
     }
 }
