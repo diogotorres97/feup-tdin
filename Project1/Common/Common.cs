@@ -54,7 +54,7 @@ public class Order
     public override string ToString()
     {
         return "[Order]: #" + Id + " Qty: " + Quantity + " Description: " + Product.Description + " State: " + State +
-               " table #" + TableId;
+               " Table #" + TableId;
     }
 }
 
@@ -108,7 +108,7 @@ public class Invoice
 
     public override string ToString()
     {
-        string printedInvoice = "[Invoice]: " + TableId + "| Date: " + Date.ToString("G") + "\n";
+        string printedInvoice = "[Invoice]: #" + TableId + "  Date: " + Date.ToString("G") + "\n";
 
         Orders.ForEach(order => { printedInvoice += order.ToString() + "\n"; });
 
