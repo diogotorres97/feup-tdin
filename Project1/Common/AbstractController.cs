@@ -5,7 +5,7 @@ using System.Runtime.Remoting;
 
 public class AbstractController
 {
-    protected IRestaurantSingleton _restaurantServer;
+    protected IRestaurantSingleton RestaurantServer;
 
     public List<Order> Orders { get; }
     public List<Product> Products { get; }
@@ -14,40 +14,40 @@ public class AbstractController
     protected AbstractController(string remotingConfiguration)
     {
         RemotingConfiguration.Configure(remotingConfiguration, false);
-        _restaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
-        Orders = _restaurantServer.GetListOfOrders();
-        Products = _restaurantServer.GetListOfProducts();
-        Tables = _restaurantServer.GetListOfTables();
+        RestaurantServer = (IRestaurantSingleton) RemoteNew.New(typeof(IRestaurantSingleton));
+        Orders = RestaurantServer.GetListOfOrders();
+        Products = RestaurantServer.GetListOfProducts();
+        Tables = RestaurantServer.GetListOfTables();
     }
 
     public List<Order> ConsultTable(uint tableId)
     {
-        return _restaurantServer.ConsultTable(tableId);
+        return RestaurantServer.ConsultTable(tableId);
     }
 
     public void ChangeStatusOrder(uint orderId)
     {
-        _restaurantServer.ChangeStatusOrder(orderId);
+        RestaurantServer.ChangeStatusOrder(orderId);
     }
 
     public void AddOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.OperationOrderEvent += operationEvent;
+        RestaurantServer.OperationOrderEvent += operationEvent;
     }
 
     public void RemoveOrderAlterEvent(OperationDelegate<Order> operationEvent)
     {
-        _restaurantServer.OperationOrderEvent -= operationEvent;
+        RestaurantServer.OperationOrderEvent -= operationEvent;
     }
 
     public void AddTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.OperationTableEvent += operationTableEvent;
+        RestaurantServer.OperationTableEvent += operationTableEvent;
     }
 
     public void RemoveTableAlterEvent(OperationDelegate<Table> operationTableEvent)
     {
-        _restaurantServer.OperationTableEvent -= operationTableEvent;
+        RestaurantServer.OperationTableEvent -= operationTableEvent;
     }
 }
 
@@ -68,7 +68,7 @@ public static class RemoteNew
     {
         if (_types == null)
             InitTypeTable();
-        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) _types[type];
+        WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry) _types?[type];
         if (entry == null)
             throw new RemotingException("Type not found!");
         return RemotingServices.Connect(type, entry.ObjectUrl);

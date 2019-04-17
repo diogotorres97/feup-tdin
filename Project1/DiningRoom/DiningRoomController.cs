@@ -6,6 +6,6 @@ public class DiningRoomController : AbstractController
 
     public void AddOrder(uint tableId, uint productId, uint quantity)
     {
-        _restaurantServer.AddOrder(tableId, productId, quantity);
+        RestaurantServer.AddOrder(tableId, productId, quantity);
     }
 }
