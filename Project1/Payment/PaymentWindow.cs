@@ -39,7 +39,10 @@ namespace Payment
                 {
                     Button btn = (Button) ctr;
                     if (btn.Name.Equals($"btnTable{table.Id}"))
+                    {
                         btn.Text = "Table" + table.Id + (table.Availability ? "\nAvailable" : "");
+                        break;
+                    }
                 }
             }
         }
@@ -107,7 +110,7 @@ namespace Payment
             }
         }
 
-        private void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
+        private static void GenerateNumberRowsAndCols(int numTables, ref int rowCount, int columnCount)
         {
             rowCount = (int) Math.Ceiling(numTables / (columnCount * 1.0));
         }
@@ -115,11 +118,9 @@ namespace Payment
         private void TableButtonClick(object sender, EventArgs e)
         {
             Button btn = (Button) sender;
-            if (btn != null)
-            {
-                PaymentTable form = new PaymentTable(btn.Name, _paymentController);
-                form.Show();
-            }
+            if (btn == null) return;
+            PaymentTable form = new PaymentTable(btn.Name, _paymentController);
+            form.Show();
         }
     }
 }
