@@ -93,19 +93,22 @@ public class Invoice
 
     private double TotalInvoice { get; set; }
 
+    private DateTime Date { get; }
+
     public Invoice(uint tableId, List<Order> orders)
     {
         Id = (uint) Interlocked.Increment(ref _nextId);
         TableId = tableId;
         Orders = orders;
         TotalInvoice = 0;
+        Date = DateTime.Now;
 
         orders.ForEach(order => { TotalInvoice += order.Product.Price * order.Quantity; });
     }
 
     public override string ToString()
     {
-        string printedInvoice = "[Invoice]: " + TableId + "\n";
+        string printedInvoice = "[Invoice]: " + TableId + "| Date: " + Date.ToString("G") + "\n";
 
         Orders.ForEach(order => { printedInvoice += order.ToString() + "\n"; });
 
@@ -147,6 +150,7 @@ public interface IRestaurantSingleton
     List<Order> GetListOfOrders();
     List<Table> GetListOfTables();
     List<Product> GetListOfProducts();
+    List<Invoice> GetListOfInvoices();
     List<Order> ConsultTable(uint tableId);
     void AddOrder(uint tableId, uint productId, uint quantity);
     void ChangeStatusOrder(uint orderId);
