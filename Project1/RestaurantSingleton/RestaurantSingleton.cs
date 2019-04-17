@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
@@ -8,6 +9,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     private List<Order> _orderList;
     private List<Table> _tableList;
     private List<Product> _productList;
+    private List<Invoice> _invoiceList;
     public event OperationDelegate<Order> OperationOrderEvent;
     public event OperationDelegate<Table> OperationTableEvent;
     public event OperationDelegate<Invoice> PrintEvent;
@@ -18,6 +20,7 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         _orderList = new List<Order>();
         CreateTables(10);
         CreateProducts();
+        _invoiceList = new List<Invoice>();
     }
 
     private void CreateTables(uint numberOfTables)
@@ -74,6 +77,12 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         return _productList;
     }
 
+    public List<Invoice> GetListOfInvoices()
+    {
+        Console.WriteLine("GetListOfInvoices() called.");
+        return _invoiceList;
+    }
+
     public List<Order> ConsultTable(uint tableId)
     {
         return _orderList.FindAll(order => order.TableId == tableId && order.State != OrderState.Paid);
@@ -99,7 +108,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     public void ChangeStatusOrder(uint orderId)
     {
         Order order = _orderList.Find(ord => ord.Id == orderId);
-        order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
+        if (order.State < (OrderState) Enum.GetValues(typeof(OrderState)).Cast<int>().Max())
+            order.State++;
         NotifyClients(OperationOrderEvent, Operation.Change, order);
     }
 
@@ -132,11 +142,15 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
         //Change Availability of Table to True
         ChangeAvailabilityTable(tableId);
 
+        // Create and store the Invoice
+        Invoice invoice = new Invoice(tableId, ordersToPay);
+        _invoiceList.Add(invoice);
+
         //Print the Invoice
-        NotifyClients(PrintEvent, Operation.New, new Invoice(tableId, ordersToPay));
+        NotifyClients(PrintEvent, Operation.New, invoice);
 
         //Delete ordersPaid
-        _orderList.RemoveAll(ordersToPay.Contains); //TODO: Notify Clients??
+        _orderList.RemoveAll(ordersToPay.Contains);
 
         return true;
     }

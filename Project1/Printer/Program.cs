@@ -1,6 +1,6 @@
 ﻿using System;
 
-class Program
+internal static class Program
 {
     private static PrinterController _printerController;
     private static OperationEventRepeater<Invoice> _evPrintRepeater;

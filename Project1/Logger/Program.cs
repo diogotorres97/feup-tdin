@@ -1,6 +1,6 @@
 ﻿using System;
 
-class Program
+internal static class Program
 {
     private static LoggerController _loggerController;
     private static OperationEventRepeater<Order> _evOrderRepeater;
