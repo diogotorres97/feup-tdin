@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace BarKitchen
 {
-    static class MainClass
+    internal static class MainClass
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
