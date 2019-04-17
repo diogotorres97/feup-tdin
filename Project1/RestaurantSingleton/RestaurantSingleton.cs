@@ -108,9 +108,8 @@ public class RestaurantSingleton : MarshalByRefObject, IRestaurantSingleton
     public void ChangeStatusOrder(uint orderId)
     {
         Order order = _orderList.Find(ord => ord.Id == orderId);
-        Console.WriteLine((OrderState) Enum.GetValues(typeof(OrderState)).Cast<int>().Max()); //TODO: CHECK THIS
         if (order.State < (OrderState) Enum.GetValues(typeof(OrderState)).Cast<int>().Max())
-            order.State++; //TODO: Check limits like if Ready cannot turn to InPreparation
+            order.State++;
         NotifyClients(OperationOrderEvent, Operation.Change, order);
     }
 
