@@ -107,11 +107,10 @@ namespace Statistics
             txtBoxNumInvoices.Text = _statisticsController.TotalInvoices.ToString();
             foreach (KeyValuePair<uint, double> it in _statisticsController.ProductQuantity)
             {
-                int prodId = (int) it.Key;
-                Product product = _statisticsController.Products.Find(prod => prod.Id == prodId);
+                Product product = _statisticsController.Products.Find(prod => prod.Id == (int) it.Key);
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
-                    prodId.ToString(), product.Type.ToString(), product.Description,
+                    product.Id.ToString(), product.Type.ToString(), product.Description,
                     product.Price.ToString(), it.Value.ToString()
                 });
                 productsListView.Items.Add(lvItem);
