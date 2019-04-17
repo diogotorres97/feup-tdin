@@ -105,16 +105,16 @@ namespace Statistics
         private void StatisticsWindow_Load(object sender, EventArgs e)
         {
             txtBoxNumInvoices.Text = _statisticsController.TotalInvoices.ToString();
-            foreach (KeyValuePair<uint, double> it in _statisticsController.ProductQuantity) {
-                int prodID = (int) it.Key;
-                Product product = _statisticsController.Products[prodID];
+            foreach (KeyValuePair<uint, double> it in _statisticsController.ProductQuantity)
+            {
+                int prodId = (int) it.Key;
+                Product product = _statisticsController.Products.Find(prod => prod.Id == prodId);
                 ListViewItem lvItem = new ListViewItem(new[]
                 {
-                    prodID.ToString(), product.Type.ToString(), product.Description,
+                    prodId.ToString(), product.Type.ToString(), product.Description,
                     product.Price.ToString(), it.Value.ToString()
                 });
                 productsListView.Items.Add(lvItem);
-                
             }
         }
     }
