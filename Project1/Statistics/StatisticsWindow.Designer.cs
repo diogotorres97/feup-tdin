@@ -123,6 +123,7 @@
             this.Name = "StatisticsWindow";
             this.Text = "Statistics";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StatisticsWindow_FormClosed);
+            this.Load += new System.EventHandler(this.StatisticsWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

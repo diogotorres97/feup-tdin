@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Statistics
@@ -99,6 +100,18 @@ namespace Statistics
         private void SetTotalInvoices()
         {
             txtBoxNumInvoices.Text = _statisticsController.TotalInvoices + "";
+        }
+
+        private void StatisticsWindow_Load(object sender, EventArgs e)
+        {
+            txtBoxNumInvoices.Text = _statisticsController.TotalInvoices + "";
+            foreach (KeyValuePair<uint, double> it in _statisticsController.ProductQuantity) {
+                ListViewItem lvItem = new ListViewItem(new[]
+                {
+                    it.Key.ToString(), it.Value.ToString()
+                });
+                productsListView.Items.Add(lvItem);
+            }
         }
     }
 }
