@@ -89,11 +89,11 @@ public class Invoice
 
     private uint TableId { get; }
 
-    private List<Order> Orders { get; }
+    public List<Order> Orders { get; }
 
-    private double TotalInvoice { get; set; }
+    public double TotalInvoice { get; set; }
 
-    private DateTime Date { get; }
+    public DateTime Date { get; }
 
     public Invoice(uint tableId, List<Order> orders)
     {

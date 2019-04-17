@@ -6,8 +6,7 @@ namespace Statistics
     public partial class StatisticsWindow : Form
     {
         private StatisticsController _statisticsController;
-        private OperationEventRepeater<Order> _evOrderRepeater;
-        private OperationEventRepeater<Table> _evTableRepeater;
+        private OperationEventRepeater<Invoice> _evStatisticsRepeater;
 
         private delegate void SetTextCallback();
 
@@ -25,13 +24,9 @@ namespace Statistics
         private void InitializeController()
         {
             _statisticsController = new StatisticsController();
-            _evOrderRepeater = new OperationEventRepeater<Order>();
-            _evOrderRepeater.OperationEvent += DoOrderAlterations;
-            _statisticsController.AddOrderAlterEvent(_evOrderRepeater.Repeater);
-
-            _evTableRepeater = new OperationEventRepeater<Table>();
-            _evTableRepeater.OperationEvent += DoTableAlterations;
-            _statisticsController.AddTableAlterEvent(_evTableRepeater.Repeater);
+            _evStatisticsRepeater = new OperationEventRepeater<Invoice>();
+            _evStatisticsRepeater.OperationEvent += CalculateStatistics;
+            _statisticsController.AddStatisticsEvent(_evStatisticsRepeater.Repeater);
         }
 
         private void InitializeStats()
@@ -41,39 +36,41 @@ namespace Statistics
 
         /* Event handler for the remote AlterEvent subscription and other auxiliary methods */
 
-        private void DoOrderAlterations(Operation op, Order order)
+        private void CalculateStatistics(Operation op, Invoice invoice)
         {
-            if (order.State != OrderState.Paid) return;
-
-            double amount = order.Quantity * order.Product.Price;
-            if (_statisticsController.AmountByDay.ContainsKey(order.Date.ToShortDateString()))
+            invoice.Orders.ForEach(order =>
             {
-                _statisticsController.AmountByDay[order.Date.ToShortDateString()] += amount;
-            }
-            else
-            {
-                _statisticsController.AmountByDay.TryAdd(order.Date.ToShortDateString(), amount);
-            }
-
-            if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id))
-            {
-                _statisticsController.ProductQuantity[order.Product.Id] += order.Quantity;
-
-                ChangeProductQuantityDelegate change = ChangeProductQuantity;
-                BeginInvoke(change, order.Product.Id, _statisticsController.ProductQuantity[order.Product.Id]);
-            }
-            else
-            {
-                _statisticsController.ProductQuantity.TryAdd(order.Product.Id, order.Quantity);
-
-                LvAddDelegate lvAdd = productsListView.Items.Add;
-                ListViewItem lvItem = new ListViewItem(new[]
+                if (_statisticsController.ProductQuantity.ContainsKey(order.Product.Id))
                 {
-                    order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description,
-                    order.Product.Price.ToString(), order.Quantity.ToString()
-                });
-                BeginInvoke(lvAdd, lvItem);
-            }
+                    _statisticsController.ProductQuantity[order.Product.Id] += order.Quantity;
+
+                    ChangeProductQuantityDelegate change = ChangeProductQuantity;
+                    BeginInvoke(change,
+                        order.Product.Id,
+                        _statisticsController.ProductQuantity[order.Product.Id]);
+                }
+                else
+                {
+                    _statisticsController.ProductQuantity.TryAdd(order.Product.Id, order.Quantity);
+
+                    LvAddDelegate lvAdd = productsListView.Items.Add;
+                    ListViewItem lvItem = new ListViewItem(new[]
+                    {
+                        order.Product.Id.ToString(), order.Product.Type.ToString(), order.Product.Description,
+                        order.Product.Price.ToString(), order.Quantity.ToString()
+                    });
+                    BeginInvoke(lvAdd, lvItem);
+                }
+            });
+
+            if (_statisticsController.AmountByDay.ContainsKey(invoice.Date.ToShortDateString()))
+                _statisticsController.AmountByDay[invoice.Date.ToShortDateString()] += invoice.TotalInvoice;
+            else
+                _statisticsController.AmountByDay.TryAdd(invoice.Date.ToShortDateString(), invoice.TotalInvoice);
+
+            _statisticsController.TotalInvoices++;
+            SetTextCallback d = SetTotalInvoices;
+            BeginInvoke(d);
         }
 
         private void ChangeProductQuantity(uint productId, double quantity)
@@ -83,22 +80,10 @@ namespace Statistics
                     lvI.SubItems[4] = new ListViewItem.ListViewSubItem(lvI, quantity.ToString());
         }
 
-        private void DoTableAlterations(Operation op, Table table)
-        {
-            if (!table.Availability) return;
-
-            _statisticsController.TotalInvoices++;
-            SetTextCallback d = SetTotalInvoices;
-            BeginInvoke(d);
-        }
-
         private void StatisticsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _evOrderRepeater.OperationEvent -= DoOrderAlterations;
-            _statisticsController.RemoveOrderAlterEvent(_evOrderRepeater.Repeater);
-
-            _evTableRepeater.OperationEvent -= DoTableAlterations;
-            _statisticsController.RemoveTableAlterEvent(_evTableRepeater.Repeater);
+            _evStatisticsRepeater.OperationEvent -= CalculateStatistics;
+            _statisticsController.RemovePrinterEvent(_evStatisticsRepeater.Repeater);
         }
 
         private void btnViewAmountByDay_Click(object sender, EventArgs e)
