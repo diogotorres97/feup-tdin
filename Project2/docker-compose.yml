@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 80:80
+    depends_on:
+      - store-server
+
+  # Client
+
+  # Store
+  store-server:
+    image: expressjs-server
+    command: npm run dev
+    build: ./store/server
+    volumes:
+      - ./store/server:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: store-server
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - store-psqldb
+
+  store-psqldb:
+    image: postgres:11-alpine
+    container_name: store-psqldb
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=tdin
+      - POSTGRES_PASSWORD=tdin
+      - POSTGRES_DB=store
+
+# Warehouse
+# RabbitMQ
+
+
+
