@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.ENUM('CLIENT', 'EMPLOYEE', 'ADMIN'),
+      allowNull: false,
+      defaultValue: 'CLIENT',
+    },
   },
   {});
 
@@ -22,9 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     return compare;
   };
 
-  // User.associate = (models) => {
-  //   // associations can be defined here
-  // };
+  User.associate = (models) => {
+    User.hasMany(models.Notification);
+  };
+
 
   User.beforeCreate(async (user) => {
     /* eslint-disable */

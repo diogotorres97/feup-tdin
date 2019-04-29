@@ -1,4 +1,5 @@
 const port = process.env.PORT || 3000;
+const { FORCE_UPDATE_DB } = require('./config/configs');
 
 const express = require('express');
 const logger = require('morgan');
@@ -29,15 +30,11 @@ app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+const db = require('./models/index');
+db.sequelize.sync({ force: FORCE_UPDATE_DB }).then(() => {
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}/`);
+    });
 });
-
-// const db = require('./models/index');
-// db.sequelize.sync({ force: true }).then(() => {
-//     app.listen(port, () => {
-//         console.log(`Server running at http://localhost:${port}/`);
-//     });
-// });
 
 module.exports = app;
