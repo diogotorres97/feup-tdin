@@ -38,6 +38,28 @@ services:
       - POSTGRES_DB=store
 
 # Warehouse
+  warehouse-server:
+    image: expressjs-server
+    command: npm run dev
+    build: ./warehouse/server
+    volumes:
+      - ./warehouse/server:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: warehouse-server
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - warehouse-psqldb
+
+  warehouse-psqldb:
+    image: postgres:11-alpine
+    container_name: warehouse-psqldb
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=tdin
+      - POSTGRES_PASSWORD=tdin
+      - POSTGRES_DB=warehouse
 # RabbitMQ
 
 
