@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true, 
-      }
-    }
+        isEmail: true,
+      },
+    },
   });
 
   Client.associate = (models) => {

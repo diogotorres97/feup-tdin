@@ -3,31 +3,31 @@ module.exports = (sequelize, DataTypes) => {
     uuid: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     totalPrice: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     state: {
       type: DataTypes.ENUM({
         values: [
-          'WAITING', 
+          'WAITING',
           'DELIVERED',
-          'DISPATCH'
-        ]
-      })
+          'DISPATCH',
+        ],
+      }),
     },
     stateDate: {
       type: DataTypes.DATE,
       allowNull: true,
-    }
+    },
   });
 
   Order.associate = (models) => {
@@ -37,12 +37,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.beforeCreate(async (order) => {
     console.log(order);
-    //Update total Price
+    // Update total Price
     order.totalPrice = order.quantity * 1;
-  
-    //order.getBook() ??
+
+    // order.getBook() ??
   });
 
   return Order;
 };
-

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     uuid: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -16,13 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0
-    }
+      defaultValue: 0,
+    },
+    // TODO: add images later
   });
 
   Book.associate = (models) => {
