@@ -28,7 +28,7 @@ const create = async (quantity, bookId, clientId) => {
   }
 
   const state = 'DELIVERED';
-  const nextDay = new Date().setDate(Date.now().getDate() + 1); //TODO: test this
+  const nextDay = new Date().setDate(Date.now().getDate() + 1); // TODO: test this
   const order = Order.create({
     quantity,
     state,

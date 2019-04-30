@@ -1,4 +1,4 @@
-const { Client } = require('../models');
+const { Client, Order, Sell } = require('../models');
 
 const create = async (name, address, email) => Client.create({
   name,
