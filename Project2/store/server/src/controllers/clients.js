@@ -22,6 +22,8 @@ const update = async (clientId, address) => {
   });
 };
 
+// TODO: add retrieve orders
+
 module.exports = {
   create,
   list,

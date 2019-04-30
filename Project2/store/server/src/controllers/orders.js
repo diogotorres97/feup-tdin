@@ -1,10 +1,48 @@
-const { Order } = require('../models');
+const { Order, Book, Client } = require('../models');
 
-const create = async (bookId, quantity, state) => Order.create({
-  quantity,
-  state,
-  bookId,
-});
+const create = async (quantity, bookId, clientId) => {
+  const book = Book.findByPk(bookId);
+  if (!book) {
+    throw new Error('Book not found');
+  }
+
+  const client = Client.findByPk(clientId);
+  if (!client) {
+    throw new Error('Client not found');
+  }
+
+  if (book.stock < quantity) {
+    const state = 'WAITING'; // TODO: Refactor ENUMS
+
+    // Make a request to warehouse
+    // quantity + 10
+    // Make an order
+    return Order.create({
+      quantity,
+      state,
+      bookId,
+      clientId,
+    });
+
+    // Send email
+  }
+
+  const state = 'DELIVERED';
+  const nextDay = Date.now().getDate() + 1;
+  const order = Order.create({
+    quantity,
+    state,
+    stateDate: nextDay,
+    bookId,
+    clientId,
+  });
+
+  book.update({
+    stock: book.stock - quantity,
+  });
+
+  return order;
+};
 
 const list = async () => Order.findAll();
 

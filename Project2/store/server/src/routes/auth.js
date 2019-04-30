@@ -12,9 +12,18 @@ router.post('/signup', async (req, res) => {
 
     if (!user) return res.status(400).send();
 
-    return res.json({
-      message: 'Signup successful',
-      user,
+    delete user.dataValues.password;
+    delete user._previousDataValues.password;
+
+    return req.login(user, { session: false }, async () => {
+      const body = { id: user.id, email: user.email, type: user.type };
+      const token = jwt.sign({ user: body }, JWT_SECRET);
+
+      return res.json({
+        message: 'Signup successful',
+        user,
+        token,
+      });
     });
   })(req, res);
 });
@@ -31,7 +40,7 @@ router.post('/login', async (req, res, next) => {
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
-        const body = { id: user.id, email: user.email };
+        const body = { id: user.id, email: user.email, type: user.type };
         const token = jwt.sign({ user: body }, JWT_SECRET);
 
         return res.json({ token });
