@@ -26,6 +26,7 @@ services:
       ENVIRONMENT: development
     depends_on:
       - store-psqldb
+      - rabbitmq
 
   store-psqldb:
     image: postgres:11-alpine
@@ -50,6 +51,7 @@ services:
       ENVIRONMENT: development
     depends_on:
       - warehouse-psqldb
+      - rabbitmq
 
   warehouse-psqldb:
     image: postgres:11-alpine
@@ -60,7 +62,14 @@ services:
       - POSTGRES_USER=tdin
       - POSTGRES_PASSWORD=tdin
       - POSTGRES_DB=warehouse
+
 # RabbitMQ
+  rabbitmq:
+   image: rabbitmq:3-management
+   container_name: rabbitmq
+   ports:
+       - 15672:15672
+       - 5672:5672
 
 
 
