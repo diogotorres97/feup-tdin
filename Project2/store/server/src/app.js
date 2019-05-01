@@ -5,14 +5,14 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const {
-  FORCE_UPDATE_DB, AMQP_URL, AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK,
+  FORCE_UPDATE_DB,
 } = require('./config/configs');
-const amqpAPI = require('./amqp/amqpAPI');
+const amqpServer = require('./amqp/amqpServer');
 
 // Set up the express app
 const app = express();
 const routes = require('./routes/index');
-const { sleep } = require('./utils/utils');
+
 // Log requests to the console.
 app.use(logger('dev'));
 
@@ -29,7 +29,7 @@ app.use(passport.initialize());
 app.use('/', routes);
 
 // AMQP Connection
-amqpAPI.connect(AMQP_URL, [AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK]);
+amqpServer.start();
 
 const db = require('./models/index');
 
