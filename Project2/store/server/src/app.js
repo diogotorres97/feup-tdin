@@ -4,7 +4,10 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const { FORCE_UPDATE_DB } = require('./config/configs');
+const {
+  FORCE_UPDATE_DB,
+} = require('./config/configs');
+const amqpServer = require('./amqp/amqpServer');
 
 // Set up the express app
 const app = express();
@@ -25,10 +28,8 @@ app.use(passport.initialize());
 // Require our routes into the application.
 app.use('/', routes);
 
-// Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
-}));
+// AMQP Connection
+amqpServer.start();
 
 const db = require('./models/index');
 
