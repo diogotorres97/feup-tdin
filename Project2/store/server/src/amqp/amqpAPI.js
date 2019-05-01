@@ -57,7 +57,7 @@ function publishMessage(queueName, message) {
   console.log(`[AMQP] Send message: ${message}`);
 }
 
-async function consumeMessage(queueName, handleMessage) {
+function consumeMessage(queueName, handleMessage) {
   amqpChannel.consume(queueName, handleMessage, { noAck: true });
 }
 
