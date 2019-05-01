@@ -13,7 +13,7 @@ function connect(amqpUrl, queuesNameArray) {
 
     if (err) {
       console.error('[AMQP]', err.message);
-      return setTimeout(connect, 1000);
+      return setTimeout(connect, 1000, amqpUrl, queuesNameArray);
     }
     connection.on('error', (err) => {
       if (err.message !== 'Connection closing') {
@@ -22,7 +22,7 @@ function connect(amqpUrl, queuesNameArray) {
     });
     connection.on('close', () => {
       console.error('[AMQP] reconnecting');
-      return setTimeout(connect, 1000);
+      return setTimeout(connect, 1000, amqpUrl, queuesNameArray);
     });
     console.log('[AMQP] connected');
     amqpConnection = connection;

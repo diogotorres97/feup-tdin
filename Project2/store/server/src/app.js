@@ -40,9 +40,3 @@ db.sequelize.sync({ force: FORCE_UPDATE_DB }).then(() => {
 });
 
 module.exports = app;
-
-(async () => {
-  await sleep(2000);
-  amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
-  amqpAPI.consumeMessage(AMQP_QUEUE_REQUEST_STOCK, amqpAPI.parseMessage);
-})();

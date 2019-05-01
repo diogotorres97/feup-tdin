@@ -1,6 +1,10 @@
 const {
   Sell, Book, Client, Order,
 } = require('../models');
+const amqpAPI = require('../amqp/amqpAPI');
+const {
+  AMQP_QUEUE_REQUEST_STOCK,
+} = require('./../config/configs');
 
 const create = async (quantity, bookId, clientId) => {
   const book = Book.findByPk(bookId);
@@ -18,6 +22,8 @@ const create = async (quantity, bookId, clientId) => {
     const state = 'WAITING'; // TODO: Refactor ENUMS
 
     // Make a request to warehouse
+    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
+
     // Make an order
     return Order.create({
       quantity,
