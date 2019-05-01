@@ -8,7 +8,7 @@ const {
 async function start() {
   amqpAPI.connect(AMQP_URL, [AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK]);
   await sleep(1000);
-  amqpAPI.consumeMessage(AMQP_QUEUE_RECEIVE_STOCK, amqpAPI.parseMessage);
+  amqpAPI.consumeMessage(AMQP_QUEUE_REQUEST_STOCK, amqpAPI.parseMessage);
 }
 
 module.exports = {
