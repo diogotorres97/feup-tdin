@@ -19,7 +19,7 @@ const create = async (quantity, bookId, clientId) => {
     const state = 'WAITING'; // TODO: Refactor ENUMS
 
     // Make a request to warehouse
-  amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
+    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
 
     // quantity + 10
     // Make an order
