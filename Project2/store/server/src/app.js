@@ -7,7 +7,7 @@ const passport = require('passport');
 const {
   FORCE_UPDATE_DB,
 } = require('./config/configs');
-const amqpServer = require('./amqp/amqpServer');
+const { amqpServer } = require('./amqp');
 
 // Set up the express app
 const app = express();

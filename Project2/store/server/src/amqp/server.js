@@ -1,4 +1,4 @@
-const amqpAPI = require('./amqpAPI');
+const amqpAPI = require('./api');
 const { sleep } = require('../utils/utils');
 
 const {

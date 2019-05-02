@@ -1,8 +1,9 @@
 const { Order, Book, Client } = require('../models');
-const amqpAPI = require('../amqp/amqpAPI');
+const { amqpAPI } = require('../amqp');
 const {
   AMQP_QUEUE_REQUEST_STOCK,
 } = require('./../config/configs');
+const { orderState, messageType } = require('../enums');
 
 const create = async (quantity, bookId, clientId) => {
   const book = Book.findByPk(bookId);
@@ -15,37 +16,38 @@ const create = async (quantity, bookId, clientId) => {
     throw new Error('Client not found');
   }
 
+  const orderData = { quantity, bookId, clientId };
+  let order = null;
+
   if (book.stock < quantity) {
-    const state = 'WAITING'; // TODO: Refactor ENUMS
-
     // Make a request to warehouse
-    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
+    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK,
+      amqpAPI.createMessage(
+        messageType.requestStock,
+        {
+          title: book.title,
+          quantity: quantity + 10,
+        },
+      ));
 
-    // quantity + 10
     // Make an order
-    return Order.create({
-      quantity,
-      state,
-      bookId,
-      clientId,
+    order = Order.create({
+      ...orderData,
+      state: orderState.waiting,
+    });
+  } else {
+    const nextDay = new Date().setDate(Date.now().getDate() + 1); // TODO: test this
+    order = Order.create({
+      ...orderData,
+      state: orderState.delivered,
+      stateDate: nextDay,
     });
 
-    // Send email
+    book.update({
+      stock: book.stock - quantity,
+    });
   }
-
-  const state = 'DELIVERED';
-  const nextDay = new Date().setDate(Date.now().getDate() + 1); // TODO: test this
-  const order = Order.create({
-    quantity,
-    state,
-    stateDate: nextDay,
-    bookId,
-    clientId,
-  });
-
-  book.update({
-    stock: book.stock - quantity,
-  });
+  // Send email
 
   return order;
 };
