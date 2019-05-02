@@ -1,12 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const Book = sequelize.define('Book', {
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
     title: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     author: {
@@ -14,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     price: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0,
     },

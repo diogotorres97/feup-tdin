@@ -35,8 +35,10 @@ app.get('*', (req, res) => res.status(200).send({
 amqpServer.start();
 
 const db = require('./models/index');
+const { initializeDatabase } = require('./seeders/seedDatabase');
 
 db.sequelize.sync({ force: FORCE_UPDATE_DB }).then(() => {
+  if (FORCE_UPDATE_DB) initializeDatabase();
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
   });
