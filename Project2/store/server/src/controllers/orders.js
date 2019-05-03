@@ -4,8 +4,24 @@ const {
   AMQP_QUEUE_REQUEST_STOCK,
 } = require('./../config/configs');
 const { orderState, messageType } = require('../enums');
+const { emailServer } = require('../email');
 
 const create = async (quantity, bookId, clientId) => {
+  const info = await emailServer.sendEmail(
+    'from@domain.com',
+    'diogo.rey97@gmail.com',
+    'Test',
+    'order',
+    {
+      name: 'Name',
+      email: 'tariqul.islam.rony@gmail.com',
+      address: '52, Kadamtola Shubag dhaka',
+    },
+  );
+  console.log(info);
+  if (info.rejected.length > 0) throw new Error('Email Not Sent');
+
+  return {};
   const book = Book.findByPk(bookId);
   if (!book) {
     throw new Error('Book not found');
@@ -47,7 +63,20 @@ const create = async (quantity, bookId, clientId) => {
       stock: book.stock - quantity,
     });
   }
+
   // Send email
+  // const info = await emailAPI.sendEmail(
+  //   'from@domain.com',
+  //   'to@domain.com',
+  //   'Test',
+  //   'order',
+  //    {
+  //     name: 'Name',
+  //     email: 'tariqul.islam.rony@gmail.com',
+  //     address: '52, Kadamtola Shubag dhaka',
+  //   });
+
+  // if (info.rejected.length > 0) throw new Error('Email Not Sent');
 
   return order;
 };
