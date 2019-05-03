@@ -18,7 +18,6 @@ const create = async (quantity, bookId, clientId) => {
       address: '52, Kadamtola Shubag dhaka',
     },
   );
-  console.log(info);
   if (info.rejected.length > 0) throw new Error('Email Not Sent');
 
   return {};
