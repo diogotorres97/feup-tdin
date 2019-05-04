@@ -1,10 +1,11 @@
-const { AMQP_QUEUE_REQUEST_STOCK } = require('./../config/configs');
+const { AMQP_QUEUE_REQUEST_STOCK, PUSHER_CHANNEL_STORE } = require('./../config/configs');
 const {
   Sell, Book, Client, Order,
 } = require('../models');
 const { amqpAPI } = require('../services/amqp');
 const { orderState, messageType } = require('../enums');
 const { emailServer } = require('../services/email');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
 
 const create = async (quantity, bookId, clientId) => {
   const book = await Book.findByPk(bookId);
@@ -62,6 +63,7 @@ const create = async (quantity, bookId, clientId) => {
   });
 
   // print a receipt
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, 'print_invoice', sell);
 
   return sell;
 };

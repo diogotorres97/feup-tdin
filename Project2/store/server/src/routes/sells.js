@@ -6,7 +6,7 @@ router.post('/sells', async (req, res) => {
   const clientId = req.user.id;
 
   try {
-    const sell = await sellsController.create(quantity, bookId, clientId);
+    const sell = await sellsController.create(quantity, bookId, 1);
     res.status(201).send(sell);
   } catch (error) {
     res.status(400).send(error);
