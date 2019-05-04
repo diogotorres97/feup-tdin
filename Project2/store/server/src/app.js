@@ -7,8 +7,9 @@ const passport = require('passport');
 const {
   FORCE_UPDATE_DB,
 } = require('./config/configs');
-const { amqpServer } = require('./amqp');
-const { emailServer } = require('./email');
+const { amqpServer } = require('./services/amqp');
+const { emailServer } = require('./services/email');
+const webSockets = require('./services/websockets/pusher');
 
 // Set up the express app
 const app = express();
@@ -22,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Authentication
-require('./auth/passport');
+require('./services/auth/passport');
 
 app.use(passport.initialize());
 

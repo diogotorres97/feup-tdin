@@ -27,11 +27,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Sell.beforeCreate(async (sell) => {
-    console.log(sell);
     // Update total Price
-    sell.totalPrice = sell.quantity * 1;
-
-    // sell.getBook() ??
+    const book = await sell.getBook();
+    sell.totalPrice = sell.quantity * book.price;
   });
 
   return Sell;

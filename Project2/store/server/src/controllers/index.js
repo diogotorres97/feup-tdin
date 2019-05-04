@@ -4,7 +4,7 @@ const booksController = require('./books');
 const clientsController = require('./clients');
 const notificationsController = require('./notifications');
 const ordersController = require('./orders');
-const sellsController = require('./todoitems');
+const sellsController = require('./sells');
 
 module.exports = {
   todoController,

@@ -1,51 +1,69 @@
+const { AMQP_QUEUE_REQUEST_STOCK, PUSHER_CHANNEL_STORE } = require('./../config/configs');
 const {
   Sell, Book, Client, Order,
 } = require('../models');
-const amqpAPI = require('../amqp/amqpAPI');
-const {
-  AMQP_QUEUE_REQUEST_STOCK,
-} = require('./../config/configs');
+const { amqpAPI } = require('../services/amqp');
+const { orderState, messageType } = require('../enums');
+const { emailServer } = require('../services/email');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
 
 const create = async (quantity, bookId, clientId) => {
-  const book = Book.findByPk(bookId);
+  const book = await Book.findByPk(bookId);
   if (!book) {
     throw new Error('Book not found');
   }
-
-  const client = Client.findByPk(clientId);
+  const client = await Client.findByPk(clientId);
   if (!client) {
     throw new Error('Client not found');
   }
 
-  if (book.stock < quantity) {
-    // TODO: Allow sell the stock and make an order of the rest?
-    const state = 'WAITING'; // TODO: Refactor ENUMS
+  const sellData = { quantity, bookId, clientId };
 
+  if (book.stock < quantity) {
     // Make a request to warehouse
-    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK, { cenas: 'hello world' });
+    amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK,
+      amqpAPI.createMessage(
+        messageType.requestStock,
+        {
+          title: book.title,
+          quantity: quantity + 10,
+        },
+      ));
 
     // Make an order
-    return Order.create({
-      quantity,
-      state,
-      bookId,
-      clientId,
+    const order = await Order.create({
+      ...sellData,
+      state: orderState.waiting,
     });
 
-    // Send email
+    // Send an e-mail
+
+    // const info = await emailServer.sendEmail(
+    //   null,
+    //   client.email,
+    //   `Order #${order.uuid} confirmed`,
+    //   'order',
+    //   {
+    //     book,
+    //     client,
+    //     order,
+    //     orderState: orderState.toString(order.state, order.stateDate),
+    //   },
+    // );
+
+    // if (info.rejected.length > 0) throw new Error('Email Not Sent');
+
+    return order;
   }
 
-  const sell = Sell.create({
-    quantity,
-    bookId,
-    clientId,
-  });
+  const sell = await Sell.create(sellData);
 
-  book.update({
+  await book.update({
     stock: book.stock - quantity,
   });
 
   // print a receipt
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, 'print_invoice', sell);
 
   return sell;
 };
