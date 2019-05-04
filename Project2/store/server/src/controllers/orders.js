@@ -7,33 +7,16 @@ const { orderState, messageType } = require('../enums');
 const { emailServer } = require('../email');
 
 const create = async (quantity, bookId, clientId) => {
-  const info = await emailServer.sendEmail(
-    'from@domain.com',
-    'diogo.rey97@gmail.com',
-    'Test',
-    'order',
-    {
-      name: 'Name',
-      email: 'tariqul.islam.rony@gmail.com',
-      address: '52, Kadamtola Shubag dhaka',
-    },
-  );
-  if (info.rejected.length > 0) throw new Error('Email Not Sent');
-
-  return {};
-  const book = Book.findByPk(bookId);
+  const book = await Book.findByPk(bookId);
   if (!book) {
     throw new Error('Book not found');
   }
-
-  const client = Client.findByPk(clientId);
+  const client = await Client.findByPk(clientId);
   if (!client) {
     throw new Error('Client not found');
   }
-
   const orderData = { quantity, bookId, clientId };
   let order = null;
-
   if (book.stock < quantity) {
     // Make a request to warehouse
     amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK,
@@ -46,34 +29,37 @@ const create = async (quantity, bookId, clientId) => {
       ));
 
     // Make an order
-    order = Order.create({
+    order = await Order.create({
       ...orderData,
       state: orderState.waiting,
     });
   } else {
-    const nextDay = new Date().setDate(Date.now().getDate() + 1); // TODO: test this
-    order = Order.create({
+    const nextDay = new Date();
+    nextDay.setDate(new Date().getDate() + 1);
+
+    order = await Order.create({
       ...orderData,
       state: orderState.delivered,
       stateDate: nextDay,
     });
 
-    book.update({
+    await book.update({
       stock: book.stock - quantity,
     });
   }
 
-  // Send email
-  // const info = await emailAPI.sendEmail(
-  //   'from@domain.com',
-  //   'to@domain.com',
-  //   'Test',
+  // const info = await emailServer.sendEmail(
+  //   null,
+  //   client.email,
+  //   `Order #${order.uuid} confirmed`,
   //   'order',
-  //    {
-  //     name: 'Name',
-  //     email: 'tariqul.islam.rony@gmail.com',
-  //     address: '52, Kadamtola Shubag dhaka',
-  //   });
+  //   {
+  //     book,
+  //     client,
+  //     order,
+  //     orderState: orderState.toString(order.state, order.stateDate),
+  //   },
+  // );
 
   // if (info.rejected.length > 0) throw new Error('Email Not Sent');
 

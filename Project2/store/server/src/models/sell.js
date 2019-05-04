@@ -11,15 +11,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     totalPrice: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0,
     },
   });
 
   Sell.associate = (models) => {
-    Sell.belongsTo(models.Book);
-    Sell.belongsTo(models.Client);
+    Sell.belongsTo(models.Book, {
+      foreignKey: 'bookId',
+    });
+    Sell.belongsTo(models.Client, {
+      foreignKey: 'clientId',
+    });
   };
 
   Sell.beforeCreate(async (sell) => {

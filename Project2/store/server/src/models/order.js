@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     totalPrice: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0,
     },
@@ -31,16 +31,18 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Order.associate = (models) => {
-    Order.belongsTo(models.Book);
-    Order.belongsTo(models.Client);
+    Order.belongsTo(models.Book, {
+      foreignKey: 'bookId',
+    });
+    Order.belongsTo(models.Client, {
+      foreignKey: 'clientId',
+    });
   };
 
   Order.beforeCreate(async (order) => {
-    console.log(order);
     // Update total Price
-    order.totalPrice = order.quantity * 1;
-
-    // order.getBook() ??
+    const book = await order.getBook();
+    order.totalPrice = order.quantity * book.price;
   });
 
   return Order;
