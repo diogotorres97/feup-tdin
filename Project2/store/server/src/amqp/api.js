@@ -61,6 +61,13 @@ function consumeMessage(queueName, handleMessage) {
   amqpChannel.consume(queueName, handleMessage, { noAck: true });
 }
 
+function createMessage(type, payload) {
+  return {
+    type,
+    payload,
+  };
+}
+
 function parseMessage(msg) {
   const messageString = msg.content.toString();
   const messageObject = JSON.parse(messageString);
@@ -78,5 +85,6 @@ module.exports = {
   connect,
   publishMessage,
   consumeMessage,
+  createMessage,
   parseMessage,
 };

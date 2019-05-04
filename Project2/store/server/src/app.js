@@ -7,7 +7,8 @@ const passport = require('passport');
 const {
   FORCE_UPDATE_DB,
 } = require('./config/configs');
-const amqpServer = require('./amqp/amqpServer');
+const { amqpServer } = require('./amqp');
+const { emailServer } = require('./email');
 
 // Set up the express app
 const app = express();
@@ -30,6 +31,9 @@ app.use('/', routes);
 
 // AMQP Connection
 amqpServer.start();
+
+// Email Connection
+emailServer.start();
 
 const db = require('./models/index');
 const { initializeDatabase } = require('./seeders/seedDatabase');

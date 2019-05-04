@@ -3,10 +3,10 @@ const { ordersController } = require('../controllers');
 
 router.post('/orders', async (req, res) => {
   const { quantity, bookId } = req.body;
-  const clientId = req.user.id;
+  const clientId = req.user.id; // TODO: Update this
 
   try {
-    const order = await ordersController.create(quantity, bookId, clientId);
+    const order = await ordersController.create(quantity, bookId, 1);
     res.status(201).send(order);
   } catch (error) {
     res.status(400).send(error);
