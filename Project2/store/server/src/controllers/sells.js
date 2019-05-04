@@ -55,7 +55,7 @@ const create = async (quantity, bookId, clientId) => {
     return order;
   }
 
-  const sell = await Sell.create(orderData);
+  const sell = await Sell.create(sellData);
 
   await book.update({
     stock: book.stock - quantity,
