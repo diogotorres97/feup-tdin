@@ -1,10 +1,10 @@
 const { Order, Book, Client } = require('../models');
-const { amqpAPI } = require('../amqp');
+const { amqpAPI } = require('../services/amqp');
 const {
   AMQP_QUEUE_REQUEST_STOCK,
 } = require('./../config/configs');
 const { orderState, messageType } = require('../enums');
-const { emailServer } = require('../email');
+const { emailServer } = require('../services/email');
 
 const create = async (quantity, bookId, clientId) => {
   const book = await Book.findByPk(bookId);

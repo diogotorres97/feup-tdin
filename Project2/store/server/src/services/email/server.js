@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const environment = process.env;
-const templatePath = 'src/email/templates';
+const templatePath = 'src/services/email/templates';
 
 const gmailTransport = nodemailer.createTransport({
   service: environment.GMAIL_SERVICE_NAME,
