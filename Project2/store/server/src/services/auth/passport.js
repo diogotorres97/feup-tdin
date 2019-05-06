@@ -39,7 +39,7 @@ passport.use('login', new LocalStrategy({
     if (!validate) {
       return done(null, false, { message: 'Wrong Password' });
     }
-    return done(null, user); // TODO: Not retrieve user bc password
+    return done(null, user);
   } catch (error) {
     return done(error);
   }
