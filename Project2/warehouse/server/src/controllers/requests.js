@@ -4,6 +4,8 @@ const {
   AMQP_QUEUE_RECEIVE_STOCK,
 } = require('../config/configs');
 const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+const { PUSHER_CHANNEL_WAREHOUSE } = require('../config/configs');
 
 const create = async (bookTitle, quantity) => {
   const book = await Book.findOne({
@@ -14,7 +16,10 @@ const create = async (bookTitle, quantity) => {
 
   if (!book) throw new Error('Book not found');
 
-  return Request.create(quantity, { bookId: book.id });
+  const request = await Request.create(quantity, { bookId: book.id });
+  sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.requestStock, request);
+
+  return request;
 };
 
 const list = async () => Request.findAll();

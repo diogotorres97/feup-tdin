@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     processedDate: {
       type: DataTypes.DATE,
     },
+    ordersId: {
+      type: DataTypes.JSONB,
+    },
   }, {});
 
   ReceiveStock.associate = (models) => {

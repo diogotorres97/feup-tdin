@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { requestsController } = require('../controllers');
+const { receiveStockController } = require('../controllers');
 
-router.get('/requests', async (req, res) => {
+router.get('/receiveStock', async (req, res) => {
   try {
     const requests = await requestsController.list();
     res.status(201).send(requests);
@@ -10,12 +10,12 @@ router.get('/requests', async (req, res) => {
   }
 });
 
-router.put('/requests/:requestId/sendStock', async (req, res) => {
-  const { requestId } = req.params;
+router.put('/receiveStock/:receiveStockId/receiveStock', async (req, res) => {
+  const { receiveStockId } = req.params;
 
   try {
-    const request = await requestsController.sendStock(requestId);
-    res.status(201).send(request);
+    const receiveStock = await receiveStockController.receiveStock(receiveStockId);
+    res.status(201).send(receiveStock);
   } catch (error) {
     res.status(400).send(error.message);
   }
