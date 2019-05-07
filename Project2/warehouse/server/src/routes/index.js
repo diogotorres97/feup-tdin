@@ -15,7 +15,7 @@ router.use('/api/', passport.authenticate('jwt', { session: false }));
 router.use('/api/', books);
 router.use('/api/', requests);
 router.get('/api', (req, res) => res.status(200).send({
-  message: 'Welcome to the Todos API!',
+  message: 'Welcome to the Warehouse API!',
 }));
 
 
