@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Authentication
-require('./auth/passport');
+require('./services/auth/passport');
 
 app.use(passport.initialize());
 

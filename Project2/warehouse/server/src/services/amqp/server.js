@@ -1,7 +1,9 @@
-const amqpAPI = require('./amqpAPI');
+const amqpAPI = require('./api');
 const { sleep } = require('../../utils/utils');
-const { notificationsController } = require('../../controllers');
-const { notificationType } = require('../../enums');
+const { requestsController } = require('../../controllers');
+const { messageType } = require('../../enums');
+const { sendNotificationMessage } = require('../websockets/pusher');
+const { PUSHER_CHANNEL_WAREHOUSE } = require('../../config/configs');
 
 const {
   AMQP_URL, AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK,
@@ -15,8 +17,8 @@ async function start() {
 
 function requestStock(msg) {
   const message = amqpAPI.parseMessage(msg);
-  notificationsController.create(notificationType.requestStock, message);
-  
+  requestsController.create(message.title, message.quantity);
+  sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.requestStock, message);
 }
 
 module.exports = {

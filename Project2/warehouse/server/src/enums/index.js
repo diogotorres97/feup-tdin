@@ -1,5 +1,5 @@
-const { notificationType } = require('./notification');
+const { messageType } = require('./messages');
 
 module.exports = {
-  notificationType,
+  messageType,
 };
