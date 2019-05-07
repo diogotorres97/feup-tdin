@@ -72,6 +72,7 @@ function parseMessage(msg) {
   const messageString = msg.content.toString();
   const messageObject = JSON.parse(messageString);
   console.log(`[AMQP] Consume a message: ${messageString}`);
+  return messageObject;
 }
 
 function closeOnErr(err) {

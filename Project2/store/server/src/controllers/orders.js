@@ -18,6 +18,7 @@ const create = async (quantity, bookId, clientId) => {
   const orderData = { quantity, bookId, clientId };
   let order = null;
   if (book.stock < quantity) {
+    console.log(amqpAPI);
     // Make a request to warehouse
     amqpAPI.publishMessage(AMQP_QUEUE_REQUEST_STOCK,
       amqpAPI.createMessage(
