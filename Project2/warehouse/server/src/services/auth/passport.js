@@ -1,8 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { Strategy, ExtractJwt } = require('passport-jwt');
-const { User } = require('../models');
-const { JWT_SECRET } = require('../config/configs');
+const { User } = require('../../models');
+const { JWT_SECRET } = require('../../config/configs');
 
 passport.use('signup', new LocalStrategy({
   usernameField: 'email',

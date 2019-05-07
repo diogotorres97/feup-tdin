@@ -5,7 +5,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const { FORCE_UPDATE_DB } = require('./config/configs');
-const amqpServer = require('./amqp/amqpServer');
+const { amqpServer } = require('./services/amqp');
 
 // Set up the express app
 const app = express();
