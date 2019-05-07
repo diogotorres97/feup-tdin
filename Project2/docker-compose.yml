@@ -15,7 +15,7 @@ services:
 
   # Store
   store-server:
-    image: expressjs-server
+    image: store-server
     command: npm run dev
     build: ./store/server
     volumes:
@@ -40,7 +40,7 @@ services:
 
 # Warehouse
   warehouse-server:
-    image: expressjs-server
+    image: warehouse-server
     command: npm run dev
     build: ./warehouse/server
     volumes:
@@ -70,6 +70,3 @@ services:
    ports:
        - 15672:15672
        - 5672:5672
-
-
-

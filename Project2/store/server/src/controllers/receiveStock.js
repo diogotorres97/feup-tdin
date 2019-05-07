@@ -1,0 +1,118 @@
+const {
+  ReceiveStock, Book, Order, Client,
+} = require('../models');
+const {
+  PUSHER_CHANNEL_STORE,
+} = require('../config/configs');
+const { orderState, messageType } = require('../enums');
+const { emailServer } = require('../services/email');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+
+const create = async (bookTitle, quantity) => {
+  const book = await Book.findOne({
+    where: {
+      title: bookTitle,
+    },
+  });
+
+  if (!book) throw new Error('Book not found');
+
+  // Update orders to dispatch should occur at (today plus 2 days)
+  const twoDaysAfter = new Date();
+  twoDaysAfter.setDate(new Date().getDate() + 2);
+
+  const orders = Order.findAll({
+    where: {
+      bookId: book.id,
+      state: 'WAITING',
+    },
+  });
+
+  let stockLeft = quantity;
+  const ordersId = [];
+  for await (const order of orders) {
+    if (stockLeft > order.quantity) {
+      await order.update({
+        state: orderState.dispatch,
+        stateDate: twoDaysAfter,
+      });
+
+      stockLeft -= order.quantity;
+      ordersId.push(order.Id);
+    }
+  }
+
+  const receiveStock = await ReceiveStock.create(quantity, ordersId, { bookId: book.id });
+
+  // Send the message through websockets
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.receiveStock, receiveStock);
+
+  return receiveStock;
+};
+
+const list = async () => ReceiveStock.findAll();
+
+const receiveStock = async (receiveStockId) => {
+  const receivedStock = await ReceiveStock.findByPk(receiveStockId);
+
+  if (!receivedStock) {
+    throw new Error('ReceiveStock not found');
+  }
+
+  if (receivedStock.processedDate) {
+    throw new Error('ReceiveStock already processed');
+  }
+
+  const book = await receivedStock.getBook();
+  console.log(book);
+
+  let stockLeft = receivedStock.quantity;
+  for await (const orderId of receivedStock.ordersId) {
+    const order = await Order.findByPk(orderId);
+    // Update orders to dispatched at (today)
+    await order.update({
+      state: orderState.delivered,
+      stateDate: Date.now(),
+    });
+
+    // Update the stock left from that receivedStock
+    stockLeft -= order.quantity;
+
+    const client = await Client.findByPk(order.clientId);
+    if (!client) {
+      throw new Error('Client not found');
+    }
+
+    // Send an email to notify the clients
+    const info = await emailServer.sendEmail(
+      null,
+      client.email,
+      `Order #${order.uuid} Updated`,
+      'order',
+      {
+        book,
+        client,
+        order,
+        orderState: orderState.toString(order.state, order.stateDate),
+      },
+    );
+
+    if (info.rejected.length > 0) throw new Error('Email Not Sent');
+  }
+
+  // update the stock
+  await book.update({
+    stock: book.stock + stockLeft,
+  });
+
+  // update the receiveStock's processedDate
+  return receivedStock.update({
+    processedDate: new Date(),
+  });
+};
+
+module.exports = {
+  create,
+  list,
+  receiveStock,
+};
