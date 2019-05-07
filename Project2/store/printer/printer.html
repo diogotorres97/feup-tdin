@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+    <title>Printer</title>
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('dd7136ca250e4358b688', {
+            cluster: 'eu',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('store');
+        channel.bind('print_invoice', function (data) {
+            let div = document.getElementById('invoices');
+            let invoice = document.createElement("P");
+            let text = document.createTextNode(JSON.stringify(data));
+            invoice.appendChild(text);
+            div.appendChild(invoice);
+        });
+    </script>
+</head>
+<body>
+<h1>Printer</h1>
+<div id="invoices">
+</div>
+</body>
