@@ -10,7 +10,7 @@ const todos = require('./todos');
 const todoItems = require('./todoItems');
 const books = require('./books');
 const clients = require('./clients');
-const notifications = require('./notifications');
+const receiveStock = require('./receiveStock');
 const orders = require('./orders');
 const sells = require('./sells');
 
@@ -21,7 +21,7 @@ router.use('/api/', todos);
 router.use('/api/', todoItems);
 router.use('/api/', books);
 router.use('/api/', clients);
-router.use('/api/', notifications);
+router.use('/api/', receiveStock);
 router.use('/api/', orders);
 router.use('/api/', sells);
 router.get('/api', (req, res) => res.status(200).send({

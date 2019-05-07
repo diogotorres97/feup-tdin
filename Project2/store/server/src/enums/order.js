@@ -4,11 +4,6 @@ const orderState = {
   dispatch: 'DISPATCH',
 };
 
-const messageType = {
-  requestStock: 'request_stock',
-  receiveStock: 'receive_stock',
-};
-
 orderState.toString = (state, stateDate) => {
   switch (state) {
     case orderState.waiting:
@@ -24,5 +19,4 @@ orderState.toString = (state, stateDate) => {
 
 module.exports = {
   orderState,
-  messageType,
 };

@@ -1,8 +1,7 @@
-const { orderState, messageType } = require('./order');
-const { notificationType } = require('./notification');
+const { orderState } = require('./order');
+const { messageType } = require('./message');
 
 module.exports = {
   orderState,
   messageType,
-  notificationType,
 };
