@@ -16,8 +16,17 @@ const gmailTransport = nodemailer.createTransport({
   },
 });
 
+const mailtrapTransport = nodemailer.createTransport({
+  host: environment.MAILTRAP_SERVICE_HOST,
+  port: environment.MAILTRAP_SERVICE_PORT,
+  auth: {
+    user: environment.MAILTRAP_USER_NAME,
+    pass: environment.MAILTRAP_USER_PASSWORD,
+  },
+});
+
 const start = () => {
-  gmailTransport.use('compile', hbs({
+  mailtrapTransport.use('compile', hbs({
     viewEngine: {
       partialsDir: templatePath,
     },
@@ -36,7 +45,7 @@ async function sendEmail(from, to, subject, template, context) {
       context, // object with variables to template
     };
 
-    return gmailTransport.sendMail(mailOptions);
+    return mailtrapTransport.sendMail(mailOptions);
   } catch (e) {
     console.log(e);
   }

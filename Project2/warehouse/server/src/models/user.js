@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('CLIENT', 'EMPLOYEE', 'ADMIN'),
+      type: DataTypes.ENUM('EMPLOYEE', 'ADMIN'),
       allowNull: false,
-      defaultValue: 'CLIENT',
+      defaultValue: 'EMPLOYEE',
     },
   },
   {});
@@ -26,11 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     const compare = await bcrypt.compare(password, this.password);
     return compare;
   };
-
-  User.associate = (models) => {
-    User.hasMany(models.Notification);
-  };
-
 
   User.beforeCreate(async (user) => {
     /* eslint-disable */

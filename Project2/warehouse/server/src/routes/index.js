@@ -7,15 +7,15 @@ const router = require('express').Router();
 const passport = require('passport');
 const auth = require('./auth');
 const books = require('./books');
-const notifications = require('./notifications');
+const requests = require('./requests');
 
 
 router.use('/', auth);
 router.use('/api/', passport.authenticate('jwt', { session: false }));
 router.use('/api/', books);
-router.use('/api/', notifications);
+router.use('/api/', requests);
 router.get('/api', (req, res) => res.status(200).send({
-  message: 'Welcome to the Todos API!',
+  message: 'Welcome to the Warehouse API!',
 }));
 
 

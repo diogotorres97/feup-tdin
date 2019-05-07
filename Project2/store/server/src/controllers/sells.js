@@ -38,20 +38,20 @@ const create = async (quantity, bookId, clientId) => {
 
     // Send an e-mail
 
-    // const info = await emailServer.sendEmail(
-    //   null,
-    //   client.email,
-    //   `Order #${order.uuid} confirmed`,
-    //   'order',
-    //   {
-    //     book,
-    //     client,
-    //     order,
-    //     orderState: orderState.toString(order.state, order.stateDate),
-    //   },
-    // );
+    const info = await emailServer.sendEmail(
+      null,
+      client.email,
+      `Order #${order.uuid} confirmed`,
+      'order',
+      {
+        book,
+        client,
+        order,
+        orderState: orderState.toString(order.state, order.stateDate),
+      },
+    );
 
-    // if (info.rejected.length > 0) throw new Error('Email Not Sent');
+    if (info.rejected.length > 0) throw new Error('Email Not Sent');
 
     return order;
   }

@@ -1,4 +1,5 @@
-const { orderState, messageType } = require('./order');
+const { orderState } = require('./order');
+const { messageType } = require('./message');
 
 module.exports = {
   orderState,

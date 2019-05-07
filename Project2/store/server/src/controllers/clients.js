@@ -10,6 +10,12 @@ const list = async () => Client.findAll();
 
 const retrieve = async clientId => Client.findByPk(clientId);
 
+const retrieveByUserId = async userId => Client.findOne({
+  where: {
+    userId,
+  },
+});
+
 const update = async (clientId, address) => {
   const client = await Client.findByPk(clientId);
 
@@ -22,6 +28,17 @@ const update = async (clientId, address) => {
   });
 };
 
+const getClientId = async (req) => {
+  let clientId;
+  if (req.user.role == 'EMPLOYEE') {
+    clientId = req.body.clientId;
+  } else {
+    const client = await retrieveByUserId(req.user.id);
+    if (!client) throw new Error("User don't have a client associated");
+    clientId = client.id;
+  }
+  return clientId;
+};
 // TODO: add retrieve orders
 
 module.exports = {
@@ -29,4 +46,5 @@ module.exports = {
   list,
   retrieve,
   update,
+  getClientId,
 };

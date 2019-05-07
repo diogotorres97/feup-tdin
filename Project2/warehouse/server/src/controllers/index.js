@@ -1,7 +1,7 @@
 const booksController = require('./books');
-const notificationsController = require('./notifications');
+const requestsController = require('./requests');
 
 module.exports = {
   booksController,
-  notificationsController,
+  requestsController,
 };
