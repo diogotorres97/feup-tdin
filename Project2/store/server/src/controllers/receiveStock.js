@@ -29,7 +29,8 @@ const create = async (bookTitle, quantity) => {
   });
 
   let stockLeft = quantity;
-  const ordersId = [];
+  // eslint-disable-next-line
+  let ordersId = [];
   for await (const order of orders) {
     if (stockLeft > order.quantity) {
       await order.update({
