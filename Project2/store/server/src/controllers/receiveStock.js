@@ -21,7 +21,7 @@ const create = async (bookTitle, quantity) => {
   const twoDaysAfter = new Date();
   twoDaysAfter.setDate(new Date().getDate() + 2);
 
-  const orders = Order.findAll({
+  const orders = await Order.findAll({
     where: {
       bookId: book.id,
       state: 'WAITING',
@@ -29,7 +29,7 @@ const create = async (bookTitle, quantity) => {
   });
 
   let stockLeft = quantity;
-  const ordersId = [];
+  let ordersId = [];
   for await (const order of orders) {
     if (stockLeft > order.quantity) {
       await order.update({
@@ -38,11 +38,11 @@ const create = async (bookTitle, quantity) => {
       });
 
       stockLeft -= order.quantity;
-      ordersId.push(order.Id);
+      ordersId.push(order.uuid);
     }
   }
-
-  const receiveStock = await ReceiveStock.create(quantity, ordersId, { bookId: book.id });
+  
+  const receiveStock = await ReceiveStock.create({quantity, ordersId, ...{ bookId: book.id }});
 
   // Send the message through websockets
   sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.receiveStock, receiveStock);
@@ -64,7 +64,6 @@ const receiveStock = async (receiveStockId) => {
   }
 
   const book = await receivedStock.getBook();
-  console.log(book);
 
   let stockLeft = receivedStock.quantity;
   for await (const orderId of receivedStock.ordersId) {

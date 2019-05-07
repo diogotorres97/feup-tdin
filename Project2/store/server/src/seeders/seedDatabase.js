@@ -5,7 +5,6 @@ const {
   booksController,
   ordersController,
   sellsController,
-  notificationsController,
 } = require('../controllers');
 
 const initializeUsers = async () => {

@@ -1,14 +1,13 @@
 const amqpAPI = require('./api');
 const { sleep } = require('../../utils/utils');
-const { receiveStockController } = require('../../controllers');
-
 const {
   AMQP_URL, AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK,
 } = require('../../config/configs');
 
-function receiveStock(msg) {
-  const message = amqpAPI.parseMessage(msg);
-  receiveStockController.create(message.title, message.quantity);
+const receiveStock = (msg) => {
+  const { payload } = amqpAPI.parseMessage(msg);
+  const receiveStockController = require('../../controllers/receiveStock');
+  receiveStockController.create(payload.title, payload.quantity);
 }
 
 async function start() {
