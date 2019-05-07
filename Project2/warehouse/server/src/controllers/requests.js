@@ -17,7 +17,7 @@ const create = async (bookTitle, quantity) => {
   if (!book) throw new Error('Book not found');
   const bookId = book.id;
 
-  const request = await Request.create({quantity, bookId});
+  const request = await Request.create({ quantity, bookId });
 
   sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.requestStock, request);
 

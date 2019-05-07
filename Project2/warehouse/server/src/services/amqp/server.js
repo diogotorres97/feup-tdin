@@ -6,10 +6,10 @@ const {
 
 
 const requestStock = (msg) => {
-  const {payload} = amqpAPI.parseMessage(msg);
+  const { payload } = amqpAPI.parseMessage(msg);
   const requestsController = require('../../controllers/requests');
   requestsController.create(payload.title, payload.quantity);
-}
+};
 
 async function start() {
   amqpAPI.connect(AMQP_URL, [AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK]);

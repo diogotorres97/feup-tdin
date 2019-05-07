@@ -8,7 +8,7 @@ const receiveStock = (msg) => {
   const { payload } = amqpAPI.parseMessage(msg);
   const receiveStockController = require('../../controllers/receiveStock');
   receiveStockController.create(payload.title, payload.quantity);
-}
+};
 
 async function start() {
   amqpAPI.connect(AMQP_URL, [AMQP_QUEUE_REQUEST_STOCK, AMQP_QUEUE_RECEIVE_STOCK]);

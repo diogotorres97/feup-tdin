@@ -29,7 +29,7 @@ const create = async (bookTitle, quantity) => {
   });
 
   let stockLeft = quantity;
-  let ordersId = [];
+  const ordersId = [];
   for await (const order of orders) {
     if (stockLeft > order.quantity) {
       await order.update({
@@ -41,8 +41,8 @@ const create = async (bookTitle, quantity) => {
       ordersId.push(order.uuid);
     }
   }
-  
-  const receiveStock = await ReceiveStock.create({quantity, ordersId, ...{ bookId: book.id }});
+
+  const receiveStock = await ReceiveStock.create({ quantity, ordersId, ...{ bookId: book.id } });
 
   // Send the message through websockets
   sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.receiveStock, receiveStock);
