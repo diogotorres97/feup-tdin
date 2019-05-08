@@ -17,6 +17,7 @@ const initializeUsers = async () => {
   ]);
 };
 
+// TODO: associate userId
 const initializeClients = async () => {
   await Promise.all([
     clientsController.create('john', 'porto', 'john@store.com'),
@@ -42,8 +43,6 @@ const initializeOrders = async () => {
 const initializeSells = async () => {
 };
 
-const initializeNotifications = async () => {
-};
 
 const initializeDatabase = async () => {
   await initializeUsers();

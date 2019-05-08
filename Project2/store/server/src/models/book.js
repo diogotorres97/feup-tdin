@@ -22,8 +22,5 @@ module.exports = (sequelize, DataTypes) => {
     // TODO: add images later
   });
 
-  Book.associate = (models) => {
-  };
-
   return Book;
 };

@@ -67,9 +67,19 @@ const create = async (quantity, bookId, clientId) => {
   return order;
 };
 
-const list = async () => Order.findAll();
+const list = async () => Order.findAll({
+  include: [
+    { model: Book },
+    { model: Client },
+  ],
+});
 
-const retrieve = async orderId => Order.findByPk(orderId);
+const retrieve = async orderId => Order.findByPk(orderId, {
+  include: [
+    { model: Book },
+    { model: Client },
+  ],
+});
 
 const update = async (orderId, state, stateDate) => {
   const order = await Order.findByPk(orderId);

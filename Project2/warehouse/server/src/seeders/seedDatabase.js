@@ -2,7 +2,6 @@ const { User } = require('../models');
 
 const {
   booksController,
-  notificationsController,
 } = require('../controllers');
 
 const initializeUsers = async () => {
@@ -20,9 +19,6 @@ const initializeBooks = async () => {
     booksController.create('Pride and Prejudice', ' Jane Austen', 7.99, 100),
     booksController.create('Twilight', 'Stephenie Meyer', 9.99, 100),
   ]);
-};
-
-const initializeNotifications = async () => {
 };
 
 const initializeDatabase = async () => {

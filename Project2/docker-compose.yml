@@ -38,7 +38,7 @@ services:
       - POSTGRES_PASSWORD=tdin
       - POSTGRES_DB=store
 
-# Warehouse
+  # Warehouse
   warehouse-server:
     image: warehouse-server
     command: npm run dev
@@ -63,10 +63,10 @@ services:
       - POSTGRES_PASSWORD=tdin
       - POSTGRES_DB=warehouse
 
-# RabbitMQ
+  # RabbitMQ
   rabbitmq:
-   image: rabbitmq:3-management
-   container_name: rabbitmq
-   ports:
-       - 15672:15672
-       - 5672:5672
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672

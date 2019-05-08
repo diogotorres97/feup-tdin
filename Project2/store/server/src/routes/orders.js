@@ -17,9 +17,9 @@ router.post('/orders', async (req, res) => {
 router.get('/orders', async (_, res) => {
   try {
     const orders = await ordersController.list();
-    res.status(201).send(orders);
+    res.status(200).send(orders);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send(error.message);
   }
 });
 
@@ -28,9 +28,9 @@ router.get('/orders/:orderId', async (req, res) => {
 
   try {
     const order = await ordersController.retrieve(orderId);
-    res.status(201).send(order);
+    res.status(200).send(order);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send(error.message);
   }
 });
 
@@ -40,9 +40,9 @@ router.put('/orders/:orderId', async (req, res) => {
 
   try {
     const order = await ordersController.update(orderId, state, stateDate);
-    res.status(201).send(order);
+    res.status(200).send(order);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send(error.message);
   }
 });
 

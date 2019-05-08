@@ -15,16 +15,19 @@ const create = async (bookTitle, quantity) => {
   });
 
   if (!book) throw new Error('Book not found');
-  const bookId = book.id;
 
-  const request = await Request.create({ quantity, bookId });
+  const request = await Request.create({ quantity, ...{ bookId: book.id } });
 
   sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.requestStock, request);
 
   return request;
 };
 
-const list = async () => Request.findAll();
+const list = async () => Request.findAll({
+  include: [
+    { model: Book },
+  ],
+});
 
 const sendStock = async (requestId) => {
   const request = await Request.findByPk(requestId);
