@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { receiveStockController } = require('../controllers');
 
-router.get('/receiveStock', async (req, res) => {
+router.get('/receiveStock', async (_, res) => {
   try {
     const receivedStock = await receiveStockController.list();
     res.status(200).send(receivedStock);

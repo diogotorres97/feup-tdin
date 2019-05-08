@@ -21,11 +21,9 @@ module.exports = (sequelize, DataTypes) => {
   Client.associate = (models) => {
     Client.hasMany(models.Order, {
       foreignKey: 'clientId',
-      // as: 'orders'
     });
     Client.hasMany(models.Sell, {
       foreignKey: 'clientId',
-      // as: 'sells'
     });
   };
 
