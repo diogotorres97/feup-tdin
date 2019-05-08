@@ -1,4 +1,6 @@
-const { Client, Order, Sell } = require('../models');
+const {
+  Client, Order, Sell, Book,
+} = require('../models');
 
 const create = async (name, address, email) => Client.create({
   name,
@@ -8,7 +10,12 @@ const create = async (name, address, email) => Client.create({
 
 const list = async () => Client.findAll();
 
-const retrieve = async clientId => Client.findByPk(clientId);
+const retrieve = async clientId => Client.findByPk(clientId, {
+  include: [
+    { model: Order, include: Book },
+    { model: Sell, include: Book },
+  ],
+});
 
 const retrieveByUserId = async userId => Client.findOne({
   where: {
@@ -30,7 +37,7 @@ const update = async (clientId, address) => {
 
 const getClientId = async (req) => {
   let clientId;
-  if (req.user.role == 'EMPLOYEE') {
+  if (req.user.role === 'EMPLOYEE') {
     clientId = req.body.clientId;
   } else {
     const client = await retrieveByUserId(req.user.id);
@@ -39,7 +46,6 @@ const getClientId = async (req) => {
   }
   return clientId;
 };
-// TODO: add retrieve orders
 
 module.exports = {
   create,

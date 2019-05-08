@@ -68,9 +68,19 @@ const create = async (quantity, bookId, clientId) => {
   return sell;
 };
 
-const list = async () => Sell.findAll();
+const list = async () => Sell.findAll({
+  include: [
+    { model: Book },
+    { model: Client },
+  ],
+});
 
-const retrieve = async sellId => Sell.findByPk(sellId);
+const retrieve = async sellId => Sell.findByPk(sellId, {
+  include: [
+    { model: Book },
+    { model: Client },
+  ],
+});
 
 module.exports = {
   create,

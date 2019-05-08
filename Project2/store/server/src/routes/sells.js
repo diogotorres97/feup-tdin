@@ -2,8 +2,7 @@ const router = require('express').Router();
 const { sellsController } = require('../controllers');
 
 router.post('/sells', async (req, res) => {
-  const { quantity, bookId } = req.body;
-  const clientId = req.user.id;
+  const { quantity, bookId, clientId } = req.body;
 
   try {
     const sell = await sellsController.create(quantity, bookId, clientId);

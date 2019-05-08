@@ -51,7 +51,11 @@ const create = async (bookTitle, quantity) => {
   return receiveStock;
 };
 
-const list = async () => ReceiveStock.findAll();
+const list = async () => ReceiveStock.findAll({
+  include: [
+    { model: Book },
+  ],
+});
 
 const receiveStock = async (receiveStockId) => {
   const receivedStock = await ReceiveStock.findByPk(receiveStockId);

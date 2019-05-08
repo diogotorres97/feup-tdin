@@ -3,8 +3,8 @@ const { receiveStockController } = require('../controllers');
 
 router.get('/receiveStock', async (req, res) => {
   try {
-    const requests = await requestsController.list();
-    res.status(201).send(requests);
+    const receivedStock = await receiveStockController.list();
+    res.status(200).send(receivedStock);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -15,7 +15,7 @@ router.put('/receiveStock/:receiveStockId/receiveStock', async (req, res) => {
 
   try {
     const receiveStock = await receiveStockController.receiveStock(receiveStockId);
-    res.status(201).send(receiveStock);
+    res.status(200).send(receiveStock);
   } catch (error) {
     res.status(400).send(error.message);
   }
