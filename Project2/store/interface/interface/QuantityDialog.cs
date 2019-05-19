@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 
 namespace @interface
@@ -72,8 +74,14 @@ namespace @interface
             else
                 url = Utils.sells;
 
-            string parameters = "quantity=" + numQuantity.Value.ToString() + "&bookId=" + idBook.ToString() + "&clientId=" + idClient.ToString();
-            IRestResponse response = Utils.executeRequest(url, "", Method.POST, parameters);
+            dynamic body = new ExpandoObject();
+            body.quantity = Convert.ToInt32(numQuantity.Value);
+            body.bookId = idBook;
+            body.clientId = idClient;
+            string json = JsonConvert.SerializeObject(body);
+            Console.WriteLine(json);
+            
+            IRestResponse response = Utils.executeRequest2(url, "", Method.POST, json);
             if (response.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 MessageBox.Show(response.Content, "Create Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

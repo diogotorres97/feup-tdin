@@ -85,5 +85,19 @@ public class Utils
 
         return client.Execute(request);
     }
+    
+    public static IRestResponse executeRequest2(string url, string id, Method method, string parameters)
+    {
+        if (!id.Equals(""))
+            url += "/" + id;
+
+        var client = new RestClient(url);
+        var request = new RestRequest(method);
+
+        request.AddHeader("Authorization", "Bearer " + token);
+        request.AddParameter("application/json", parameters, ParameterType.RequestBody);
+
+        return client.Execute(request);
+    }
 
 }
