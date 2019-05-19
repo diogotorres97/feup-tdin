@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace @interface
+﻿namespace @interface
 {
-   
     class Request
     {
         public int id { get; set; }
@@ -16,7 +9,6 @@ namespace @interface
 
         public Request()
         {
-
         }
 
         public Request(int id, int quantity, string processedDate, Book book)
@@ -25,8 +17,6 @@ namespace @interface
             this.quantity = quantity;
             this.processedDate = processedDate;
             this.book = book;
-
         }
     }
-
 }

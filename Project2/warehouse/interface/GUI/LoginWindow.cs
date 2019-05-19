@@ -1,17 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Dynamic;
+using System.Net;
+using System.Net.Mail;
+using System.Windows.Forms;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 
 namespace @interface
 {
@@ -42,26 +36,27 @@ namespace @interface
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (!checkEmail())
+            if (!CheckEmail())
                 return;
-            login();
-            this.Hide();
+            Login();
+            Hide();
             WarehouseWindow form = new WarehouseWindow();
-            form.Closed += (s, args) => this.Close();
+            form.Closed += (s, args) => Close();
             form.Show();
-
-
         }
 
-        private void login()
+        private void Login()
         {
             string email = txtBoxEmail.Text;
             string password = txtBoxPassword.Text;
-            string parameters = "email=" + email + "&password=" + password;
+            dynamic body = new ExpandoObject();
+            body.email = email;
+            body.password = password;
+            string credentials = JsonConvert.SerializeObject(body);
 
-            IRestResponse response = Utils.executeAuthRequest(Utils.login, "", Method.POST, parameters);
+            IRestResponse response = Utils.ExecuteAuthRequest(Utils.Login, credentials);
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            if (response.StatusCode != HttpStatusCode.OK)
             {
                 MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -70,8 +65,7 @@ namespace @interface
                 try
                 {
                     JToken obj = JToken.Parse(response.Content);
-                    Utils.token = obj.Value<string>("token");
-
+                    Utils.Token = obj.Value<string>("token");
                 }
                 catch (JsonReaderException jex)
                 {
@@ -83,14 +77,13 @@ namespace @interface
                     Console.WriteLine(ex.ToString());
                 }
             }
-
         }
 
-        private bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             try
             {
-                var addr = new System.Net.Mail.MailAddress(email);
+                var addr = new MailAddress(email);
                 return addr.Address == email;
             }
             catch
@@ -99,19 +92,16 @@ namespace @interface
             }
         }
 
-        private bool checkEmail()
+        private bool CheckEmail()
         {
             if (!IsValidEmail(txtBoxEmail.Text))
             {
                 lblErrorEmail.Visible = true;
                 return false;
             }
-            else
-            {
-                lblErrorEmail.Visible = false;
-                return true;
-            }
-        }
 
+            lblErrorEmail.Visible = false;
+            return true;
+        }
     }
 }
