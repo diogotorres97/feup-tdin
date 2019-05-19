@@ -14,7 +14,7 @@ public class Utils
     // Receive Stock routes
     public const string requests = urlDefault + "requests";
 
-    public static string token = "";
+    public static string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJlbWFpbCI6ImVtcGxveWVlQHN0b3JlLmNvbSIsInJvbGUiOiJFTVBMT1lFRSJ9LCJpYXQiOjE1NTgyOTI5ODN9.luB3Bxq0v14WSaNMVXulV8VnhtOyeeKnuDAbcMnTFBs";
 
     public const string AppKey = "dd7136ca250e4358b688";
 

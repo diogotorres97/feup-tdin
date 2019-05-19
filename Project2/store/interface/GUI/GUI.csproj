@@ -62,9 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Utils.cs">
-      <Link>Utils.cs</Link>
-    </Compile>
     <Compile Include="Book.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientWindow.cs">
@@ -102,6 +99,7 @@
     <Compile Include="StoreWindow.Designer.cs">
       <DependentUpon>StoreWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="ClientWindow.resx">
       <DependentUpon>ClientWindow.cs</DependentUpon>
     </EmbeddedResource>

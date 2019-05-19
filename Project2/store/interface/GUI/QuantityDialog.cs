@@ -1,18 +1,10 @@
-﻿using PusherClient;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+using System.Net;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-
+using PusherClient;
+using RestSharp;
 
 namespace @interface
 {
@@ -22,26 +14,22 @@ namespace @interface
         private static Channel _chatChannel;
         private static PresenceChannel _presenceChannel;
 
-        private int idClient, idBook;
-        private bool isOrder;
-        public CreateOrderDialog(int idClient, int idBook, bool isOrder)
+        private int _clientId, _bookId;
+        private bool _isOrder;
+        public CreateOrderDialog(int clientId, int bookId, bool isOrder)
         {
             InitializeComponent();
-            this.idClient = idClient;
-            this.idBook = idBook;
-            this.isOrder = isOrder;
+            _clientId = clientId;
+            _bookId = bookId;
+            _isOrder = isOrder;
 
             InitPusher();
-
-     
-        
-
         }
 
         // Pusher Initiation / Connection
         private static void InitPusher()
         {
-            _pusher = new Pusher(Utils.AppKey, new PusherOptions()
+            _pusher = new Pusher(Utils.PusherKey, new PusherOptions
             {
                 Cluster = "eu"
             });
@@ -51,7 +39,7 @@ namespace @interface
             _chatChannel = _pusher.Subscribe("store");
 
             // Inline binding!
-            _chatChannel.Bind("print_invoice", (dynamic data) =>
+            _chatChannel.Bind("print_invoice", data =>
             {
                 Console.WriteLine("[" + data.name + "] " + data.message);
             });
@@ -60,35 +48,31 @@ namespace @interface
         }
 
 
-        static void _pusher_Error(object sender, PusherException error)
+        private static void _pusher_Error(object sender, PusherException error)
         {
             Console.WriteLine("Pusher Error: " + error);
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-
-            string url;
-            if(isOrder)
-                url = Utils.orders;
-            else
-                url = Utils.sells;
+            var url = _isOrder ? Utils.Orders : Utils.Sells;
 
             dynamic body = new ExpandoObject();
             body.quantity = Convert.ToInt32(numQuantity.Value);
-            body.bookId = idBook;
-            body.clientId = idClient;
-            string json = JsonConvert.SerializeObject(body);
-            Console.WriteLine(json);
+            body.bookId = _bookId;
+            body.clientId = _clientId;
+            string order = JsonConvert.SerializeObject(body);
             
-            IRestResponse response = Utils.executeRequest2(url, "", Method.POST, json);
-            if (response.StatusCode != System.Net.HttpStatusCode.Created)
+            Console.WriteLine(order);
+            
+            IRestResponse response = Utils.ExecutePostRequest(url, order);
+            if (response.StatusCode != HttpStatusCode.Created)
             {
                 MessageBox.Show(response.Content, "Create Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                this.Close();
+                Close();
             }
         }
     }

@@ -10,7 +10,7 @@ router.get('/receiveStock', async (_, res) => {
   }
 });
 
-router.put('/receiveStock/:receiveStockId/receiveStock', async (req, res) => {
+router.put('/receiveStock/:receiveStockId', async (req, res) => {
   const { receiveStockId } = req.params;
 
   try {

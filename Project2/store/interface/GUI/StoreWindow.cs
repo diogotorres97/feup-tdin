@@ -1,16 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows.Forms;
-
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace @interface
 {
@@ -25,14 +18,18 @@ namespace @interface
 
         private void LoadBooks()
         {
-            IRestResponse response = Utils.executeRequest(Utils.books, "", Method.GET, "");
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            IRestResponse response = Utils.ExecuteRequest(Utils.Books, Method.GET, "", "");
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-                MessageBox.Show(response.Content, "Fetch Books Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            } else {
-                List<Book> bookList = (List<Book>) Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content, typeof(List<Book>));
+                MessageBox.Show(response.Content, "Fetch Books Failed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                List<Book> bookList = (List<Book>) JsonConvert.DeserializeObject(response.Content, typeof(List<Book>));
 
-                foreach (Book book in bookList) {
+                foreach (Book book in bookList)
+                {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
                         book.id.ToString(), book.title, book.author, book.price.ToString(), book.stock.ToString()
@@ -44,14 +41,17 @@ namespace @interface
 
         private void LoadClients()
         {
-            IRestResponse response = Utils.executeRequest(Utils.clients, "", Method.GET, "");
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            IRestResponse response = Utils.ExecuteRequest(Utils.Clients, Method.GET, "", "");
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-                MessageBox.Show(response.Content, "Fetch Clients Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(response.Content, "Fetch Clients Failed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
             else
             {
-                List<Client> clientList = (List<Client>)Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content, typeof(List<Client>));
+                List<Client> clientList =
+                    (List<Client>) JsonConvert.DeserializeObject(response.Content, typeof(List<Client>));
+                
                 Console.WriteLine(clientList.Count.ToString());
 
                 foreach (Client client in clientList)
@@ -78,7 +78,8 @@ namespace @interface
         {
             if (listViewClients.SelectedItems.Count > 0 && listViewBooks.SelectedItems.Count > 0)
             {
-                CreateOrderDialog form = new CreateOrderDialog(int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
+                CreateOrderDialog form = new CreateOrderDialog(
+                    int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
                     int.Parse(listViewBooks.SelectedItems[0].SubItems[0].Text), true);
                 form.Show();
             }
@@ -88,7 +89,8 @@ namespace @interface
         {
             if (listViewClients.SelectedItems.Count > 0 && listViewBooks.SelectedItems.Count > 0)
             {
-                CreateOrderDialog form = new CreateOrderDialog(int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
+                CreateOrderDialog form = new CreateOrderDialog(
+                    int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
                     int.Parse(listViewBooks.SelectedItems[0].SubItems[0].Text), false);
                 form.Show();
             }
