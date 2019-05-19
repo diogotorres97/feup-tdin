@@ -92,6 +92,7 @@
             this.btnNotifications.TabIndex = 6;
             this.btnNotifications.Text = "Notifications";
             this.btnNotifications.UseVisualStyleBackColor = true;
+            this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
             // 
             // label1
             // 
@@ -118,6 +119,7 @@
             this.name});
             this.listViewClients.FullRowSelect = true;
             this.listViewClients.GridLines = true;
+            this.listViewClients.HideSelection = false;
             this.listViewClients.Location = new System.Drawing.Point(37, 219);
             this.listViewClients.MultiSelect = false;
             this.listViewClients.Name = "listViewClients";
@@ -145,7 +147,6 @@
             this.stock});
             this.listViewBooks.FullRowSelect = true;
             this.listViewBooks.GridLines = true;
-            this.listViewBooks.HideSelection = false;
             this.listViewBooks.Location = new System.Drawing.Point(443, 219);
             this.listViewBooks.MultiSelect = false;
             this.listViewBooks.Name = "listViewBooks";

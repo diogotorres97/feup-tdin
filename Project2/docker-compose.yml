@@ -63,7 +63,7 @@ services:
       - POSTGRES_PASSWORD=tdin
       - POSTGRES_DB=warehouse
 
-  # RabbitMQ
+  # RabbitMQA
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

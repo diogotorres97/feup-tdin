@@ -76,12 +76,28 @@ namespace @interface
 
         private void btnOrder_Click(object sender, EventArgs e)
         {
-
+            if (listViewClients.SelectedItems.Count > 0 && listViewBooks.SelectedItems.Count > 0)
+            {
+                CreateOrderDialog form = new CreateOrderDialog(int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
+                    int.Parse(listViewBooks.SelectedItems[0].SubItems[0].Text), true);
+                form.Show();
+            }
         }
 
         private void btnSell_Click(object sender, EventArgs e)
         {
+            if (listViewClients.SelectedItems.Count > 0 && listViewBooks.SelectedItems.Count > 0)
+            {
+                CreateOrderDialog form = new CreateOrderDialog(int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text),
+                    int.Parse(listViewBooks.SelectedItems[0].SubItems[0].Text), false);
+                form.Show();
+            }
+        }
 
+        private void btnNotifications_Click(object sender, EventArgs e)
+        {
+            NotificationsWindow form = new NotificationsWindow();
+            form.Show();
         }
     }
 }

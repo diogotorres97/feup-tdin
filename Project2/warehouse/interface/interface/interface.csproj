@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76DADEA9-D7FB-4579-BF1B-D688F19B9784}</ProjectGuid>
+    <ProjectGuid>{21FE6CD2-9E87-4612-B855-8C956DE04EBA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>interface</RootNamespace>
     <AssemblyName>@interface</AssemblyName>
@@ -39,14 +39,38 @@
     <Reference Include="PusherClient, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PusherClient.0.5.1\lib\net40\PusherClient.dll</HintPath>
     </Reference>
-    <Reference Include="PusherClientDotNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PusherClientDotNet.1.0.0.0\lib\net40\PusherClientDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="RestSharp, Version=106.6.9.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.6.9\lib\net452\RestSharp.dll</HintPath>
     </Reference>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Security.4.3.0\lib\net46\System.Net.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -57,60 +81,28 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\net45\WebSocket4Net.dll</HintPath>
+    <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Utils.cs">
-      <Link>Utils.cs</Link>
-    </Compile>
     <Compile Include="Book.cs" />
-    <Compile Include="Client.cs" />
-    <Compile Include="ClientWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ClientWindow.Designer.cs">
-      <DependentUpon>ClientWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NotificationsWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NotificationsWindow.Designer.cs">
-      <DependentUpon>NotificationsWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="QuantityDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="QuantityDialog.Designer.cs">
-      <DependentUpon>QuantityDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LoginWindow.Designer.cs">
       <DependentUpon>LoginWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Order.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReceiveStock.cs" />
-    <Compile Include="Sell.cs" />
-    <Compile Include="StoreWindow.cs">
+    <Compile Include="Request.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="WarehouseWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StoreWindow.Designer.cs">
-      <DependentUpon>StoreWindow.cs</DependentUpon>
+    <Compile Include="WarehouseWindow.Designer.cs">
+      <DependentUpon>WarehouseWindow.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ClientWindow.resx">
-      <DependentUpon>ClientWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NotificationsWindow.resx">
-      <DependentUpon>NotificationsWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="QuantityDialog.resx">
-      <DependentUpon>QuantityDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LoginWindow.resx">
       <DependentUpon>LoginWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,8 +115,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="StoreWindow.resx">
-      <DependentUpon>StoreWindow.cs</DependentUpon>
+    <EmbeddedResource Include="WarehouseWindow.resx">
+      <DependentUpon>WarehouseWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
