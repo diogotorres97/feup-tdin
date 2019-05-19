@@ -43,6 +43,8 @@
             this.author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.stock = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnAllOrders = new System.Windows.Forms.Button();
+            this.btnAllSells = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSell
@@ -177,11 +179,31 @@
             // 
             this.stock.Text = "Stock";
             // 
+            // btnAllOrders
+            // 
+            this.btnAllOrders.Location = new System.Drawing.Point(449, 33);
+            this.btnAllOrders.Name = "btnAllOrders";
+            this.btnAllOrders.Size = new System.Drawing.Size(191, 40);
+            this.btnAllOrders.TabIndex = 12;
+            this.btnAllOrders.Text = "All Orders";
+            this.btnAllOrders.UseVisualStyleBackColor = true;
+            // 
+            // btnAllSells
+            // 
+            this.btnAllSells.Location = new System.Drawing.Point(223, 33);
+            this.btnAllSells.Name = "btnAllSells";
+            this.btnAllSells.Size = new System.Drawing.Size(191, 40);
+            this.btnAllSells.TabIndex = 11;
+            this.btnAllSells.Text = "All Sells";
+            this.btnAllSells.UseVisualStyleBackColor = true;
+            // 
             // StoreWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.btnAllOrders);
+            this.Controls.Add(this.btnAllSells);
             this.Controls.Add(this.listViewBooks);
             this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.label2);
@@ -218,5 +240,7 @@
         private System.Windows.Forms.ColumnHeader author;
         private System.Windows.Forms.ColumnHeader price;
         private System.Windows.Forms.ColumnHeader stock;
+        private System.Windows.Forms.Button btnAllOrders;
+        private System.Windows.Forms.Button btnAllSells;
     }
 }
