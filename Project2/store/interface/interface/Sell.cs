@@ -5,21 +5,21 @@ public class Sell
 	public string uuid { get; set; }
 	public int quantity { get; set; }
 	public double totalPrice { get; set; }
-	public int clientId { get; set; }
-	public int bookId { get; set; }
-	
-	public Sell()
+    public Book book { get; set; }
+    public Client client { get; set; }
+
+    public Sell()
 	{
 
 	}
 	
-	public Sell(string uuid, int quantity, double totalPrice, int clientId, int bookId )
+	public Sell(string uuid, int quantity, double totalPrice, Book book, Client client)
 	{
 		this.uuid = uuid;
 		this.quantity = quantity;
 		this.totalPrice = totalPrice;
-		this.clientId = clientId;
-		this.bookId = bookId;
+        this.book = book;
+        this.client = client;
 
-	}
+    }
 }

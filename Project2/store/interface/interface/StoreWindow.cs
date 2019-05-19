@@ -20,6 +20,7 @@ namespace @interface
         {
             InitializeComponent();
             LoadBooks();
+            LoadClients();
         }
 
         private void LoadBooks()
@@ -29,9 +30,7 @@ namespace @interface
             {
                 MessageBox.Show(response.Content, "Fetch Books Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             } else {
-                Console.WriteLine(response.Content);
                 List<Book> bookList = (List<Book>) Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content, typeof(List<Book>));
-                Console.WriteLine(bookList.Count.ToString());
 
                 foreach (Book book in bookList) {
                     ListViewItem lvItem = new ListViewItem(new[]
@@ -41,10 +40,48 @@ namespace @interface
                     listViewBooks.Items.Add(lvItem);
                 }
             }
-
-           
         }
 
+        private void LoadClients()
+        {
+            IRestResponse response = Utils.executeRequest(Utils.clients, "", Method.GET, "");
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                MessageBox.Show(response.Content, "Fetch Clients Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                List<Client> clientList = (List<Client>)Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content, typeof(List<Client>));
+                Console.WriteLine(clientList.Count.ToString());
 
+                foreach (Client client in clientList)
+                {
+                    ListViewItem lvItem = new ListViewItem(new[]
+                    {
+                        client.id.ToString(), client.name
+                    });
+                    listViewClients.Items.Add(lvItem);
+                }
+            }
+        }
+
+        private void btnViewClient_Click(object sender, EventArgs e)
+        {
+            if (listViewClients.SelectedItems.Count == 0)
+                return;
+
+            ClientWindow form = new ClientWindow(int.Parse(listViewClients.SelectedItems[0].SubItems[0].Text));
+            form.Show();
+        }
+
+        private void btnOrder_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSell_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

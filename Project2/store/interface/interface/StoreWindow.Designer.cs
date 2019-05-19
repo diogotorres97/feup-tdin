@@ -43,8 +43,6 @@
             this.author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.stock = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnSells = new System.Windows.Forms.Button();
-            this.btnOrders = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSell
@@ -55,6 +53,7 @@
             this.btnSell.TabIndex = 0;
             this.btnSell.Text = "Sell Book";
             this.btnSell.UseVisualStyleBackColor = true;
+            this.btnSell.Click += new System.EventHandler(this.btnSell_Click);
             // 
             // btnOrder
             // 
@@ -64,6 +63,7 @@
             this.btnOrder.TabIndex = 3;
             this.btnOrder.Text = "Order Book";
             this.btnOrder.UseVisualStyleBackColor = true;
+            this.btnOrder.Click += new System.EventHandler(this.btnOrder_Click);
             // 
             // btnViewClient
             // 
@@ -73,10 +73,11 @@
             this.btnViewClient.TabIndex = 4;
             this.btnViewClient.Text = "View Client";
             this.btnViewClient.UseVisualStyleBackColor = true;
+            this.btnViewClient.Click += new System.EventHandler(this.btnViewClient_Click);
             // 
             // btnStatistics
             // 
-            this.btnStatistics.Location = new System.Drawing.Point(251, 29);
+            this.btnStatistics.Location = new System.Drawing.Point(672, 33);
             this.btnStatistics.Name = "btnStatistics";
             this.btnStatistics.Size = new System.Drawing.Size(191, 40);
             this.btnStatistics.TabIndex = 5;
@@ -85,7 +86,7 @@
             // 
             // btnNotifications
             // 
-            this.btnNotifications.Location = new System.Drawing.Point(477, 29);
+            this.btnNotifications.Location = new System.Drawing.Point(898, 33);
             this.btnNotifications.Name = "btnNotifications";
             this.btnNotifications.Size = new System.Drawing.Size(191, 40);
             this.btnNotifications.TabIndex = 6;
@@ -175,31 +176,11 @@
             // 
             this.stock.Text = "Stock";
             // 
-            // btnSells
-            // 
-            this.btnSells.Location = new System.Drawing.Point(929, 29);
-            this.btnSells.Name = "btnSells";
-            this.btnSells.Size = new System.Drawing.Size(191, 40);
-            this.btnSells.TabIndex = 12;
-            this.btnSells.Text = "Sells";
-            this.btnSells.UseVisualStyleBackColor = true;
-            // 
-            // btnOrders
-            // 
-            this.btnOrders.Location = new System.Drawing.Point(703, 29);
-            this.btnOrders.Name = "btnOrders";
-            this.btnOrders.Size = new System.Drawing.Size(191, 40);
-            this.btnOrders.TabIndex = 11;
-            this.btnOrders.Text = "Orders";
-            this.btnOrders.UseVisualStyleBackColor = true;
-            // 
             // StoreWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1182, 753);
-            this.Controls.Add(this.btnSells);
-            this.Controls.Add(this.btnOrders);
             this.Controls.Add(this.listViewBooks);
             this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.label2);
@@ -236,7 +217,5 @@
         private System.Windows.Forms.ColumnHeader author;
         private System.Windows.Forms.ColumnHeader price;
         private System.Windows.Forms.ColumnHeader stock;
-        private System.Windows.Forms.Button btnSells;
-        private System.Windows.Forms.Button btnOrders;
     }
 }

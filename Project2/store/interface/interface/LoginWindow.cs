@@ -53,35 +53,37 @@ namespace @interface
 
         }
 
-        private bool login()
+        private void login()
         {
             string email = txtBoxEmail.Text;
             string password = txtBoxPassword.Text;
             string parameters = "email=" + email + "&password=" + password;
             
             IRestResponse response = Utils.executeAuthRequest(Utils.login, "", Method.POST, parameters);
-            if ((response.Content.StartsWith("{") && response.Content.EndsWith("}")) || //For object
-                (response.Content.StartsWith("[") && response.Content.EndsWith("]"))) //For array
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                try {
+                MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                try
+                {
                     JToken obj = JToken.Parse(response.Content);
                     Utils.token = obj.Value<string>("token");
-                    
-                    return true;
-                } catch (JsonReaderException jex) {
+
+                }
+                catch (JsonReaderException jex)
+                {
                     //Exception in parsing json
                     Console.WriteLine(jex.Message);
-                    return false;
-                } catch (Exception ex) //some other exception
-                  {
-                    Console.WriteLine(ex.ToString());
-                    return false;
                 }
-            } else {
-                MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
+                catch (Exception ex) //some other exception
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
-           
+
         }
 
         private bool IsValidEmail(string email)

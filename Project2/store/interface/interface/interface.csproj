@@ -58,6 +58,18 @@
     </Compile>
     <Compile Include="Book.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClientWindow.Designer.cs">
+      <DependentUpon>ClientWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateOrderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateOrderDialog.Designer.cs">
+      <DependentUpon>CreateOrderDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +86,12 @@
     <Compile Include="StoreWindow.Designer.cs">
       <DependentUpon>StoreWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ClientWindow.resx">
+      <DependentUpon>ClientWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateOrderDialog.resx">
+      <DependentUpon>CreateOrderDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginWindow.resx">
       <DependentUpon>LoginWindow.cs</DependentUpon>
     </EmbeddedResource>

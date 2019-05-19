@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 public class Client
 {
@@ -6,19 +7,21 @@ public class Client
 	public string name { get; set; }
 	public string address { get; set; }
 	public string email { get; set; }
-	public int stock ;
-	
-	public Client()
+    public List<Order> orders { get; set; }
+    public List<Sell> sells { get; set; }
+
+    public Client()
 	{
 
 	}
 	
-	public Client(int id, string name, string address, string email, int stock )
+	public Client(int id, string name, string address, string email, List<Order> orders, List<Sell> sells)
 	{
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.email = email;
-        this.stock = stock;
-	}
+        this.orders = orders;
+        this.sells = sells;
+    }
 }
