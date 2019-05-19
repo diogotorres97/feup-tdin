@@ -10,7 +10,7 @@ router.get('/requests', async (_, res) => {
   }
 });
 
-router.put('/requests/:requestId/sendStock', async (req, res) => {
+router.put('/requests/:requestId', async (req, res) => {
   const { requestId } = req.params;
 
   try {
