@@ -1,3 +1,7 @@
+const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+const { PUSHER_CHANNEL_WAREHOUSE } = require('../config/configs');
+
 module.exports = (sequelize, DataTypes) => {
   const Request = sequelize.define('Request', {
     quantity: {
@@ -15,6 +19,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'bookId',
     });
   };
+
+  Request.afterCreate(async (request) => {
+    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.createRequest, request);
+  });
+
+  Request.afterUpdate(async (request) => {
+    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.updateRequest, request);
+  });
 
   return Request;
 };
