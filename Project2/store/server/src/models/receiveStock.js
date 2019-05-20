@@ -1,3 +1,7 @@
+const { PUSHER_CHANNEL_STORE } = require('./../config/configs');
+const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+
 module.exports = (sequelize, DataTypes) => {
   const ReceiveStock = sequelize.define('ReceiveStock', {
     quantity: {

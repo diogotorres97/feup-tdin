@@ -41,17 +41,17 @@ const update = async (clientId, address) => {
 
 const associateUserToClient = async (userId, clientId) => {
   const client = await Client.findByPk(clientId);
-  
+
   if (!client) {
     throw new Error('Client not found');
   }
 
-  if(client.userId) {
+  if (client.userId) {
     throw new Error('Client already have a user associated');
   }
 
-  return client.update({userId});
-} 
+  return client.update({ userId });
+};
 
 const getClientId = async (req) => {
   let clientId;
