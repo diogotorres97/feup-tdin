@@ -12,6 +12,27 @@ router.post('/clients', async (req, res) => {
   }
 });
 
+router.post('/clients/association', async (req, res) => {
+  const { name, address, email } = req.body;
+
+  try {
+    const client = await clientsController.create(name, address, email);
+    const clientAssociatedToUser = await clientsController.associateUserToClient(req.user.id, client.id);
+    res.status(201).send(clientAssociatedToUser);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+router.get('/clients/association', async (req, res) => {
+  try {
+    const client = await clientsController.retrieveByUserId(req.user.id);
+    res.status(200).send(client);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 router.get('/clients', async (_, res) => {
   try {
     const clients = await clientsController.list();

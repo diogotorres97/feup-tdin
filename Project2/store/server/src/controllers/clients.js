@@ -1,5 +1,5 @@
 const {
-  Client, Order, Sell, Book,
+  Client, Order, Sell, Book, User,
 } = require('../models');
 
 const create = async (name, address, email) => Client.create({
@@ -34,10 +34,24 @@ const update = async (clientId, address) => {
     throw new Error('Client not found');
   }
 
-  return Client.update({
+  return client.update({
     address: address || client.address,
   });
 };
+
+const associateUserToClient = async (userId, clientId) => {
+  const client = await Client.findByPk(clientId);
+  
+  if (!client) {
+    throw new Error('Client not found');
+  }
+
+  if(client.userId) {
+    throw new Error('Client already have a user associated');
+  }
+
+  return client.update({userId});
+} 
 
 const getClientId = async (req) => {
   let clientId;
@@ -56,5 +70,7 @@ module.exports = {
   list,
   retrieve,
   update,
+  retrieveByUserId,
+  associateUserToClient,
   getClientId,
 };
