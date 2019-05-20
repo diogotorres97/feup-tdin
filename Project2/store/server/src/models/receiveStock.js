@@ -19,5 +19,13 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  ReceiveStock.afterCreate(async (receiveStock) => {
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createReceiveStock, receiveStock);
+  });
+
+  ReceiveStock.afterUpdate(async (receiveStock) => {
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateReceiveStock, receiveStock);
+  });
+
   return ReceiveStock;
 };

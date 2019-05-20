@@ -1,12 +1,8 @@
 const {
   ReceiveStock, Book, Order, Client,
 } = require('../models');
-const {
-  PUSHER_CHANNEL_STORE,
-} = require('../config/configs');
-const { orderState, messageType } = require('../enums');
+const { orderState } = require('../enums');
 const { emailServer } = require('../services/email');
-const { sendNotificationMessage } = require('../services/websockets/pusher');
 
 const create = async (bookTitle, quantity) => {
   const book = await Book.findOne({
@@ -44,9 +40,6 @@ const create = async (bookTitle, quantity) => {
   }
 
   const receiveStock = await ReceiveStock.create({ quantity, ordersId, ...{ bookId: book.id } });
-
-  // Send the message through websockets
-  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.receiveStock, receiveStock);
 
   return receiveStock;
 };

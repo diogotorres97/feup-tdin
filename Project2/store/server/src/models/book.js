@@ -1,3 +1,7 @@
+const { PUSHER_CHANNEL_STORE } = require('./../config/configs');
+const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+
 module.exports = (sequelize, DataTypes) => {
   const Book = sequelize.define('Book', {
     title: {
@@ -20,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     // TODO: add images later
+  });
+
+  Book.afterUpdate(async (book) => {
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateBook, book);
   });
 
   return Book;

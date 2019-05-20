@@ -37,7 +37,6 @@ const create = async (quantity, bookId, clientId) => {
     });
 
     // Send an e-mail
-
     const info = await emailServer.sendEmail(
       null,
       client.email,
@@ -63,7 +62,7 @@ const create = async (quantity, bookId, clientId) => {
   });
 
   // print a receipt
-  sendNotificationMessage(PUSHER_CHANNEL_STORE, 'print_invoice', sell);
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.printInvoice, sell);
 
   return sell;
 };

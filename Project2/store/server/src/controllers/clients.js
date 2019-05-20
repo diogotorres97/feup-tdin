@@ -21,6 +21,10 @@ const retrieveByUserId = async userId => Client.findOne({
   where: {
     userId,
   },
+  include: [
+    { model: Order, include: Book },
+    { model: Sell, include: Book },
+  ],
 });
 
 const update = async (clientId, address) => {
