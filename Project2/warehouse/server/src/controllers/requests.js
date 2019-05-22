@@ -16,6 +16,8 @@ const create = async (bookTitle, quantity) => {
 
   const request = await Request.create({ quantity, ...{ bookId: book.id } });
 
+  request.setDataValue('book', book.dataValues);
+  
   return request;
 };
 
@@ -26,7 +28,11 @@ const list = async () => Request.findAll({
 });
 
 const sendStock = async (requestId) => {
-  const request = await Request.findByPk(requestId);
+  const request = await Request.findByPk(requestId, {
+    include: [
+      { model: Book },
+    ],
+  });
 
   if (!request) {
     throw new Error('Request not found');
