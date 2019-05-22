@@ -52,13 +52,13 @@ module.exports = (sequelize, DataTypes) => {
   Order.afterCreate(async (order) => {
     const book = await order.getBook();
     const client = await order.getClient();
-    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createOrder, {...order.dataValues, book, client});
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createOrder, { ...order.dataValues, book, client });
   });
 
   Order.afterUpdate(async (order) => {
     const book = await order.getBook();
     const client = await order.getClient();
-    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateOrder, {...order.dataValues, book, client});
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateOrder, { ...order.dataValues, book, client });
   });
 
   return Order;

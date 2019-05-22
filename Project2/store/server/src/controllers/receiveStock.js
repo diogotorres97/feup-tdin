@@ -41,7 +41,7 @@ const create = async (bookTitle, quantity) => {
 
   const receiveStock = await ReceiveStock.create({ quantity, ordersId, ...{ bookId: book.id } });
 
-  return {...receiveStock.dataValues, book};
+  return { ...receiveStock.dataValues, book };
 };
 
 const list = async () => ReceiveStock.findAll({
@@ -51,7 +51,7 @@ const list = async () => ReceiveStock.findAll({
 });
 
 const receiveStock = async (receiveStockId) => {
-  const receivedStock = await ReceiveStock.findByPk(receiveStockId,{
+  const receivedStock = await ReceiveStock.findByPk(receiveStockId, {
     include: [
       { model: Book },
     ],

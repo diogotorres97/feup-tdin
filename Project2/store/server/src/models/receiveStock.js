@@ -25,12 +25,12 @@ module.exports = (sequelize, DataTypes) => {
 
   ReceiveStock.afterCreate(async (receiveStock) => {
     const book = await receiveStock.getBook();
-    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createReceiveStock, {...receiveStock.dataValues, book});
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createReceiveStock, { ...receiveStock.dataValues, book });
   });
 
   ReceiveStock.afterUpdate(async (receiveStock) => {
     const book = await receiveStock.getBook();
-    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateReceiveStock, {...receiveStock.dataValues, book});
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateReceiveStock, { ...receiveStock.dataValues, book });
   });
 
   return ReceiveStock;
