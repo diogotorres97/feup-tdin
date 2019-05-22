@@ -23,28 +23,12 @@ const mailtrapTransport = nodemailer.createTransport({
     user: environment.MAILTRAP_USER_NAME,
     pass: environment.MAILTRAP_USER_PASSWORD,
   },
-  pool: true, // use pooled connection
-  rateLimit: true, // enable to make sure we are limiting
-  maxConnections: 1, // set limit to 1 connection only
-  maxMessages: 0.2 // send 3 emails per second
 });
 
-const start = () => {
-  mailtrapTransport.use('compile', hbs({
-    viewEngine: {
-      partialsDir: templatePath,
-    },
-    viewPath: templatePath,
-    extName: '.hbs',
-  }));
-  (async () => {
-    run()
-  })();
-};
-
-let counter = 0;
+let counter = 0; // variable to send 2 messages each 10 sec
 const { sleep, AsyncQueue } = require('../../utils/utils');
-let emailsQueue = new AsyncQueue();
+
+const emailsQueue = new AsyncQueue();
 
 function pushEmail(from, to, subject, template, context) {
   const mailOptions = {
@@ -68,17 +52,30 @@ async function sendEmail(mailOptions) {
 
 async function run() {
   while (true) {
-      const mailOptions = await emailsQueue.pop();
-      if(counter == 2) {
-        await sleep(10000);
-        counter = 0;
-      }
-      await sendEmail(mailOptions);
-      counter++;
+    const mailOptions = await emailsQueue.pop();
+    if (counter === 2) {
+      await sleep(10000);
+      counter = 0;
+    }
+    await sendEmail(mailOptions);
+    counter++;
   }
 }
+
+const start = () => {
+  mailtrapTransport.use('compile', hbs({
+    viewEngine: {
+      partialsDir: templatePath,
+    },
+    viewPath: templatePath,
+    extName: '.hbs',
+  }));
+  (async () => {
+    run();
+  })();
+};
+
 module.exports = {
   start,
-  sendEmail,
-  pushEmail
+  pushEmail,
 };
