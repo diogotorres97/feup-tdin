@@ -9,11 +9,15 @@ namespace @interface
 {
     public partial class StoreWindow : Form
     {
+        public delegate void OperationDelegate(dynamic data);
         public StoreWindow()
         {
             InitializeComponent();
             LoadBooks();
             LoadClients();
+
+            PusherController pusherClient = new PusherController("create_client", createClientDelegate);
+            PusherController pusherBook = new PusherController("update_book", updateBookDelegate);
         }
 
         private void LoadBooks()
@@ -51,8 +55,7 @@ namespace @interface
             {
                 List<Client> clientList =
                     (List<Client>) JsonConvert.DeserializeObject(response.Content, typeof(List<Client>));
-                
-                Console.WriteLine(clientList.Count.ToString());
+
 
                 foreach (Client client in clientList)
                 {
@@ -99,6 +102,68 @@ namespace @interface
         private void btnNotifications_Click(object sender, EventArgs e)
         {
             NotificationsWindow form = new NotificationsWindow();
+            form.Show();
+        }
+
+        private void btnAddClient_Click(object sender, EventArgs e)
+        {
+            AddClientDialog form = new AddClientDialog();
+            form.Show();
+        }
+
+        public void createClientDelegate(dynamic data)
+        {
+            OperationDelegate del = createClient;
+            BeginInvoke(del, data);
+        }
+
+        public void createClient(dynamic data)
+        {
+            Client client=
+                    (Client)JsonConvert.DeserializeObject(data, typeof(Client));
+
+            ListViewItem lvItem = new ListViewItem(new[]
+            {
+                client.id.ToString(), client.name
+            });
+            listViewClients.Items.Add(lvItem);
+        }
+
+        public void updateBookDelegate(dynamic data)
+        {
+            OperationDelegate del = updateBook;
+            BeginInvoke(del, data);
+        }
+
+        public void updateBook(dynamic data)
+        {
+            
+            Book book =
+                    (Book)JsonConvert.DeserializeObject(data, typeof(Book));
+
+            foreach(ListViewItem item in listViewBooks.Items)
+            {
+                if(int.Parse(item.SubItems[0].Text) == book.id)
+                {
+                    ListViewItem lvItem = new ListViewItem(new[]
+                    {
+                        book.id.ToString(), book.title, book.author, book.price.ToString(), book.stock.ToString()
+                    });
+                    listViewBooks.Items[item.Index] = lvItem;
+                    break;
+                }
+            }
+        }
+
+        private void btnAllSells_Click(object sender, EventArgs e)
+        {
+            AllSellsWindow form = new AllSellsWindow();
+            form.Show();
+        }
+
+        private void btnAllOrders_Click(object sender, EventArgs e)
+        {
+            AllOrdersWindow form = new AllOrdersWindow();
             form.Show();
         }
     }

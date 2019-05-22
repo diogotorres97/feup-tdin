@@ -9,14 +9,18 @@ namespace @interface
     public partial class ClientWindow : Form
     {
         private int _clientId;
-
+        public delegate void OperationDelegate(dynamic data);
         public ClientWindow(int clientId)
         {
             InitializeComponent();
             _clientId = clientId;
             FillFields();
 
-            Console.Write(clientId.ToString());
+            PusherController pusherCreateSell = new PusherController("create_sell", createSellDelegate);
+            PusherController pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
+
+            PusherController pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
+            PusherController pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
         }
 
         private void FillFields()
@@ -68,6 +72,94 @@ namespace @interface
                     sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title
                 });
                 listViewSells.Items.Add(lvItem);
+            }
+        }
+
+        public void createOrderDelegate(dynamic data)
+        {
+            OperationDelegate del = createOrder;
+            BeginInvoke(del, data);
+        }
+
+        private void createOrder(dynamic data)
+        {
+            Order order =
+                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+
+            ListViewItem lvItem = new ListViewItem(new[]
+            {
+                order.uuid, order.quantity.ToString(), order.totalPrice.ToString(), order.state, order.stateDate,
+                    order.book.title
+            });
+            listViewOrders.Items.Add(lvItem);
+        }
+
+        public void updateOrderDelegate(dynamic data)
+        {
+            OperationDelegate del = updateOrder;
+            BeginInvoke(del, data);
+        }
+
+        public void updateOrder(dynamic data)
+        {
+            Order order =
+                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+
+            foreach (ListViewItem item in listViewOrders.Items)
+            {
+                if (item.SubItems[0].Text == order.uuid)
+                {
+                    ListViewItem lvItem = new ListViewItem(new[]
+                    {
+                        order.uuid, order.quantity.ToString(), order.totalPrice.ToString(), order.state, order.stateDate,
+                    order.book.title
+                    });
+                    listViewOrders.Items[item.Index] = lvItem;
+                    break;
+                }
+            }
+        }
+
+        public void createSellDelegate(dynamic data)
+        {
+            OperationDelegate del = createSell;
+            BeginInvoke(del, data);
+        }
+
+        public void createSell(dynamic data)
+        {
+            Sell sell =
+                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+
+            ListViewItem lvItem = new ListViewItem(new[]
+            {
+                sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title
+            });
+            listViewSells.Items.Add(lvItem);
+        }
+
+        public void updateSellDelegate(dynamic data)
+        {
+            OperationDelegate del = updateSell;
+            BeginInvoke(del, data);
+        }
+
+        public void updateSell(dynamic data)
+        {
+            Sell sell =
+                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+
+            foreach (ListViewItem item in listViewSells.Items)
+            {
+                if (item.SubItems[0].Text == sell.uuid)
+                {
+                    ListViewItem lvItem = new ListViewItem(new[]
+                    {
+                        sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title
+                    });
+                    listViewSells.Items[item.Index] = lvItem;
+                    break;
+                }
             }
         }
     }

@@ -45,6 +45,7 @@
             this.stock = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnAllOrders = new System.Windows.Forms.Button();
             this.btnAllSells = new System.Windows.Forms.Button();
+            this.btnAddClient = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSell
@@ -99,7 +100,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(120, 166);
+            this.label1.Location = new System.Drawing.Point(187, 166);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 17);
             this.label1.TabIndex = 7;
@@ -122,10 +123,10 @@
             this.listViewClients.FullRowSelect = true;
             this.listViewClients.GridLines = true;
             this.listViewClients.HideSelection = false;
-            this.listViewClients.Location = new System.Drawing.Point(37, 219);
+            this.listViewClients.Location = new System.Drawing.Point(104, 219);
             this.listViewClients.MultiSelect = false;
             this.listViewClients.Name = "listViewClients";
-            this.listViewClients.Size = new System.Drawing.Size(275, 244);
+            this.listViewClients.Size = new System.Drawing.Size(281, 244);
             this.listViewClients.TabIndex = 9;
             this.listViewClients.UseCompatibleStateImageBehavior = false;
             this.listViewClients.View = System.Windows.Forms.View.Details;
@@ -187,6 +188,7 @@
             this.btnAllOrders.TabIndex = 12;
             this.btnAllOrders.Text = "All Orders";
             this.btnAllOrders.UseVisualStyleBackColor = true;
+            this.btnAllOrders.Click += new System.EventHandler(this.btnAllOrders_Click);
             // 
             // btnAllSells
             // 
@@ -196,12 +198,24 @@
             this.btnAllSells.TabIndex = 11;
             this.btnAllSells.Text = "All Sells";
             this.btnAllSells.UseVisualStyleBackColor = true;
+            this.btnAllSells.Click += new System.EventHandler(this.btnAllSells_Click);
+            // 
+            // btnAddClient
+            // 
+            this.btnAddClient.Location = new System.Drawing.Point(262, 503);
+            this.btnAddClient.Name = "btnAddClient";
+            this.btnAddClient.Size = new System.Drawing.Size(123, 84);
+            this.btnAddClient.TabIndex = 13;
+            this.btnAddClient.Text = "Add Client";
+            this.btnAddClient.UseVisualStyleBackColor = true;
+            this.btnAddClient.Click += new System.EventHandler(this.btnAddClient_Click);
             // 
             // StoreWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.btnAddClient);
             this.Controls.Add(this.btnAllOrders);
             this.Controls.Add(this.btnAllSells);
             this.Controls.Add(this.listViewBooks);
@@ -242,5 +256,6 @@
         private System.Windows.Forms.ColumnHeader stock;
         private System.Windows.Forms.Button btnAllOrders;
         private System.Windows.Forms.Button btnAllSells;
+        private System.Windows.Forms.Button btnAddClient;
     }
 }

@@ -59,7 +59,7 @@ public static class Utils
 
         request.AddHeader("Authorization", "Bearer " + Token);
 
-        if (method == Method.PUT)
+        if (method != Method.GET)
             request.AddParameter("application/json", body, ParameterType.RequestBody);
 
         return client.Execute(request);

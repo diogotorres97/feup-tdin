@@ -62,6 +62,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddClientDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddClientDialog.Designer.cs">
+      <DependentUpon>AddClientDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AllOrdersWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AllOrdersWindow.Designer.cs">
+      <DependentUpon>AllOrdersWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AllSellsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AllSellsWindow.Designer.cs">
+      <DependentUpon>AllSellsWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Book.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientWindow.cs">
@@ -76,6 +94,7 @@
     <Compile Include="NotificationsWindow.Designer.cs">
       <DependentUpon>NotificationsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="PusherController.cs" />
     <Compile Include="QuantityDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +119,15 @@
       <DependentUpon>StoreWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="AddClientDialog.resx">
+      <DependentUpon>AddClientDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AllOrdersWindow.resx">
+      <DependentUpon>AllOrdersWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AllSellsWindow.resx">
+      <DependentUpon>AllSellsWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClientWindow.resx">
       <DependentUpon>ClientWindow.cs</DependentUpon>
     </EmbeddedResource>

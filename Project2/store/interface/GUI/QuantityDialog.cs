@@ -12,7 +12,6 @@ namespace @interface
     {
         private static Pusher _pusher;
         private static Channel _chatChannel;
-        private static PresenceChannel _presenceChannel;
 
         private int _clientId, _bookId;
         private bool _isOrder;
