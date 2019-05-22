@@ -40,8 +40,8 @@ const create = async (bookTitle, quantity) => {
   }
 
   const receiveStock = await ReceiveStock.create({ quantity, ordersId, ...{ bookId: book.id } });
-  receiveStock.setDataValue('book', book);
-  return receiveStock;
+
+  return {...receiveStock.dataValues, book};
 };
 
 const list = async () => ReceiveStock.findAll({

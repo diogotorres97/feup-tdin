@@ -33,7 +33,6 @@ const create = async (quantity, bookId, clientId) => {
     order = await Order.create({
       ...orderData,
       state: orderState.waiting,
-      book: book,
     });
   } else {
     const nextDay = new Date();
@@ -64,9 +63,8 @@ const create = async (quantity, bookId, clientId) => {
   );
 
   if (info.rejected.length > 0) throw new Error('Email Not Sent');
-  order.setDataValue('book', book);
-  order.setDataValue('client', client);
-  return order;
+
+  return {...order.dataValues, book, client};
 };
 
 const list = async () => Order.findAll({
