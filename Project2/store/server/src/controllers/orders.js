@@ -49,7 +49,7 @@ const create = async (quantity, bookId, clientId) => {
     });
   }
 
-  const info = await emailServer.sendEmail(
+  emailServer.pushEmail(
     null,
     client.email,
     `Order #${order.uuid} confirmed`,
@@ -61,8 +61,6 @@ const create = async (quantity, bookId, clientId) => {
       orderState: orderState.toString(order.state, order.stateDate),
     },
   );
-
-  if (info.rejected.length > 0) throw new Error('Email Not Sent');
 
   return { ...order.dataValues, Book: book, Client: client };
 };

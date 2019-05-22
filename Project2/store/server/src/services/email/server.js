@@ -23,6 +23,10 @@ const mailtrapTransport = nodemailer.createTransport({
     user: environment.MAILTRAP_USER_NAME,
     pass: environment.MAILTRAP_USER_PASSWORD,
   },
+  pool: true, // use pooled connection
+  rateLimit: true, // enable to make sure we are limiting
+  maxConnections: 1, // set limit to 1 connection only
+  maxMessages: 0.2 // send 3 emails per second
 });
 
 const start = () => {
@@ -33,25 +37,48 @@ const start = () => {
     viewPath: templatePath,
     extName: '.hbs',
   }));
+  (async () => {
+    run()
+  })();
 };
 
-async function sendEmail(from, to, subject, template, context) {
-  try {
-    const mailOptions = {
-      from, // sender address, gmail overrides this
-      to, // list of receivers
-      subject, // Subject line
-      template, // html template
-      context, // object with variables to template
-    };
+let counter = 0;
+const { sleep, AsyncQueue } = require('../../utils/utils');
+let emailsQueue = new AsyncQueue();
 
+function pushEmail(from, to, subject, template, context) {
+  const mailOptions = {
+    from, // sender address, gmail overrides this
+    to, // list of receivers
+    subject, // Subject line
+    template, // html template
+    context, // object with variables to template
+  };
+
+  emailsQueue.push(mailOptions);
+}
+
+async function sendEmail(mailOptions) {
+  try {
     return mailtrapTransport.sendMail(mailOptions);
   } catch (e) {
     console.log(e);
   }
 }
 
+async function run() {
+  while (true) {
+      const mailOptions = await emailsQueue.pop();
+      if(counter == 2) {
+        await sleep(10000);
+        counter = 0;
+      }
+      await sendEmail(mailOptions);
+      counter++;
+  }
+}
 module.exports = {
   start,
   sendEmail,
+  pushEmail
 };
