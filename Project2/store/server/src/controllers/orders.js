@@ -64,7 +64,7 @@ const create = async (quantity, bookId, clientId) => {
 
   if (info.rejected.length > 0) throw new Error('Email Not Sent');
 
-  return { ...order.dataValues, book, client };
+  return { ...order.dataValues, Book: book, Client: client };
 };
 
 const list = async () => Order.findAll({

@@ -16,7 +16,7 @@ const create = async (bookTitle, quantity) => {
 
   const request = await Request.create({ quantity, ...{ bookId: book.id } });
 
-  return { ...request.dataValues, book };
+  return { ...request.dataValues, Book: book };
 };
 
 const list = async () => Request.findAll({
