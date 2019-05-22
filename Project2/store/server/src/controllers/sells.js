@@ -51,7 +51,8 @@ const create = async (quantity, bookId, clientId) => {
     );
 
     if (info.rejected.length > 0) throw new Error('Email Not Sent');
-
+    order.setDataValue('book', book);
+    order.setDataValue('client', client);
     return order;
   }
 
@@ -61,9 +62,11 @@ const create = async (quantity, bookId, clientId) => {
     stock: book.stock - quantity,
   });
 
+  sell.setDataValue('book', book);
+  sell.setDataValue('client', client);
   // print a receipt
   sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.printInvoice, sell);
-
+  
   return sell;
 };
 

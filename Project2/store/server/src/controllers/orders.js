@@ -33,6 +33,7 @@ const create = async (quantity, bookId, clientId) => {
     order = await Order.create({
       ...orderData,
       state: orderState.waiting,
+      book: book,
     });
   } else {
     const nextDay = new Date();
@@ -63,7 +64,8 @@ const create = async (quantity, bookId, clientId) => {
   );
 
   if (info.rejected.length > 0) throw new Error('Email Not Sent');
-
+  order.setDataValue('book', book);
+  order.setDataValue('client', client);
   return order;
 };
 
@@ -82,7 +84,12 @@ const retrieve = async orderId => Order.findByPk(orderId, {
 });
 
 const update = async (orderId, state, stateDate) => {
-  const order = await Order.findByPk(orderId);
+  const order = await Order.findByPk(orderId, {
+    include: [
+      { model: Book },
+      { model: Client },
+    ],
+  });
 
   if (!order) {
     throw new Error('Order not found');
