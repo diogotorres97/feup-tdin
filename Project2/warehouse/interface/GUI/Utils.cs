@@ -16,7 +16,7 @@ namespace @interface
         public const string Requests = UrlDefault + "requests";
 
         public static string Token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJlbWFpbCI6ImVtcGxveWVlQHN0b3JlLmNvbSIsInJvbGUiOiJFTVBMT1lFRSJ9LCJpYXQiOjE1NTgyOTI5ODN9.luB3Bxq0v14WSaNMVXulV8VnhtOyeeKnuDAbcMnTFBs";
+            "";
 
         public const string PusherKey = "dd7136ca250e4358b688";
 
