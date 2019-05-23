@@ -3,58 +3,25 @@ using System.Dynamic;
 using System.Net;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using PusherClient;
 using RestSharp;
 
 namespace @interface
 {
     public partial class CreateOrderDialog : Form
     {
-        private Pusher _pusher;
-        private Channel _chatChannel;
-
         private int _clientId, _bookId;
         private bool _isOrder;
+
         public CreateOrderDialog(int clientId, int bookId, bool isOrder)
         {
             InitializeComponent();
             _clientId = clientId;
             _bookId = bookId;
             _isOrder = isOrder;
-
-            //InitPusher();
-        }
-
-        // Pusher Initiation / Connection
-        private void InitPusher()
-        {
-            _pusher = new Pusher(Utils.PusherKey, new PusherOptions
-            {
-                Cluster = "eu"
-            });
-            _pusher.Error += _pusher_Error;
-
-            // Setup private channel
-            _chatChannel = _pusher.Subscribe("store");
-
-            // Inline binding!
-            _chatChannel.Bind("print_invoice", data =>
-            {
-                Console.WriteLine("[" + data.name + "] " + data.message);
-            });
-
-            _pusher.Connect();
-        }
-
-
-        private static void _pusher_Error(object sender, PusherException error)
-        {
-            Console.WriteLine("Pusher Error: " + error);
         }
 
         private void CreateOrderDialog_Load(object sender, EventArgs e)
         {
-
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
@@ -66,13 +33,12 @@ namespace @interface
             body.bookId = _bookId;
             body.clientId = _clientId;
             string order = JsonConvert.SerializeObject(body);
-            
-            Console.WriteLine(order);
-            
+
             IRestResponse response = Utils.ExecutePostRequest(url, order);
             if (response.StatusCode != HttpStatusCode.Created)
             {
-                MessageBox.Show(response.Content, "Create Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(response.Content, "Create Order Failed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
             else
             {

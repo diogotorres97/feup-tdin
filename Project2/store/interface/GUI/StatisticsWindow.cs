@@ -1,16 +1,8 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace @interface
 {
@@ -25,7 +17,7 @@ namespace @interface
 
         private void LoadTopBooks()
         {
-            string url = Utils.Statistics + "/topBooks";
+            const string url = Utils.Statistics + "/topBooks";
             IRestResponse response = Utils.ExecuteRequest(url, Method.GET, "", "");
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -34,14 +26,15 @@ namespace @interface
             }
             else
             {
-                Console.WriteLine(response.Content);
-                List<TopBooks> topBooksList = (List<TopBooks>)JsonConvert.DeserializeObject(response.Content, typeof(List<TopBooks>));
+                List<TopBooks> topBooksList =
+                    (List<TopBooks>) JsonConvert.DeserializeObject(response.Content, typeof(List<TopBooks>));
 
                 foreach (TopBooks top in topBooksList)
                 {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
-                        top._book.id.ToString(), top._book.title, top._book.author, top._book.price.ToString(), top._total
+                        top.book.id.ToString(), top.book.title, top.book.author, top.book.price.ToString(),
+                        top.total
                     });
                     listViewBooks.Items.Add(lvItem);
                 }
@@ -60,7 +53,7 @@ namespace @interface
 
         private void LoadTotalSales()
         {
-            string url = Utils.Statistics + "/totalSales";
+            const string url = Utils.Statistics + "/totalSales";
             IRestResponse response = Utils.ExecuteRequest(url, Method.GET, "", "");
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -69,11 +62,10 @@ namespace @interface
             }
             else
             {
-                TotalSales totalSales = (TotalSales)JsonConvert.DeserializeObject(response.Content, typeof(TotalSales));
-                txtBoxTotalSold.Text = totalSales._totalsales;
+                TotalSales totalSales =
+                    (TotalSales) JsonConvert.DeserializeObject(response.Content, typeof(TotalSales));
+                txtBoxTotalSold.Text = totalSales.totalSales;
             }
-
         }
-
     }
 }

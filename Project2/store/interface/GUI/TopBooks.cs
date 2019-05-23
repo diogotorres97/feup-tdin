@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace @interface
+﻿namespace @interface
 {
     class TopBooks
     {
-        public string _total { get; set; }
-        public Book _book { get; set; }
+        public string total { get; set; }
+        public Book book { get; set; }
 
         public TopBooks(string total, Book book)
         {
-            _total = total;
-            _book = book;
+            this.total = total;
+            this.book = book;
         }
     }
 }

@@ -1,28 +1,21 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.Dynamic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace @interface
 {
     public partial class AddClientDialog : Form
-{
-    public AddClientDialog()
     {
-        InitializeComponent();
-    }
+        public AddClientDialog()
+        {
+            InitializeComponent();
+        }
 
-    private void btnCreate_Click(object sender, EventArgs e)
-    {
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
             string name = txtBoxName.Text;
             string address = txtBoxAddress.Text;
             string email = txtBoxEmail.Text;
@@ -36,17 +29,16 @@ namespace @interface
             body.email = email;
             string client = JsonConvert.SerializeObject(body);
 
-
             IRestResponse response = Utils.ExecuteRequest(Utils.Clients, Method.POST, "", client);
             if (response.StatusCode != HttpStatusCode.Created)
             {
-                MessageBox.Show(response.Content, "Create Client Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(response.Content, "Create Client Failed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
             else
             {
                 Close();
             }
-
         }
-}
+    }
 }
