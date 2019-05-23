@@ -79,7 +79,7 @@ namespace @interface
             Console.WriteLine(data);
             Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
 
-            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedData, book);
+            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedDate, book);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -100,7 +100,7 @@ namespace @interface
             
             Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
 
-            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedData, book);
+            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedDate, book);
 
             foreach (ListViewItem item in listViewReceiveStock.Items)
             {
