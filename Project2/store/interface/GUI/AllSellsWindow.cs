@@ -1,31 +1,28 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace @interface
 {
     public partial class AllSellsWindow : Form
     {
-        public delegate void OperationDelegate(dynamic data);
-        PusherController pusherCreateSell;
-        PusherController pusherUpdateSell;
+        private delegate void OperationDelegate(dynamic data);
+
+        private PusherController _pusherCreateSell;
+        private PusherController _pusherUpdateSell;
+
         public AllSellsWindow()
         {
             InitializeComponent();
             LoadSells();
 
-            pusherCreateSell = new PusherController("create_sell", createSellDelegate);
-            pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
+            _pusherCreateSell = new PusherController("create_sell", CreateSellDelegate);
+            _pusherUpdateSell = new PusherController("update_sell", UpdateSellDelegate);
         }
+
         private void LoadSells()
         {
             IRestResponse response = Utils.ExecuteRequest(Utils.Sells, Method.GET, "", "");
@@ -42,26 +39,27 @@ namespace @interface
                 {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
-                        sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title, sell.client.name
+                        sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title,
+                        sell.client.name
                     });
                     listViewSells.Items.Add(lvItem);
                 }
             }
         }
 
-        public void createSellDelegate(dynamic data)
+        private void CreateSellDelegate(dynamic data)
         {
-            OperationDelegate del = createSell;
+            OperationDelegate del = CreateSell;
             BeginInvoke(del, data);
         }
 
-        public void createSell(dynamic data)
+        private void CreateSell(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
+            Sell sell = new Sell(data, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -70,19 +68,19 @@ namespace @interface
             listViewSells.Items.Add(lvItem);
         }
 
-        public void updateSellDelegate(dynamic data)
+        private void UpdateSellDelegate(dynamic data)
         {
-            OperationDelegate del = updateSell;
+            OperationDelegate del = UpdateSell;
             BeginInvoke(del, data);
         }
 
-        public void updateSell(dynamic data)
+        private void UpdateSell(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
+            Sell sell = new Sell(data, book, client);
 
             foreach (ListViewItem item in listViewSells.Items)
             {
@@ -90,7 +88,8 @@ namespace @interface
                 {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
-                        sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title, sell.client.name
+                        sell.uuid, sell.quantity.ToString(), sell.totalPrice.ToString(), sell.book.title,
+                        sell.client.name
                     });
                     listViewSells.Items[item.Index] = lvItem;
                     break;
@@ -100,9 +99,8 @@ namespace @interface
 
         private void Form_FormClosing(object sender, EventArgs e)
         {
-            pusherCreateSell.disconnect();
-            pusherUpdateSell.disconnect();
+            _pusherCreateSell.Disconnect();
+            _pusherUpdateSell.Disconnect();
         }
-
     }
 }

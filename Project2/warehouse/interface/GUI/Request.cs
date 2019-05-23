@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace @interface
+﻿namespace @interface
 {
     class Request
     {
@@ -11,6 +9,14 @@ namespace @interface
 
         public Request()
         {
+        }
+
+        public Request(dynamic data, Book book)
+        {
+            id = (int) data.id;
+            quantity = (int) data.quantity;
+            processedDate = (string) data.processedDate;
+            this.book = book;
         }
 
         public Request(int id, int quantity, string processedDate, Book book)

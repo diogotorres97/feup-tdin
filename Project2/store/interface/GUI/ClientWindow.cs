@@ -9,22 +9,25 @@ namespace @interface
     public partial class ClientWindow : Form
     {
         private int _clientId;
-        public delegate void OperationDelegate(dynamic data);
-        PusherController pusherCreateSell;
-        PusherController pusherUpdateSell;
-        PusherController pusherCreateOrder;
-        PusherController pusherUpdateOrder;
+
+        private delegate void OperationDelegate(dynamic data);
+
+        private PusherController _pusherCreateSell;
+        private PusherController _pusherUpdateSell;
+        private PusherController _pusherCreateOrder;
+        private PusherController _pusherUpdateOrder;
+
         public ClientWindow(int clientId)
         {
             InitializeComponent();
             _clientId = clientId;
             FillFields();
 
-            pusherCreateSell = new PusherController("create_sell", createSellDelegate);
-            pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
+            _pusherCreateSell = new PusherController("create_sell", CreateSellDelegate);
+            _pusherUpdateSell = new PusherController("update_sell", UpdateSellDelegate);
 
-            pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
-            pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
+            _pusherCreateOrder = new PusherController("create_order", CreateOrderDelegate);
+            _pusherUpdateOrder = new PusherController("update_order", UpdateOrderDelegate);
         }
 
         private void FillFields()
@@ -77,41 +80,41 @@ namespace @interface
             }
         }
 
-        public void createOrderDelegate(dynamic data)
+        private void CreateOrderDelegate(dynamic data)
         {
-            OperationDelegate del = createOrder;
+            OperationDelegate del = CreateOrder;
             BeginInvoke(del, data);
         }
 
-        private void createOrder(dynamic data)
+        private void CreateOrder(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Order order = new Order((string)data.uuid, (int)data.quantity, (double)data.totalPrice, (string)data.state, (string)data.stateDate, book, client);
+            Order order = new Order(data, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
                 order.uuid, order.quantity.ToString(), order.totalPrice.ToString(), order.state, order.stateDate,
-                    order.book.title
+                order.book.title
             });
             listViewOrders.Items.Add(lvItem);
         }
 
-        public void updateOrderDelegate(dynamic data)
+        private void UpdateOrderDelegate(dynamic data)
         {
-            OperationDelegate del = updateOrder;
+            OperationDelegate del = UpdateOrder;
             BeginInvoke(del, data);
         }
 
-        public void updateOrder(dynamic data)
+        private void UpdateOrder(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Order order = new Order((string)data.uuid, (int)data.quantity, (double)data.totalPrice, (string)data.state, (string)data.stateDate, book, client);
+            Order order = new Order(data, book, client);
 
             foreach (ListViewItem item in listViewOrders.Items)
             {
@@ -119,8 +122,9 @@ namespace @interface
                 {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
-                        order.uuid, order.quantity.ToString(), order.totalPrice.ToString(), order.state, order.stateDate,
-                    order.book.title
+                        order.uuid, order.quantity.ToString(), order.totalPrice.ToString(), order.state,
+                        order.stateDate,
+                        order.book.title
                     });
                     listViewOrders.Items[item.Index] = lvItem;
                     break;
@@ -128,19 +132,19 @@ namespace @interface
             }
         }
 
-        public void createSellDelegate(dynamic data)
+        private void CreateSellDelegate(dynamic data)
         {
-            OperationDelegate del = createSell;
+            OperationDelegate del = CreateSell;
             BeginInvoke(del, data);
         }
 
-        public void createSell(dynamic data)
+        private void CreateSell(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
+            Sell sell = new Sell(data, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -149,19 +153,19 @@ namespace @interface
             listViewSells.Items.Add(lvItem);
         }
 
-        public void updateSellDelegate(dynamic data)
+        private void UpdateSellDelegate(dynamic data)
         {
-            OperationDelegate del = updateSell;
+            OperationDelegate del = UpdateSell;
             BeginInvoke(del, data);
         }
 
-        public void updateSell(dynamic data)
+        private void UpdateSell(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+            Client client = new Client(data.Client);
 
-            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
+            Sell sell = new Sell(data, book, client);
 
             foreach (ListViewItem item in listViewSells.Items)
             {
@@ -179,10 +183,10 @@ namespace @interface
 
         private void Form_FormClosing(object sender, EventArgs e)
         {
-            pusherCreateSell.disconnect();
-            pusherUpdateSell.disconnect();
-            pusherCreateOrder.disconnect();
-            pusherUpdateOrder.disconnect();
+            _pusherCreateSell.Disconnect();
+            _pusherUpdateSell.Disconnect();
+            _pusherCreateOrder.Disconnect();
+            _pusherUpdateOrder.Disconnect();
         }
     }
 }

@@ -20,5 +20,14 @@
             this.book = book;
             this.client = client;
         }
+
+        public Sell(dynamic data, Book book, Client client)
+        {
+            uuid = (string) data.uuid;
+            quantity = (int) data.quantity;
+            totalPrice = (double) data.totalPrice;
+            this.book = book;
+            this.client = client;
+        }
     }
 }

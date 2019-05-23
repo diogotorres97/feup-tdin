@@ -9,10 +9,10 @@ namespace @interface
 {
     public partial class StoreWindow : Form
     {
-        public delegate void OperationDelegate(dynamic data);
+        private delegate void OperationDelegate(dynamic data);
 
-        PusherController pusherClient;
-        PusherController pusherBook;
+        private PusherController _pusherClient;
+        private PusherController _pusherBook;
 
         public StoreWindow()
         {
@@ -20,8 +20,8 @@ namespace @interface
             LoadBooks();
             LoadClients();
 
-            pusherClient = new PusherController("create_client", createClientDelegate);
-            pusherBook = new PusherController("update_book", updateBookDelegate);
+            _pusherClient = new PusherController("create_client", CreateClientDelegate);
+            _pusherBook = new PusherController("update_book", UpdateBookDelegate);
         }
 
         private void LoadBooks()
@@ -59,7 +59,6 @@ namespace @interface
             {
                 List<Client> clientList =
                     (List<Client>) JsonConvert.DeserializeObject(response.Content, typeof(List<Client>));
-
 
                 foreach (Client client in clientList)
                 {
@@ -115,16 +114,15 @@ namespace @interface
             form.Show();
         }
 
-        public void createClientDelegate(dynamic data)
+        private void CreateClientDelegate(dynamic data)
         {
-            OperationDelegate del = createClient;
+            OperationDelegate del = CreateClient;
             BeginInvoke(del, data);
         }
 
-        public void createClient(dynamic data)
+        private void CreateClient(dynamic data)
         {
-            Client client = new Client((int)data.id, (string)data.name, 
-                (string)data.address, (string)data.email);
+            Client client = new Client(data);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -133,19 +131,19 @@ namespace @interface
             listViewClients.Items.Add(lvItem);
         }
 
-        public void updateBookDelegate(dynamic data)
+        private void UpdateBookDelegate(dynamic data)
         {
-            OperationDelegate del = updateBook;
+            OperationDelegate del = UpdateBook;
             BeginInvoke(del, data);
         }
 
-        public void updateBook(dynamic data)
+        private void UpdateBook(dynamic data)
         {
-            Book book = new Book((int) data.id, (string) data.title, (string) data.author, (double)data.price, (int)data.stock);
+            Book book = new Book(data);
 
-            foreach(ListViewItem item in listViewBooks.Items)
+            foreach (ListViewItem item in listViewBooks.Items)
             {
-                if(int.Parse(item.SubItems[0].Text) == book.id)
+                if (int.Parse(item.SubItems[0].Text) == book.id)
                 {
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
@@ -171,8 +169,8 @@ namespace @interface
 
         private void Form_FormClosing(object sender, EventArgs e)
         {
-            pusherClient.disconnect();
-            pusherBook.disconnect();
+            _pusherClient.Disconnect();
+            _pusherBook.Disconnect();
         }
 
         private void btnStatistics_Click(object sender, EventArgs e)

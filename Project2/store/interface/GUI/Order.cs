@@ -14,7 +14,19 @@
         {
         }
 
-        public Order(string uuid, int quantity, double totalPrice, string state, string stateDate, Book book, Client client)
+        public Order(dynamic data, Book book, Client client)
+        {
+            uuid = (string) data.uuid;
+            quantity = (int) data.quantity;
+            totalPrice = (double) data.totalPrice;
+            state = (string) data.state;
+            stateDate = (string) data.stateDate;
+            this.book = book;
+            this.client = client;
+        }
+
+        public Order(string uuid, int quantity, double totalPrice, string state, string stateDate, Book book,
+            Client client)
         {
             this.uuid = uuid;
             this.quantity = quantity;

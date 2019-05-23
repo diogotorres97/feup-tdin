@@ -9,19 +9,20 @@ namespace @interface
 {
     public partial class WarehouseWindow : Form
     {
-        public delegate void OperationDelegate(dynamic data);
-        PusherController pusherBook;
-        PusherController pusherCreateRequest;
-        PusherController pusherUpdateRequest;
+        private delegate void OperationDelegate(dynamic data);
+
+        private PusherController _pusherBook;
+        private PusherController _pusherCreateRequest;
+        private PusherController _pusherUpdateRequest;
+
         public WarehouseWindow()
         {
             InitializeComponent();
             LoadRequests();
             LoadBooks();
-            pusherBook = new PusherController("update_book", updateBookDelegate);
-            pusherCreateRequest = new PusherController("create_request", createRequestDelegate);
-            pusherUpdateRequest = new PusherController("update_request", updateRequestDelegate);
-
+            _pusherBook = new PusherController("update_book", UpdateBookDelegate);
+            _pusherCreateRequest = new PusherController("create_request", CreateRequestDelegate);
+            _pusherUpdateRequest = new PusherController("update_request", UpdateRequestDelegate);
         }
 
         private void LoadRequests()
@@ -46,8 +47,6 @@ namespace @interface
                     listViewRequests.Items.Add(lvItem);
                 }
             }
-
-            
         }
 
         private void LoadBooks()
@@ -61,7 +60,7 @@ namespace @interface
             else
             {
                 List<Book> bookList =
-                    (List<Book>)JsonConvert.DeserializeObject(response.Content, typeof(List<Book>));
+                    (List<Book>) JsonConvert.DeserializeObject(response.Content, typeof(List<Book>));
 
                 foreach (Book book in bookList)
                 {
@@ -88,23 +87,18 @@ namespace @interface
                     MessageBox.Show(response.Content, "Send Stock Failed", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
                 }
-                else
-                {
-                    
-                }
             }
         }
 
-        public void updateBookDelegate(dynamic data)
+        private void UpdateBookDelegate(dynamic data)
         {
-            OperationDelegate del = updateBook;
+            OperationDelegate del = UpdateBook;
             BeginInvoke(del, data);
-            
         }
 
-        private void updateBook(dynamic data)
+        private void UpdateBook(dynamic data)
         {
-            Book book = new Book((int)data.id, (string)data.title, (string)data.author, (double)data.price, (int)data.stock);
+            Book book = new Book(data);
 
             foreach (ListViewItem item in listViewBooks.Items)
             {
@@ -119,16 +113,18 @@ namespace @interface
                 }
             }
         }
-        public void updateRequestDelegate(dynamic data)
+
+        private void UpdateRequestDelegate(dynamic data)
         {
-            OperationDelegate del = updateRequest;
+            OperationDelegate del = UpdateRequest;
             BeginInvoke(del, data);
         }
-        private void updateRequest(dynamic data)
-        {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
 
-            Request request = new Request((int)data.id, (int)data.quantity, (string) data.processedDate, book);
+        private void UpdateRequest(dynamic data)
+        {
+            Book book = new Book(data.Book);
+
+            Request request = new Request(data, book);
 
             foreach (ListViewItem item in listViewRequests.Items)
             {
@@ -145,35 +141,31 @@ namespace @interface
             }
         }
 
-        public void createRequestDelegate(dynamic data)
+        private void CreateRequestDelegate(dynamic data)
         {
-            OperationDelegate del = createRequest;
+            OperationDelegate del = CreateRequest;
             BeginInvoke(del, data);
         }
 
-        public void createRequest(dynamic data)
+        private void CreateRequest(dynamic data)
         {
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            Request request = new Request((int)data.id, (int)data.quantity, (string)data.processedDate, book);
+            Request request = new Request(data, book);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
                 request.id.ToString(), request.quantity.ToString(), request.processedDate,
-                        request.book.title
+                request.book.title
             });
             listViewRequests.Items.Add(lvItem);
         }
 
         private void Form_FormClosing(object sender, EventArgs e)
         {
-            pusherBook.disconnect();
-            pusherCreateRequest.disconnect();
-            pusherUpdateRequest.disconnect();
+            _pusherBook.Disconnect();
+            _pusherCreateRequest.Disconnect();
+            _pusherUpdateRequest.Disconnect();
         }
-
-
-
-
     }
 }

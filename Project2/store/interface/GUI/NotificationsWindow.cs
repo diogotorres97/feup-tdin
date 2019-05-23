@@ -9,16 +9,18 @@ namespace @interface
 {
     public partial class NotificationsWindow : Form
     {
-        public delegate void OperationDelegate(dynamic data);
-        PusherController pusherCreateReceiveStock;
-        PusherController pusherUpdateReceiveStock;
+        private delegate void OperationDelegate(dynamic data);
+
+        private PusherController _pusherCreateReceiveStock;
+        private PusherController _pusherUpdateReceiveStock;
+
         public NotificationsWindow()
         {
             InitializeComponent();
             LoadReceiveStock();
 
-            pusherCreateReceiveStock = new PusherController("create_receiveStock", createReceiveStockDelegate);
-            pusherUpdateReceiveStock = new PusherController("update_receiveStock", updateReceiveStockDelegate);
+            _pusherCreateReceiveStock = new PusherController("create_receiveStock", CreateReceiveStockDelegate);
+            _pusherUpdateReceiveStock = new PusherController("update_receiveStock", UpdateReceiveStockDelegate);
         }
 
         private void LoadReceiveStock()
@@ -50,7 +52,6 @@ namespace @interface
         {
             if (listViewReceiveStock.SelectedItems.Count > 0)
             {
-                Console.WriteLine(listViewReceiveStock.SelectedItems[0].SubItems[2].Text);
                 if (!listViewReceiveStock.SelectedItems[0].SubItems[2].Text.Equals(""))
                     return;
 
@@ -61,53 +62,45 @@ namespace @interface
                     MessageBox.Show(response.Content, "Receive Stock Failed", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
                 }
-                else
-                {
-                    
-                }
             }
         }
 
-        public void createReceiveStockDelegate(dynamic data)
+        private void CreateReceiveStockDelegate(dynamic data)
         {
-            OperationDelegate del = createReceiveStock;
+            OperationDelegate del = CreateReceiveStock;
             BeginInvoke(del, data);
         }
 
-        public void createReceiveStock(dynamic data)
+        private void CreateReceiveStock(dynamic data)
         {
-            Console.WriteLine(data);
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedDate, book);
+            ReceiveStock receiveStock = new ReceiveStock(data, book);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
                 receiveStock.id.ToString(), receiveStock.quantity.ToString(), receiveStock.processedDate,
-                        receiveStock.book.title
+                receiveStock.book.title
             });
             listViewReceiveStock.Items.Add(lvItem);
         }
 
-        public void updateReceiveStockDelegate(dynamic data)
+        private void UpdateReceiveStockDelegate(dynamic data)
         {
-            OperationDelegate del = updateReceiveStock;
+            OperationDelegate del = UpdateReceiveStock;
             BeginInvoke(del, data);
         }
 
-        public void updateReceiveStock(dynamic data)
+        private void UpdateReceiveStock(dynamic data)
         {
-            
-            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+            Book book = new Book(data.Book);
 
-            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedDate, book);
+            ReceiveStock receiveStock = new ReceiveStock(data, book);
 
             foreach (ListViewItem item in listViewReceiveStock.Items)
             {
-                
                 if (int.Parse(item.SubItems[0].Text) == receiveStock.id)
                 {
-                    Console.WriteLine(receiveStock.processedDate);
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
                         receiveStock.id.ToString(), receiveStock.quantity.ToString(), receiveStock.processedDate,
@@ -121,8 +114,8 @@ namespace @interface
 
         private void Form_FormClosing(object sender, EventArgs e)
         {
-            pusherCreateReceiveStock.disconnect();
-            pusherUpdateReceiveStock.disconnect();
+            _pusherCreateReceiveStock.Disconnect();
+            _pusherUpdateReceiveStock.Disconnect();
         }
     }
 }

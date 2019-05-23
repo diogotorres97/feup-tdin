@@ -15,6 +15,14 @@ namespace @interface
         {
         }
 
+        public Client(dynamic client)
+        {
+            id = (int) client.id;
+            name = (string) client.name;
+            address = (string) client.address;
+            email = (string) client.email;
+        }
+
         public Client(int id, string name, string address, string email)
         {
             this.id = id;
