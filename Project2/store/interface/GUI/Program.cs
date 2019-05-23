@@ -13,7 +13,7 @@ namespace @interface
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StoreWindow());
+            Application.Run(new LoginWindow());
         }
     }
 }

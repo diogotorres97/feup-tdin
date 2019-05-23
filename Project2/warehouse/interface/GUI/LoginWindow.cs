@@ -38,14 +38,15 @@ namespace @interface
         {
             if (!CheckEmail())
                 return;
-            Login();
+            if (!Login())
+                return;
             Hide();
             WarehouseWindow form = new WarehouseWindow();
             form.Closed += (s, args) => Close();
             form.Show();
         }
 
-        private void Login()
+        private bool Login()
         {
             string email = txtBoxEmail.Text;
             string password = txtBoxPassword.Text;
@@ -59,6 +60,7 @@ namespace @interface
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
             }
             else
             {
@@ -76,6 +78,7 @@ namespace @interface
                 {
                     Console.WriteLine(ex.ToString());
                 }
+                return true;
             }
         }
 
