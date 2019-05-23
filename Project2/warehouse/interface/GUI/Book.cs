@@ -11,6 +11,15 @@
         public Book()
         {
         }
+        
+        public Book(dynamic book)
+        {
+            id = (int) book.id;
+            title = (string) book.title;
+            author = (string) book.author;
+            price = (double) book.price;
+            stock = (int) book.stock;
+        }
 
         public Book(int id, string title, string author, double price, int stock)
         {

@@ -18,20 +18,17 @@ namespace @interface
 
         private void txtBoxEmail_TextChanged(object sender, EventArgs e)
         {
-            enableBtnLogin();
+            EnableBtnLogin();
         }
 
         private void txtBoxPassword_TextChanged(object sender, EventArgs e)
         {
-            enableBtnLogin();
+            EnableBtnLogin();
         }
 
-        private void enableBtnLogin()
+        private void EnableBtnLogin()
         {
-            if (txtBoxEmail.Text.Length > 0 && txtBoxPassword.Text.Length > 0)
-                btnLogin.Enabled = true;
-            else
-                btnLogin.Enabled = false;
+            btnLogin.Enabled = txtBoxEmail.Text.Length > 0 && txtBoxPassword.Text.Length > 0;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -59,27 +56,27 @@ namespace @interface
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(response.Content, "Login Failed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return false;
             }
-            else
+
+            try
             {
-                try
-                {
-                    JToken obj = JToken.Parse(response.Content);
-                    Utils.Token = obj.Value<string>("token");
-                }
-                catch (JsonReaderException jex)
-                {
-                    //Exception in parsing json
-                    Console.WriteLine(jex.Message);
-                }
-                catch (Exception ex) //some other exception
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-                return true;
+                JToken obj = JToken.Parse(response.Content);
+                Utils.Token = obj.Value<string>("token");
             }
+            catch (JsonReaderException jex)
+            {
+                //Exception in parsing json
+                Console.WriteLine(jex.Message);
+            }
+            catch (Exception ex) //some other exception
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return true;
         }
 
         private static bool IsValidEmail(string email)
