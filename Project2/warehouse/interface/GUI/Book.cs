@@ -11,7 +11,7 @@
         public Book()
         {
         }
-        
+
         public Book(dynamic book)
         {
             id = (int) book.id;
