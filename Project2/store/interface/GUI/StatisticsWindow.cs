@@ -41,16 +41,6 @@ namespace @interface
             }
         }
 
-        public class Account
-        {
-            public string _totalsales { get; set; }
-
-            public Account(string totalsales)
-            {
-                _totalsales = totalsales;
-            }
-        }
-
         private void LoadTotalSales()
         {
             const string url = Utils.Statistics + "/totalSales";
