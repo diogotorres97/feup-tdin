@@ -10,14 +10,17 @@ namespace @interface
     public partial class WarehouseWindow : Form
     {
         public delegate void OperationDelegate(dynamic data);
+        PusherController pusherBook;
+        PusherController pusherCreateRequest;
+        PusherController pusherUpdateRequest;
         public WarehouseWindow()
         {
             InitializeComponent();
             LoadRequests();
             LoadBooks();
-            PusherController pusherBook = new PusherController("update_book", updateBookDelegate);
-            PusherController pusherCreateRequest = new PusherController("create_request", createRequestDelegate);
-            PusherController pusherUpdateRequest = new PusherController("update_request", updateRequestDelegate);
+            pusherBook = new PusherController("update_book", updateBookDelegate);
+            pusherCreateRequest = new PusherController("create_request", createRequestDelegate);
+            pusherUpdateRequest = new PusherController("update_request", updateRequestDelegate);
 
         }
 
@@ -75,7 +78,6 @@ namespace @interface
         {
             if (listViewRequests.SelectedItems.Count > 0)
             {
-                Console.WriteLine(listViewRequests.SelectedItems[0].SubItems[2].Text);
                 if (!listViewRequests.SelectedItems[0].SubItems[2].Text.Equals(""))
                     return;
 
@@ -102,9 +104,7 @@ namespace @interface
 
         private void updateBook(dynamic data)
         {
-            Book book =
-                    data.ToObject<Book>(); ;
-
+            Book book = new Book((int)data.id, (string)data.title, (string)data.author, (double)data.price, (int)data.stock);
 
             foreach (ListViewItem item in listViewBooks.Items)
             {
@@ -126,8 +126,9 @@ namespace @interface
         }
         private void updateRequest(dynamic data)
         {
-            Request request =
-                    data.ToObject<Request>();
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Request request = new Request((int)data.id, (int)data.quantity, (string) data.processedDate, book);
 
             foreach (ListViewItem item in listViewRequests.Items)
             {
@@ -146,9 +147,15 @@ namespace @interface
 
         public void createRequestDelegate(dynamic data)
         {
-            Console.WriteLine(data);
-            Request request =
-                    data.ToObject<Request>(); ;
+            OperationDelegate del = createRequest;
+            BeginInvoke(del, data);
+        }
+
+        public void createRequest(dynamic data)
+        {
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Request request = new Request((int)data.id, (int)data.quantity, (string)data.processedDate, book);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -158,8 +165,15 @@ namespace @interface
             listViewRequests.Items.Add(lvItem);
         }
 
-       
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherBook.disconnect();
+            pusherCreateRequest.disconnect();
+            pusherUpdateRequest.disconnect();
+        }
 
-        
+
+
+
     }
 }

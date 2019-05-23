@@ -10,17 +10,21 @@ namespace @interface
     {
         private int _clientId;
         public delegate void OperationDelegate(dynamic data);
+        PusherController pusherCreateSell;
+        PusherController pusherUpdateSell;
+        PusherController pusherCreateOrder;
+        PusherController pusherUpdateOrder;
         public ClientWindow(int clientId)
         {
             InitializeComponent();
             _clientId = clientId;
             FillFields();
 
-            PusherController pusherCreateSell = new PusherController("create_sell", createSellDelegate);
-            PusherController pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
+            pusherCreateSell = new PusherController("create_sell", createSellDelegate);
+            pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
 
-            PusherController pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
-            PusherController pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
+            pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
+            pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
         }
 
         private void FillFields()
@@ -33,9 +37,7 @@ namespace @interface
             }
             else
             {
-                Console.WriteLine(response.Content);
                 Client client = (Client) JsonConvert.DeserializeObject(response.Content, typeof(Client));
-                Console.WriteLine(client.ToString());
                 LoadInfos(client);
                 LoadOrders(client);
                 LoadSells(client);
@@ -83,8 +85,11 @@ namespace @interface
 
         private void createOrder(dynamic data)
         {
-            Order order =
-                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Order order = new Order((string)data.uuid, (int)data.quantity, (double)data.totalPrice, (string)data.state, (string)data.stateDate, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -102,8 +107,11 @@ namespace @interface
 
         public void updateOrder(dynamic data)
         {
-            Order order =
-                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Order order = new Order((string)data.uuid, (int)data.quantity, (double)data.totalPrice, (string)data.state, (string)data.stateDate, book, client);
 
             foreach (ListViewItem item in listViewOrders.Items)
             {
@@ -128,8 +136,11 @@ namespace @interface
 
         public void createSell(dynamic data)
         {
-            Sell sell =
-                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -146,8 +157,11 @@ namespace @interface
 
         public void updateSell(dynamic data)
         {
-            Sell sell =
-                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
 
             foreach (ListViewItem item in listViewSells.Items)
             {
@@ -161,6 +175,14 @@ namespace @interface
                     break;
                 }
             }
+        }
+
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherCreateSell.disconnect();
+            pusherUpdateSell.disconnect();
+            pusherCreateOrder.disconnect();
+            pusherUpdateOrder.disconnect();
         }
     }
 }

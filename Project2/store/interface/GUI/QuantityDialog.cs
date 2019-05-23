@@ -10,8 +10,8 @@ namespace @interface
 {
     public partial class CreateOrderDialog : Form
     {
-        private static Pusher _pusher;
-        private static Channel _chatChannel;
+        private Pusher _pusher;
+        private Channel _chatChannel;
 
         private int _clientId, _bookId;
         private bool _isOrder;
@@ -22,11 +22,11 @@ namespace @interface
             _bookId = bookId;
             _isOrder = isOrder;
 
-            InitPusher();
+            //InitPusher();
         }
 
         // Pusher Initiation / Connection
-        private static void InitPusher()
+        private void InitPusher()
         {
             _pusher = new Pusher(Utils.PusherKey, new PusherOptions
             {
@@ -50,6 +50,11 @@ namespace @interface
         private static void _pusher_Error(object sender, PusherException error)
         {
             Console.WriteLine("Pusher Error: " + error);
+        }
+
+        private void CreateOrderDialog_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void btnCreate_Click(object sender, EventArgs e)

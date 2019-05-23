@@ -15,6 +15,14 @@ namespace @interface
         {
         }
 
+        public Client(int id, string name, string address, string email)
+        {
+            this.id = id;
+            this.name = name;
+            this.address = address;
+            this.email = email;
+        }
+
         public Client(int id, string name, string address, string email, List<Order> orders, List<Sell> sells)
         {
             this.id = id;

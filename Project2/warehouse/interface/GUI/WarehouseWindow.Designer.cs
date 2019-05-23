@@ -162,6 +162,7 @@
             this.Name = "WarehouseWindow";
             this.Text = "WarehouseWindow";
             this.ResumeLayout(false);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.PerformLayout();
 
         }

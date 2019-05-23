@@ -16,13 +16,15 @@ namespace @interface
     public partial class AllSellsWindow : Form
     {
         public delegate void OperationDelegate(dynamic data);
+        PusherController pusherCreateSell;
+        PusherController pusherUpdateSell;
         public AllSellsWindow()
         {
             InitializeComponent();
             LoadSells();
 
-            PusherController pusherCreateSell = new PusherController("create_sell", createSellDelegate);
-            PusherController pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
+            pusherCreateSell = new PusherController("create_sell", createSellDelegate);
+            pusherUpdateSell = new PusherController("update_sell", updateSellDelegate);
         }
         private void LoadSells()
         {
@@ -55,8 +57,11 @@ namespace @interface
 
         public void createSell(dynamic data)
         {
-            Sell sell =
-                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -73,8 +78,11 @@ namespace @interface
 
         public void updateSell(dynamic data)
         {
-            Sell sell =
-                    (Sell)JsonConvert.DeserializeObject(data, typeof(Sell));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Sell sell = new Sell((string)data.uuid, (int)data.quantity, (double)data.totalPrice, book, client);
 
             foreach (ListViewItem item in listViewSells.Items)
             {
@@ -89,5 +97,12 @@ namespace @interface
                 }
             }
         }
+
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherCreateSell.disconnect();
+            pusherUpdateSell.disconnect();
+        }
+
     }
 }

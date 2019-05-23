@@ -36,7 +36,6 @@ namespace @interface
             body.email = email;
             string client = JsonConvert.SerializeObject(body);
 
-            Console.WriteLine(client);
 
             IRestResponse response = Utils.ExecuteRequest(Utils.Clients, Method.POST, "", client);
             if (response.StatusCode != HttpStatusCode.Created)

@@ -10,16 +10,18 @@ namespace @interface
     public partial class NotificationsWindow : Form
     {
         public delegate void OperationDelegate(dynamic data);
+        PusherController pusherCreateReceiveStock;
+        PusherController pusherUpdateReceiveStock;
         public NotificationsWindow()
         {
             InitializeComponent();
-            LoadRequests();
+            LoadReceiveStock();
 
-            PusherController pusherCreateReceiveStock = new PusherController("create_request", createReceiveStockDelegate);
-            PusherController pusherUpdateReceiveStock = new PusherController("update_request", updateReceiveStockDelegate);
+            pusherCreateReceiveStock = new PusherController("create_receiveStock", createReceiveStockDelegate);
+            pusherUpdateReceiveStock = new PusherController("update_receiveStock", updateReceiveStockDelegate);
         }
 
-        private void LoadRequests()
+        private void LoadReceiveStock()
         {
             IRestResponse response = Utils.ExecuteRequest(Utils.ReceiveStock, Method.GET, "", "");
             if (response.StatusCode != HttpStatusCode.OK)
@@ -48,6 +50,7 @@ namespace @interface
         {
             if (listViewReceiveStock.SelectedItems.Count > 0)
             {
+                Console.WriteLine(listViewReceiveStock.SelectedItems[0].SubItems[2].Text);
                 if (!listViewReceiveStock.SelectedItems[0].SubItems[2].Text.Equals(""))
                     return;
 
@@ -73,8 +76,10 @@ namespace @interface
 
         public void createReceiveStock(dynamic data)
         {
-            ReceiveStock receiveStock =
-                    (ReceiveStock)JsonConvert.DeserializeObject(data, typeof(ReceiveStock));
+            Console.WriteLine(data);
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedData, book);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -92,13 +97,17 @@ namespace @interface
 
         public void updateReceiveStock(dynamic data)
         {
-            ReceiveStock receiveStock =
-                    (ReceiveStock)JsonConvert.DeserializeObject(data, typeof(ReceiveStock));
+            
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            ReceiveStock receiveStock = new ReceiveStock((int)data.id, (int)data.quantity, (string)data.processedData, book);
 
             foreach (ListViewItem item in listViewReceiveStock.Items)
             {
+                
                 if (int.Parse(item.SubItems[0].Text) == receiveStock.id)
                 {
+                    Console.WriteLine(receiveStock.processedDate);
                     ListViewItem lvItem = new ListViewItem(new[]
                     {
                         receiveStock.id.ToString(), receiveStock.quantity.ToString(), receiveStock.processedDate,
@@ -108,6 +117,12 @@ namespace @interface
                     break;
                 }
             }
+        }
+
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherCreateReceiveStock.disconnect();
+            pusherUpdateReceiveStock.disconnect();
         }
     }
 }

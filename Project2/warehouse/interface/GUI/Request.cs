@@ -15,7 +15,6 @@ namespace @interface
 
         public Request(int id, int quantity, string processedDate, Book book)
         {
-            Console.WriteLine(id.ToString());
             this.id = id;
             this.quantity = quantity;
             this.processedDate = processedDate;

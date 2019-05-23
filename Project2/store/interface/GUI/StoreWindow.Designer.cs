@@ -86,6 +86,7 @@
             this.btnStatistics.TabIndex = 5;
             this.btnStatistics.Text = "Statistics";
             this.btnStatistics.UseVisualStyleBackColor = true;
+            this.btnStatistics.Click += new System.EventHandler(this.btnStatistics_Click);
             // 
             // btnNotifications
             // 
@@ -231,6 +232,7 @@
             this.MaximizeBox = false;
             this.Name = "StoreWindow";
             this.Text = "StoreWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

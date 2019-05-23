@@ -22,20 +22,13 @@ public static class Utils
     // Sells routes
     public const string Sells = UrlDefault + "sells";
 
+    // Top Books
+    public const string Statistics = UrlDefault + "statistics";
+
     public static string Token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJlbWFpbCI6ImVtcGxveWVlQHN0b3JlLmNvbSIsInJvbGUiOiJFTVBMT1lFRSJ9LCJpYXQiOjE1NTgyNjQ2Njl9.s580jaLZBpJPHcLreTdm2Wlw8nEr35h1gjfOzmKphgg";
 
     public const string PusherKey = "dd7136ca250e4358b688";
-
-    enum MessageType
-    {
-        request_stock,
-        receive_stock
-    }
-
-    public const string AMQP_QUEUE_REQUEST_STOCK = "request_stock";
-    public const string AMQP_QUEUE_RECEIVE_STOCK = "receive_stock";
-    public const string PUSHER_CHANNEL_STORE = "store";
 
     //Handles login request
     public static IRestResponse ExecuteAuthRequest(string url, string body)

@@ -100,7 +100,7 @@
             // orderStateDate
             // 
             this.orderStateDate.Text = "State Date";
-            this.orderStateDate.Width = 82;
+            this.orderStateDate.Width = 180;
             // 
             // orderBookTitle
             // 
@@ -239,6 +239,7 @@
             this.MaximizeBox = false;
             this.Name = "ClientWindow";
             this.Text = "ClientWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

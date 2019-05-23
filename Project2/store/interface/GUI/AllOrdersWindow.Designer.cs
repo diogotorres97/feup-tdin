@@ -88,12 +88,12 @@
             // orderStateDate
             // 
             this.orderStateDate.Text = "State Date";
-            this.orderStateDate.Width = 82;
+            this.orderStateDate.Width = 140;
             // 
             // orderBookTitle
             // 
             this.orderBookTitle.Text = "Book Title";
-            this.orderBookTitle.Width = 180;
+            this.orderBookTitle.Width = 120;
             // 
             // orderClientName
             // 
@@ -108,8 +108,10 @@
             this.Controls.Add(this.listViewOrders);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "AllOrdersWindow";
             this.Text = "AllOrdersWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

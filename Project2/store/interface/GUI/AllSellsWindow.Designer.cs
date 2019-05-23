@@ -33,8 +33,8 @@
             this.sellQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sellTotalPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sellBookTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label1 = new System.Windows.Forms.Label();
             this.sellClientName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listViewSells
@@ -72,6 +72,11 @@
             this.sellBookTitle.Text = "Book Title";
             this.sellBookTitle.Width = 180;
             // 
+            // sellClientName
+            // 
+            this.sellClientName.Text = "Client Name";
+            this.sellClientName.Width = 180;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -81,11 +86,6 @@
             this.label1.TabIndex = 23;
             this.label1.Text = "List of Sells";
             // 
-            // sellClientName
-            // 
-            this.sellClientName.Text = "Client Name";
-            this.sellClientName.Width = 180;
-            // 
             // AllSellsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -94,8 +94,10 @@
             this.Controls.Add(this.listViewSells);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "AllSellsWindow";
             this.Text = "AllSellsWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

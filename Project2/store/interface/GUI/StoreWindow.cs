@@ -10,14 +10,18 @@ namespace @interface
     public partial class StoreWindow : Form
     {
         public delegate void OperationDelegate(dynamic data);
+
+        PusherController pusherClient;
+        PusherController pusherBook;
+
         public StoreWindow()
         {
             InitializeComponent();
             LoadBooks();
             LoadClients();
 
-            PusherController pusherClient = new PusherController("create_client", createClientDelegate);
-            PusherController pusherBook = new PusherController("update_book", updateBookDelegate);
+            pusherClient = new PusherController("create_client", createClientDelegate);
+            pusherBook = new PusherController("update_book", updateBookDelegate);
         }
 
         private void LoadBooks()
@@ -119,8 +123,8 @@ namespace @interface
 
         public void createClient(dynamic data)
         {
-            Client client=
-                    (Client)JsonConvert.DeserializeObject(data, typeof(Client));
+            Client client = new Client((int)data.id, (string)data.name, 
+                (string)data.address, (string)data.email);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -137,9 +141,7 @@ namespace @interface
 
         public void updateBook(dynamic data)
         {
-            
-            Book book =
-                    (Book)JsonConvert.DeserializeObject(data, typeof(Book));
+            Book book = new Book((int) data.id, (string) data.title, (string) data.author, (double)data.price, (int)data.stock);
 
             foreach(ListViewItem item in listViewBooks.Items)
             {
@@ -164,6 +166,18 @@ namespace @interface
         private void btnAllOrders_Click(object sender, EventArgs e)
         {
             AllOrdersWindow form = new AllOrdersWindow();
+            form.Show();
+        }
+
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherClient.disconnect();
+            pusherBook.disconnect();
+        }
+
+        private void btnStatistics_Click(object sender, EventArgs e)
+        {
+            StatisticsWindow form = new StatisticsWindow();
             form.Show();
         }
     }

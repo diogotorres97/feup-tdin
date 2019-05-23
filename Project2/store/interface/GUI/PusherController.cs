@@ -9,8 +9,8 @@ namespace @interface
 {
     class PusherController
     {
-        private static Pusher _pusher;
-        private static Channel _channel;
+        private Pusher _pusher;
+        private Channel _channel;
         public delegate void OperationDelegate(dynamic data);
 
         public PusherController(String request, OperationDelegate update)
@@ -31,6 +31,11 @@ namespace @interface
             });
 
             _pusher.Connect();
+        }
+
+        public void disconnect()
+        {
+            _pusher.Disconnect();
         }
 
         private static void _pusher_Error(object sender, PusherException error)

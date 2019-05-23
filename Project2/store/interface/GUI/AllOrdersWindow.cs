@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,13 +17,15 @@ namespace @interface
     public partial class AllOrdersWindow : Form
 {
         public delegate void OperationDelegate(dynamic data);
+        PusherController pusherCreateOrder;
+        PusherController pusherUpdateOrder;
         public AllOrdersWindow()
     {
         InitializeComponent();
         LoadOrders();
-        
-        PusherController pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
-        PusherController pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
+
+        pusherCreateOrder = new PusherController("create_order", createOrderDelegate);
+        pusherUpdateOrder = new PusherController("update_order", updateOrderDelegate);
     }
     private void LoadOrders()
     {
@@ -35,7 +38,6 @@ namespace @interface
         else
         {
             List<Order> orderList = (List<Order>)JsonConvert.DeserializeObject(response.Content, typeof(List<Order>));
-
             foreach (Order order in orderList)
             {
                 ListViewItem lvItem = new ListViewItem(new[]
@@ -56,8 +58,11 @@ namespace @interface
 
         private void createOrder(dynamic data)
         {
-            Order order =
-                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+            Book book =  new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int) data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Order order = new Order((string) data.uuid, (int) data.quantity, (double) data.totalPrice, (string) data.state, (string) data.stateDate, book, client);
 
             ListViewItem lvItem = new ListViewItem(new[]
             {
@@ -75,8 +80,11 @@ namespace @interface
 
         public void updateOrder(dynamic data)
         {
-            Order order =
-                    (Order)JsonConvert.DeserializeObject(data, typeof(Order));
+            Book book = new Book((int)data.Book.id, (string)data.Book.title, (string)data.Book.author, (double)data.Book.price, (int)data.Book.stock);
+
+            Client client = new Client((int)data.Client.id, (string)data.Client.name, (string)data.Client.address, (string)data.Client.email);
+
+            Order order = new Order((string)data.uuid, (int)data.quantity, (double)data.totalPrice, (string)data.state, (string)data.stateDate, book, client);
 
             foreach (ListViewItem item in listViewOrders.Items)
             {
@@ -91,6 +99,12 @@ namespace @interface
                     break;
                 }
             }
+        }
+
+        private void Form_FormClosing(object sender, EventArgs e)
+        {
+            pusherCreateOrder.disconnect();
+            pusherUpdateOrder.disconnect();
         }
 
     }

@@ -15,20 +15,9 @@ namespace @interface
         // Receive Stock routes
         public const string Requests = UrlDefault + "requests";
 
-        public static string Token =
-            "";
+        public static string Token = "";
 
         public const string PusherKey = "dd7136ca250e4358b688";
-
-        enum MessageType
-        {
-            request_stock,
-            receive_stock
-        }
-
-        public const string AMQP_QUEUE_REQUEST_STOCK = "request_stock";
-        public const string AMQP_QUEUE_RECEIVE_STOCK = "send_stock";
-        public const string PUSHER_CHANNEL_WAREHOUSE = "warehouse";
 
         //Handles login request
         public static IRestResponse ExecuteAuthRequest(string url, string body)

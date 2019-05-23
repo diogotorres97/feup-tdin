@@ -83,6 +83,7 @@
             this.Name = "CreateOrderDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "QuantityDialog";
+            this.Load += new System.EventHandler(this.CreateOrderDialog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

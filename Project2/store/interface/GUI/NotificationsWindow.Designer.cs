@@ -43,7 +43,7 @@
             this.btnDispatch.Name = "btnDispatch";
             this.btnDispatch.Size = new System.Drawing.Size(123, 84);
             this.btnDispatch.TabIndex = 0;
-            this.btnDispatch.Text = "Dispatch Order";
+            this.btnDispatch.Text = "Deliver Order";
             this.btnDispatch.UseVisualStyleBackColor = true;
             this.btnDispatch.Click += new System.EventHandler(this.btnDispatch_Click);
             // 
@@ -80,7 +80,6 @@
             // quantity
             // 
             this.quantity.Text = "Quantity";
-            this.quantity.Width = 180;
             // 
             // processedDate
             // 
@@ -104,6 +103,7 @@
             this.MaximizeBox = false;
             this.Name = "NotificationsWindow";
             this.Text = "NotificationsWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
