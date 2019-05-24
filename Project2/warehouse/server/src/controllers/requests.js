@@ -3,8 +3,6 @@ const {
   AMQP_QUEUE_RECEIVE_STOCK,
 } = require('../config/configs');
 const { messageType } = require('../enums');
-const { sendNotificationMessage } = require('../services/websockets/pusher');
-const { PUSHER_CHANNEL_WAREHOUSE } = require('../config/configs');
 const { amqpAPI } = require('../services/amqp');
 
 const create = async (bookTitle, quantity) => {
@@ -18,9 +16,7 @@ const create = async (bookTitle, quantity) => {
 
   const request = await Request.create({ quantity, ...{ bookId: book.id } });
 
-  sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.requestStock, request);
-
-  return request;
+  return { ...request.dataValues, Book: book };
 };
 
 const list = async () => Request.findAll({
@@ -30,7 +26,11 @@ const list = async () => Request.findAll({
 });
 
 const sendStock = async (requestId) => {
-  const request = await Request.findByPk(requestId);
+  const request = await Request.findByPk(requestId, {
+    include: [
+      { model: Book },
+    ],
+  });
 
   if (!request) {
     throw new Error('Request not found');

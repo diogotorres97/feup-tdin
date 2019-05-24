@@ -25,6 +25,43 @@ const mailtrapTransport = nodemailer.createTransport({
   },
 });
 
+let counter = 0; // variable to send 2 messages each 10 sec
+const { sleep, AsyncQueue } = require('../../utils/utils');
+
+const emailsQueue = new AsyncQueue();
+
+function pushEmail(from, to, subject, template, context) {
+  const mailOptions = {
+    from, // sender address, gmail overrides this
+    to, // list of receivers
+    subject, // Subject line
+    template, // html template
+    context, // object with variables to template
+  };
+
+  emailsQueue.push(mailOptions);
+}
+
+async function sendEmail(mailOptions) {
+  try {
+    return mailtrapTransport.sendMail(mailOptions);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function run() {
+  while (true) {
+    const mailOptions = await emailsQueue.pop();
+    if (counter === 2) {
+      await sleep(10000);
+      counter = 0;
+    }
+    await sendEmail(mailOptions);
+    counter++;
+  }
+}
+
 const start = () => {
   mailtrapTransport.use('compile', hbs({
     viewEngine: {
@@ -33,25 +70,12 @@ const start = () => {
     viewPath: templatePath,
     extName: '.hbs',
   }));
+  (async () => {
+    run();
+  })();
 };
-
-async function sendEmail(from, to, subject, template, context) {
-  try {
-    const mailOptions = {
-      from, // sender address, gmail overrides this
-      to, // list of receivers
-      subject, // Subject line
-      template, // html template
-      context, // object with variables to template
-    };
-
-    return mailtrapTransport.sendMail(mailOptions);
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 module.exports = {
   start,
-  sendEmail,
+  pushEmail,
 };

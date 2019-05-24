@@ -1,3 +1,7 @@
+const { PUSHER_CHANNEL_STORE } = require('./../config/configs');
+const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+
 module.exports = (sequelize, DataTypes) => {
   const Sell = sequelize.define('Sell', {
     uuid: {
@@ -30,6 +34,18 @@ module.exports = (sequelize, DataTypes) => {
     // Update total Price
     const book = await sell.getBook();
     sell.totalPrice = sell.quantity * book.price;
+  });
+
+  Sell.afterCreate(async (sell) => {
+    const book = await sell.getBook();
+    const client = await sell.getClient();
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createSell, { ...sell.dataValues, Book: book, Client: client });
+  });
+
+  Sell.afterUpdate(async (sell) => {
+    const book = await sell.getBook();
+    const client = await sell.getClient();
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateSell, { ...sell.dataValues, Book: book, Client: client });
   });
 
   return Sell;

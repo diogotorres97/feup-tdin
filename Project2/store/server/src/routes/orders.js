@@ -9,7 +9,6 @@ router.post('/orders', async (req, res) => {
     const order = await ordersController.create(quantity, bookId, clientId);
     res.status(201).send(order);
   } catch (error) {
-    console.log(error);
     res.status(400).send(error.message);
   }
 });

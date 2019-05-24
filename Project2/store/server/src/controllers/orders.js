@@ -49,7 +49,7 @@ const create = async (quantity, bookId, clientId) => {
     });
   }
 
-  const info = await emailServer.sendEmail(
+  emailServer.pushEmail(
     null,
     client.email,
     `Order #${order.uuid} confirmed`,
@@ -62,9 +62,7 @@ const create = async (quantity, bookId, clientId) => {
     },
   );
 
-  if (info.rejected.length > 0) throw new Error('Email Not Sent');
-
-  return order;
+  return { ...order.dataValues, Book: book, Client: client };
 };
 
 const list = async () => Order.findAll({
@@ -82,7 +80,12 @@ const retrieve = async orderId => Order.findByPk(orderId, {
 });
 
 const update = async (orderId, state, stateDate) => {
-  const order = await Order.findByPk(orderId);
+  const order = await Order.findByPk(orderId, {
+    include: [
+      { model: Book },
+      { model: Client },
+    ],
+  });
 
   if (!order) {
     throw new Error('Order not found');

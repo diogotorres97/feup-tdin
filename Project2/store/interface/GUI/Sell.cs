@@ -1,0 +1,33 @@
+﻿namespace @interface
+{
+    public class Sell
+    {
+        public string uuid { get; set; }
+        public int quantity { get; set; }
+        public double totalPrice { get; set; }
+        public Book book { get; set; }
+        public Client client { get; set; }
+
+        public Sell()
+        {
+        }
+
+        public Sell(string uuid, int quantity, double totalPrice, Book book, Client client)
+        {
+            this.uuid = uuid;
+            this.quantity = quantity;
+            this.totalPrice = totalPrice;
+            this.book = book;
+            this.client = client;
+        }
+
+        public Sell(dynamic data, Book book, Client client)
+        {
+            uuid = (string) data.uuid;
+            quantity = (int) data.quantity;
+            totalPrice = (double) data.totalPrice;
+            this.book = book;
+            this.client = client;
+        }
+    }
+}

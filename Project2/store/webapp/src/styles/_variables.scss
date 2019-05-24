@@ -1,0 +1,22 @@
+/*
+* OVERRIDE BOOTSTRAP VARIABLES
+*/
+
+$theme-colors: (
+    "primary": #1C4F59,
+    "secondary": #3FB4CC
+);
+
+$font-base: 'Montserrat';
+
+@import '~bootstrap/scss/bootstrap';
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+/*
+* VARIABLES
+*/
+
+$dark-blue: #1C4F59;
+$light-blue: #3FB4CC;
+$lime: #DAE579;
+$light-grey: #F2F2F2;

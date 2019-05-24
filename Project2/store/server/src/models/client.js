@@ -1,3 +1,7 @@
+const { PUSHER_CHANNEL_STORE } = require('./../config/configs');
+const { messageType } = require('../enums');
+const { sendNotificationMessage } = require('../services/websockets/pusher');
+
 module.exports = (sequelize, DataTypes) => {
   const Client = sequelize.define('Client', {
     name: {
@@ -26,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'clientId',
     });
   };
+
+  Client.afterCreate(async (client) => {
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.createClient, client);
+  });
+
+  Client.afterUpdate(async (client) => {
+    sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.updateClient, client);
+  });
 
   return Client;
 };

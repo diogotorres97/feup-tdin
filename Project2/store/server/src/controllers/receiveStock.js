@@ -1,12 +1,8 @@
 const {
   ReceiveStock, Book, Order, Client,
 } = require('../models');
-const {
-  PUSHER_CHANNEL_STORE,
-} = require('../config/configs');
-const { orderState, messageType } = require('../enums');
+const { orderState } = require('../enums');
 const { emailServer } = require('../services/email');
-const { sendNotificationMessage } = require('../services/websockets/pusher');
 
 const create = async (bookTitle, quantity) => {
   const book = await Book.findOne({
@@ -45,10 +41,7 @@ const create = async (bookTitle, quantity) => {
 
   const receiveStock = await ReceiveStock.create({ quantity, ordersId, ...{ bookId: book.id } });
 
-  // Send the message through websockets
-  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.receiveStock, receiveStock);
-
-  return receiveStock;
+  return { ...receiveStock.dataValues, Book: book };
 };
 
 const list = async () => ReceiveStock.findAll({
@@ -58,7 +51,11 @@ const list = async () => ReceiveStock.findAll({
 });
 
 const receiveStock = async (receiveStockId) => {
-  const receivedStock = await ReceiveStock.findByPk(receiveStockId);
+  const receivedStock = await ReceiveStock.findByPk(receiveStockId, {
+    include: [
+      { model: Book },
+    ],
+  });
 
   if (!receivedStock) {
     throw new Error('ReceiveStock not found');
@@ -88,7 +85,7 @@ const receiveStock = async (receiveStockId) => {
     }
 
     // Send an email to notify the clients
-    const info = await emailServer.sendEmail(
+    emailServer.pushEmail(
       null,
       client.email,
       `Order #${order.uuid} Updated`,
@@ -100,8 +97,6 @@ const receiveStock = async (receiveStockId) => {
         orderState: orderState.toString(order.state, order.stateDate),
       },
     );
-
-    if (info.rejected.length > 0) throw new Error('Email Not Sent');
   }
 
   // update the stock

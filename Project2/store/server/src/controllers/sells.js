@@ -37,8 +37,7 @@ const create = async (quantity, bookId, clientId) => {
     });
 
     // Send an e-mail
-
-    const info = await emailServer.sendEmail(
+    emailServer.pushEmail(
       null,
       client.email,
       `Order #${order.uuid} confirmed`,
@@ -51,9 +50,7 @@ const create = async (quantity, bookId, clientId) => {
       },
     );
 
-    if (info.rejected.length > 0) throw new Error('Email Not Sent');
-
-    return order;
+    return { ...order.dataValues, Book: book, Client: client };
   }
 
   const sell = await Sell.create(sellData);
@@ -63,9 +60,9 @@ const create = async (quantity, bookId, clientId) => {
   });
 
   // print a receipt
-  sendNotificationMessage(PUSHER_CHANNEL_STORE, 'print_invoice', sell);
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.printInvoice, { ...sell.dataValues, Book: book, Client: client });
 
-  return sell;
+  return { ...sell.dataValues, Book: book, Client: client };
 };
 
 const list = async () => Sell.findAll({

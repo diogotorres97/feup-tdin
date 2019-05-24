@@ -11,6 +11,7 @@ const clients = require('./clients');
 const receiveStock = require('./receiveStock');
 const orders = require('./orders');
 const sells = require('./sells');
+const statistics = require('./statistics');
 
 router.use('/api/', auth);
 router.use('/api/', passport.authenticate('jwt', { session: false }));
@@ -19,5 +20,6 @@ router.use('/api/', clients);
 router.use('/api/', receiveStock);
 router.use('/api/', orders);
 router.use('/api/', sells);
+router.use('/api/', statistics);
 
 module.exports = router;
