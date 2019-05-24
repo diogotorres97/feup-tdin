@@ -1,36 +1,54 @@
 import React, { Component } from 'react';
-import logo from '../../logo.svg';
+import { Link, Redirect } from 'react-router-dom';
 import './App.scss';
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-import Loginscreen from '../login/Loginscreen'
-//injectTapEventPlugin();
+/* Once the 'Authservice' and 'withAuth' componenets are created, import them into App.js */
+import AuthHelperMethods from '../AuthHelperMethods';
+
+//Our higher order component
+import withAuth from '../withAuth';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loginPage: [],
-      uploadScreen: []
-    }
+  Auth = new AuthHelperMethods();
+  
+  state = {
+    username: '',
+    toLogin: false
   }
-  componentWillMount() {
-    var loginPage = [];
-    loginPage.push(<Loginscreen key={1} parentContext={this} />);
+  
+  _handleLogout = () => {
+    this.Auth.logout()
     this.setState({
-      loginPage: loginPage
-    })
+      toLogin: true
+    });
   }
+
+
   render() {
+    if (this.state.toLogin === true) {
+      return <Redirect to='/login' />
+    }
+
+    let name = null;
+    if (this.props.confirm) {
+      name = this.props.confirm.user.email;
+    }
+
+    console.log("Rendering Appjs!")
+
     return (
       <div className="App">
-        {this.state.loginPage}
-        {this.state.uploadScreen}
+        <div className="main-page">
+          <div className="top-section">
+            <h1>Welcome, {name}</h1>
+          </div>
+          <div className="bottom-section">
+            <button onClick={this._handleLogout}>LOGOUT</button>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+export default withAuth(App);

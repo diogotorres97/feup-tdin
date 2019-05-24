@@ -5,92 +5,105 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import './Register.scss';
 import TextField from 'material-ui/TextField';
+import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import AuthHelperMethods from '../AuthHelperMethods';
+import { Link, Redirect } from 'react-router-dom';
 
 const configs = require('../../utils/Utils').configs;
 
 class Register extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            first_name: '',
-            last_name: '',
-            email: '',
-            password: ''
+    Auth = new AuthHelperMethods();
+    state = {
+        email: "",
+        password: "",
+        toHome: false
+    }
+
+    _handleChange = (e) => {
+
+        this.setState(
+            {
+                [e.target.name]: e.target.value
+            }
+        )
+    }
+
+    handleFormSubmit = (e) => {
+
+        e.preventDefault();
+
+        this.Auth.signup(this.state.email, this.state.password)
+            .then(res => {
+                if (res === false) {
+                    return alert("Registration failed!");
+                }
+                this.setState({
+                    toHome: true
+                });
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+       
+    }
+
+    componentDidMount() {
+        console.log(this.Auth.loggedIn());
+        if (this.Auth.loggedIn()) {
+            this.setState({
+                toHome: true
+            });
+
         }
     }
+
     render() {
+        if (this.state.toHome === true) {
+            return <Redirect to='/' />
+        }
         return (
-            <div className="register">
-                <MuiThemeProvider>
-                    <div>
-                        <AppBar
-                            title="Register"
-                        />
-                        <TextField
-                            hintText="Enter your First Name"
-                            floatingLabelText="First Name"
-                            onChange={(event, newValue) => this.setState({ first_name: newValue })}
-                        />
-                        <br />
-                        <TextField
-                            hintText="Enter your Last Name"
-                            floatingLabelText="Last Name"
-                            onChange={(event, newValue) => this.setState({ last_name: newValue })}
-                        />
-                        <br />
-                        <TextField
-                            hintText="Enter your Email"
-                            type="email"
-                            floatingLabelText="Email"
-                            onChange={(event, newValue) => this.setState({ email: newValue })}
-                        />
-                        <br />
-                        <TextField
-                            type="password"
-                            hintText="Enter your Password"
-                            floatingLabelText="Password"
-                            onChange={(event, newValue) => this.setState({ password: newValue })}
-                        />
-                        <br />
-                        <RaisedButton label="Submit" primary={true} onClick={(event) => this.handleClick(event)} />
-                    </div>
-                </MuiThemeProvider>
-            </div>
+            <React.Fragment>
+                <div className="register">
+                    <MuiThemeProvider>
+                        <div>
+                            <AppBar
+                                title="Register"
+                                showMenuIconButton={false}
+                            />
+                            <div className="content">
+                                <Form className="box-form">
+                                    <TextField
+                                        className="form-item"
+                                        hintText="Enter the Email"
+                                        name="email"
+                                        type="email"
+                                        onChange={this._handleChange}
+                                    />
+                                    <br />
+                                    <TextField
+                                        className="form-item"
+                                        hintText="Enter the password"
+                                        name="password"
+                                        type="password"
+                                        onChange={this._handleChange}
+                                    />
+                                    <br />
+                                    <RaisedButton className="form-submit" onClick={this.handleFormSubmit}>SignUp</RaisedButton>
+                                </Form>
+                                <p className="textLogin">Already registered. Go to Login</p>
+                                <Link className="link" to="/login"><span className="link-login">Login</span></Link>
+                            </div>
+                        </div>
+                    </MuiThemeProvider>
+                </div>
+            </React.Fragment>
         );
     }
 
-    handleClick(event) {
-        var apiBaseUrl = configs.SERVER_HOST;
-        console.log("values", this.state.first_name, this.state.last_name, this.state.email, this.state.password);
-        //To be done:check for empty values before hitting submit
-        var self = this;
-        var payload = {
-            "first_name": this.state.first_name,
-            "last_name": this.state.last_name,
-            "email": this.state.email,
-            "password": this.state.password
-        }
-        axios.post(apiBaseUrl + '/register', payload)
-            .then(function (response) {
-                console.log(response);
-                if (response.data.code == 200) {
-                    //  console.log("registration successfull");
-                    var loginscreen = [];
-                    loginscreen.push(<Login key={1}  parentContext={this} />);
-                    var loginmessage = "Not Registered yet.Go to registration";
-                    self.props.parentContext.setState({
-                        loginscreen: loginscreen,
-                        loginmessage: loginmessage,
-                        buttonLabel: "Register",
-                        isLogin: true
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
+    
 
 }
 

@@ -3,76 +3,114 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
+import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import './Login.scss';
-import UploadScreen from '../uploadscreen/UploadScreen';
+import { Link, NavLink, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import AuthHelperMethods from '../AuthHelperMethods';
 
 const configs = require('../../utils/Utils').configs;
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: ''
+   
+    Auth = new AuthHelperMethods();
+
+    state = {
+        email: "",
+        password: "",
+        toHome: false,
+        showError: false
         }
+
+    /* Fired off every time the use enters something into the input fields */
+    _handleChange = (e) => {
+        this.setState(
+            {
+                [e.target.name]: e.target.value
     }
+        )
+    }
+
+    handleFormSubmit = (e) => {
+
+        e.preventDefault();
+        /* Here is where all the login logic will go. Upon clicking the login button, we would like to utilize a login method that will send our entered credentials over to the server for verification. Once verified, it should store your token and send you to the protected route. */
+        this.Auth.login(this.state.email, this.state.password)
+            .then(res => {
+                if (res === false) {
+                    return alert("Sorry those credentials don't exist!");
+                }
+                this.setState({
+                    toHome: true,
+                    showError: false
+                });
+                
+            })
+            .catch(err => {
+                this.setState({
+                    showError: true
+                })
+                console.log(err);
+            })
+    }
+
+    componentWillMount() {
+        /* Here is a great place to redirect someone who is already logged in to the protected route */
+        if (this.Auth.loggedIn())
+            this.setState({
+                toHome: true
+            });
+    }
+
     render() {
+        if (this.state.toHome === true) {
+            return <Redirect to='/' />
+        }
+
+        let errorMessage = "";
+        if(this.state.showError){
+            errorMessage = "Invalid Email or Password!";
+        }
+
         return (
+            <React.Fragment>
             <div className="login">
                 <MuiThemeProvider>
                     <div>
                         <AppBar
                             title="Login"
+                                showMenuIconButton={false}
                         />
-                        <TextField
-                            hintText="Enter your Username"
-                            floatingLabelText="Username"
-                            onChange={(event, newValue) => this.setState({ username: newValue })}
-                        />
-                        <br />
-                        <TextField
-                            type="password"
-                            hintText="Enter your Password"
-                            floatingLabelText="Password"
-                            onChange={(event, newValue) => this.setState({ password: newValue })}
-                        />
-                        <br />
-                        <RaisedButton label="Submit" primary={true} onClick={(event) => this.handleClick(event)} />
+                            <Form className="box-form">
+                                <TextField
+                                    className="form-item"
+                                    hintText = "Enter your Email"
+                                    name="email"
+                                    type="email"
+                                    onChange={this._handleChange}
+                                />
+                                <br/>
+                                <TextField
+                                    className="form-item"
+                                    hintText="Enter your password"
+                                    name="password"
+                                    type="password"
+                                    onChange={this._handleChange}
+                                />
+                                <br />
+                                <p className="errorMessage">{errorMessage}</p>
+                                <RaisedButton className="form-submit" onClick={this.handleFormSubmit}>Login</RaisedButton>
+                            </Form>
+                            <p className="textSignup">Not registered yet? Register Now</p>
+                            <Link className="link" to="/signup"><span className="link-signup">Signup</span></Link>
                     </div>
                 </MuiThemeProvider>
             </div>
+            </React.Fragment>
         );
     }
 
-    handleClick(event) {
-        var apiBaseUrl = configs.SERVER_HOST;
-        var self = this;
-        var payload = {
-            "email": this.state.username,
-            "password": this.state.password
-        }
-        axios.post(apiBaseUrl + '/login', payload)
-            .then(function (response) {
-                console.log(response);
-                if (response.data.code == 200) {
-                    console.log("Login successfull");
-                    var uploadScreen = [];
-                    uploadScreen.push(<UploadScreen key={1} appContext={self.props.appContext} />)
-                    self.props.appContext.setState({ loginPage: [], uploadScreen: uploadScreen })
-                }
-                else if (response.data.code == 204) {
-                    console.log("Username password do not match");
-                    alert("username password do not match")
-                }
-                else {
-                    console.log("Username does not exists");
-                    alert("Username does not exist");
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
+   
 }
 export default Login;
