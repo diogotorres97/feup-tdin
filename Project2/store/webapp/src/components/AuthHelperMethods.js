@@ -16,11 +16,9 @@ export default class AuthHelperMethods {
             "password": password
         }
 
-        console.log(payload)
         // Get a token from api server using the fetch api
         return axios.post(apiBaseUrl + '/login', payload)
             .then(res => {
-                console.log(res)
                 this.setToken(res.data.token); // Setting the token in localStorage
                 return Promise.resolve(res);
             });
@@ -42,7 +40,6 @@ export default class AuthHelperMethods {
         // Get a token from api server using the fetch api
         return axios.post(apiBaseUrl + '/signup', payload)
             .then(res => {
-                console.log(res)
                 this.setToken(res.data.token); // Setting the token in localStorage
                 return Promise.resolve(res);
             });
@@ -63,7 +60,6 @@ export default class AuthHelperMethods {
 
     setToken = idToken => {
         // Saves user token to localStorage
-        console.log(idToken)
         localStorage.setItem("id_token", idToken);
     };
 
@@ -80,7 +76,6 @@ export default class AuthHelperMethods {
     getConfirm = () => {
         // Using jwt-decode npm package to decode the token
         let answer = decode(this.getToken());
-        console.log("Recieved answer!");
         return answer;
     };
 

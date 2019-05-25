@@ -6,32 +6,26 @@
 */
 .App {
   text-align: center; }
-
-.App .listOrders {
-  margin-top: 1em; }
-
-.App .btnLogout {
-  height: 50%;
-  align-self: center; }
-
-.App .content {
-  align-content: center; }
-
-.App .link {
-  background-color: #3FB4CC;
-  color: white;
-  padding: 1em 1.5em;
-  text-decoration: none;
-  text-transform: uppercase;
-  margin-top: 1em; }
-
-.App .link:hover {
-  background-color: #32D4BE; }
-
-.App .gridList {
-  max-width: 1200px;
-  max-height: 450px;
-  text-align: left;
-  margin: 0 auto !important;
-  background-color: #F4F4F4;
-  padding: 0 1em 1em 1em; }
+  .App .listOrders {
+    margin-top: 1em; }
+  .App .btnLogout {
+    height: 50%;
+    align-self: center; }
+  .App .content {
+    align-content: center; }
+  .App .link {
+    background-color: #3FB4CC;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-top: 1em; }
+  .App .link:hover {
+    background-color: #32D4BE; }
+  .App .gridList {
+    max-width: 1200px;
+    max-height: 450px;
+    text-align: left;
+    margin: 0 auto !important;
+    background-color: #F4F4F4;
+    padding: 0 1em 1em 1em; }

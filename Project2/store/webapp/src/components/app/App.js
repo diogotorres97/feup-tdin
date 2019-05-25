@@ -57,7 +57,6 @@ class App extends Component {
     this.Client.getClient()
       .then(res => {
 
-        console.log(res)
         if (res.data !== "") {
 
           this.setState({
@@ -78,7 +77,6 @@ class App extends Component {
     this.setState({
       confirm: conf
     })
-    console.log(conf.user)
     this.getClient();
     if(this.state.client)
       this.listOrders();
@@ -96,7 +94,6 @@ class App extends Component {
       name = "Welcome, " + this.state.confirm.user.email;
     }
 
-    console.log("Rendering Appjs!")
 
     return (
       <div className="App">

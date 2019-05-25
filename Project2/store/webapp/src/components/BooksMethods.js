@@ -23,7 +23,6 @@ export default class BooksMethods {
 
         return axios.get(apiBaseUrl + '/books', header)
             .then(res => {
-                console.log(res)
                 return Promise.resolve(res);
             });
     }

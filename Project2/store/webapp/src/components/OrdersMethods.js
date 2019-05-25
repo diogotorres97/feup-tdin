@@ -27,11 +27,9 @@ export default class OrderMethods {
             "clientId": clientId
         }
 
-        console.log(payload)
 
         return axios.post(apiBaseUrl + '/orders', payload, header)
             .then(res => {
-                console.log(res)
                 return Promise.resolve(res);
             });
     }

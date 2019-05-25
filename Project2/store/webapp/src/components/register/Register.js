@@ -51,7 +51,6 @@ class Register extends Component {
     }
 
     componentDidMount() {
-        console.log(this.Auth.loggedIn());
         if (this.Auth.loggedIn()) {
             this.setState({
                 toHome: true

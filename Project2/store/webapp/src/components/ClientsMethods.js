@@ -23,7 +23,6 @@ export default class ClientsMethods {
         // Get a token from api server using the fetch api
         return axios.get(apiBaseUrl + '/clients/association', header)
             .then(res => {
-                console.log(res)
                 return Promise.resolve(res);
             });
     };
@@ -43,12 +42,10 @@ export default class ClientsMethods {
             "email": this.Auth.getConfirm().user.email
         }
 
-        console.log(payload)
 
         // Get a token from api server using the fetch api
         return axios.post(apiBaseUrl + '/clients/association', payload, header)
             .then(res => {
-                console.log(res)
                 return Promise.resolve(res);
             });
     };

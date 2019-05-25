@@ -25,8 +25,7 @@ import withAuth from '../withAuth';
 
 function importAll(r) {
     let images = {};
-    r.keys().map((item, index) => { console.log(item); images[index] = r(item); });
-    console.log(images[0])
+    r.keys().map((item, index) => { images[index] = r(item); });
     return images;
 }
 
@@ -91,7 +90,6 @@ class CreateOrderPage extends Component {
                 this.Client.createClient(this.state.clientName, this.state.clientAddress)
                     .then(res => {
 
-                        console.log(res)
                         if (res.data !== "") {
 
                             this.setState({
@@ -110,7 +108,6 @@ class CreateOrderPage extends Component {
             this.Order.createOrder(this.state.client.id, this.state.quantity, this.state.selectedBook.id)
                 .then(res => {
 
-                    console.log(res)
                     this.setState({
                         toHome: true
                     });
@@ -127,7 +124,6 @@ class CreateOrderPage extends Component {
         this.Client.getClient()
             .then(res => {
 
-                console.log(res)
                 if (res.data !== "") {
                     
                     this.setState({
@@ -144,7 +140,6 @@ class CreateOrderPage extends Component {
         this.Book.getBooks()
             .then(res => {
 
-                console.log(res)
                 if (res.data !== "") {
                     let newBooks = [];
                     let index;
@@ -159,7 +154,6 @@ class CreateOrderPage extends Component {
                         books: newBooks
                     })
 
-                  console.log(this.state.books)
                 }
 
             })
