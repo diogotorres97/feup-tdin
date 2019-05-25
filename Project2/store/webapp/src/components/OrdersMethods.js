@@ -23,7 +23,7 @@ export default class OrderMethods {
         };
 
         let payload = {
-            "quantity": quantity,
+            "quantity": parseInt(quantity),
             "bookId": bookId,
             "clientId": clientId
         };

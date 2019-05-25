@@ -39,7 +39,7 @@ class Order extends Component {
                             </Typography>
 
                             <Typography variant="h6" component="h2">
-                                State Date: {this.state.order.stateDate ? this.state.order.stateDate : "No Date"}
+                                State Date: {this.state.order.stateDate ? new Date(this.state.order.stateDate).toDateString() : "No Date"}
                             </Typography>
 
                             <Typography variant="h6" component="h2">
