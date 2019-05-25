@@ -16,8 +16,11 @@ router.post('/clients/association', async (req, res) => {
   const { name, address, email } = req.body;
 
   try {
-    const client = await clientsController.create(name, address, email);
-    const clientAssociatedToUser = await clientsController.associateUserToClient(req.user.id, client.id);
+    let client = await clientsController.getClientByEmail(email);
+    if(!client)
+      client = await clientsController.create(name, address, email);
+    
+      const clientAssociatedToUser = await clientsController.associateUserToClient(req.user.id, client.id);
     res.status(201).send(clientAssociatedToUser);
   } catch (error) {
     res.status(400).send(error.message);

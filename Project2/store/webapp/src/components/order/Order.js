@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './Order.scss';
 
 import Card from '@material-ui/core/Card';
@@ -9,21 +9,21 @@ class Order extends Component {
     state = {
         order: Object,
         loaded: false,
-    }
+    };
 
-    componentDidMount(){
+    componentDidMount() {
         this.setState({
             order: this.props.order,
             loaded: true
         })
     }
-    
+
 
     render() {
         if (this.state.loaded === true) {
-            return(
+            return (
                 <React.Fragment>
-                     <Card className="card">
+                    <Card className="card">
                         <CardContent>
                             <Typography className="title" color="textSecondary" gutterBottom>
                                 UUID: {this.state.order.uuid}
@@ -37,20 +37,20 @@ class Order extends Component {
                             <Typography variant="h6" component="h2">
                                 State: {this.state.order.state}
                             </Typography>
-                            
+
                             <Typography variant="h6" component="h2">
-                                State Date: {this.state.order.stateDate ? this.state.order.stateDate : "No Date"}
+                                State Date: {this.state.order.stateDate ? new Date(this.state.order.stateDate).toDateString() : "No Date"}
                             </Typography>
-                            
+
                             <Typography variant="h6" component="h2">
                                 Book title: {this.state.order.Book.title}
                             </Typography>
                         </CardContent>
-                       
+
                     </Card>
                 </React.Fragment>
             );
-        }else{
+        } else {
             return null;
         }
     }

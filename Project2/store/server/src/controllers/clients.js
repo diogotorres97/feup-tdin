@@ -39,6 +39,13 @@ const update = async (clientId, address) => {
   });
 };
 
+const getClientByEmail = async(email) => Client.findOne({
+      where: {
+        email
+      }
+});
+
+
 const associateUserToClient = async (userId, clientId) => {
   const client = await Client.findByPk(clientId);
 
@@ -73,4 +80,5 @@ module.exports = {
   retrieveByUserId,
   associateUserToClient,
   getClientId,
+  getClientByEmail
 };

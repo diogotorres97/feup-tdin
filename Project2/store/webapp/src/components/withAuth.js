@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import React, {Component} from "react";
+import {Redirect} from 'react-router-dom';
 import AuthHelperMethods from "./AuthHelperMethods";
 
 /* A higher order component is frequently written as a function that returns a class. */
@@ -41,7 +41,7 @@ export default function withAuth(AuthComponent) {
 
         render() {
             if (this.state.toLogin === true) {
-                return <Redirect to='/login' />
+                return <Redirect to='/login'/>
             }
 
             if (this.state.loaded === true) {

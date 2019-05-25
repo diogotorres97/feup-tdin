@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import './Register.scss';
 import TextField from 'material-ui/TextField';
-import { Form } from 'reactstrap';
+import {Form} from 'reactstrap';
 import AuthHelperMethods from '../AuthHelperMethods';
-import { Link, Redirect } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 class Register extends Component {
     Auth = new AuthHelperMethods();
@@ -14,7 +14,7 @@ class Register extends Component {
         email: "",
         password: "",
         toHome: false
-    }
+    };
 
     _handleChange = (e) => {
 
@@ -23,7 +23,7 @@ class Register extends Component {
                 [e.target.name]: e.target.value
             }
         )
-    }
+    };
 
     handleFormSubmit = (e) => {
 
@@ -43,8 +43,8 @@ class Register extends Component {
                 console.log(err);
             })
 
-       
-    }
+
+    };
 
     componentDidMount() {
         if (this.Auth.loggedIn()) {
@@ -57,7 +57,7 @@ class Register extends Component {
 
     render() {
         if (this.state.toHome === true) {
-            return <Redirect to='/' />
+            return <Redirect to='/'/>
         }
         return (
             <React.Fragment>
@@ -77,7 +77,7 @@ class Register extends Component {
                                         type="email"
                                         onChange={this._handleChange}
                                     />
-                                    <br />
+                                    <br/>
                                     <TextField
                                         className="form-item"
                                         hintText="Enter the password"
@@ -85,8 +85,9 @@ class Register extends Component {
                                         type="password"
                                         onChange={this._handleChange}
                                     />
-                                    <br />
-                                    <RaisedButton className="form-submit" onClick={this.handleFormSubmit}>SignUp</RaisedButton>
+                                    <br/>
+                                    <RaisedButton className="form-submit"
+                                                  onClick={this.handleFormSubmit}>SignUp</RaisedButton>
                                 </Form>
                                 <p className="textLogin">Already registered. Go to Login</p>
                                 <Link className="link" to="/login"><span className="link-login">Login</span></Link>
@@ -98,7 +99,6 @@ class Register extends Component {
         );
     }
 
-    
 
 }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AuthHelperMethods from './AuthHelperMethods';
+
 const configs = require('../utils/Utils').configs;
 
 
@@ -15,10 +16,10 @@ export default class ClientsMethods {
         let apiBaseUrl = configs.SERVER_HOST;
 
         let header = {
-                headers: {
-                    Authorization: 'Bearer ' + this.Auth.getToken() //the token is a variable which holds the token
-                }
-            };
+            headers: {
+                Authorization: 'Bearer ' + this.Auth.getToken() //the token is a variable which holds the token
+            }
+        };
 
         // Get a token from api server using the fetch api
         return axios.get(apiBaseUrl + '/clients/association', header)
@@ -28,13 +29,13 @@ export default class ClientsMethods {
     };
 
     createClient = (name, address) => {
-         let apiBaseUrl = configs.SERVER_HOST;
+        let apiBaseUrl = configs.SERVER_HOST;
 
         let header = {
-                headers: {
-                    Authorization: 'Bearer ' + this.Auth.getToken() //the token is a variable which holds the token
-                }
-            };
+            headers: {
+                Authorization: 'Bearer ' + this.Auth.getToken() //the token is a variable which holds the token
+            }
+        };
 
         let payload = {
             "name": name,
@@ -50,5 +51,5 @@ export default class ClientsMethods {
             });
     };
 
-   
+
 }
