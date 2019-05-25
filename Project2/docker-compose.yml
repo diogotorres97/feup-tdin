@@ -12,9 +12,20 @@ services:
     depends_on:
       - store-server
 
-  # Client
-
   # Store
+  store-webapp:
+    image: store-webapp
+    command: yarn start-js
+    build: ./store/webapp
+    volumes:
+      - ./store/webapp:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: store-webapp
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - store-server
+    
   store-server:
     image: store-server
     command: npm run dev
