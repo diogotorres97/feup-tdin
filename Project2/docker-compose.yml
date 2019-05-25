@@ -15,7 +15,7 @@ services:
   # Store
   store-webapp:
     image: store-webapp
-    command: yarn start-js
+    command: yarn start
     build: ./store/webapp
     volumes:
       - ./store/webapp:/usr/src/app
