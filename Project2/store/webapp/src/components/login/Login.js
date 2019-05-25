@@ -3,14 +3,11 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import axios from 'axios';
+import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
 import './Login.scss';
 import { Link, NavLink, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import AuthHelperMethods from '../AuthHelperMethods';
 
-const configs = require('../../utils/Utils').configs;
 
 class Login extends Component {
    

@@ -5,6 +5,7 @@ import './index.css';
 import App from './components/app/App';
 import Login from './components/login/Login';
 import Register from './components/register/Register';
+import CreateOrderPage from './components/createOrderPage/CreateOrderPage';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Register} />
+            <Route exact path="/createorder" component={CreateOrderPage} />
         </div>
     </Router>, document.getElementById('root'));
 

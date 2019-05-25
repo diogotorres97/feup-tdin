@@ -1,0 +1,39 @@
+@import '../../styles/_variables';
+
+.page {
+     display: 'flex';
+     flex-wrap: 'wrap';
+     justify-content: 'space-around';
+     overflow: 'hidden';
+     
+     text-align: center;
+
+     .appBar{
+        margin-bottom: 1em;
+     }
+
+     .gridList {
+         max-width: 1000px;
+         max-height: 450px;
+         text-align: left;
+         margin: 0 auto !important;
+         background-color: #F4F4F4;
+         padding: 0 1em 1em 1em;
+         
+     }
+
+     .btnLogout {
+         height: 50%;
+         align-self: center;
+         margin-right:1em;
+     }
+
+     .actionIcon{
+         color: white;
+         margin-left:1em;
+     }
+
+ 
+
+}
+

@@ -1,11 +1,11 @@
-import Login from '../login//Login';
+import Login from '../login/Login';
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import './Register.scss';
 import TextField from 'material-ui/TextField';
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import AuthHelperMethods from '../AuthHelperMethods';
 import { Link, Redirect } from 'react-router-dom';
