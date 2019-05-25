@@ -22,12 +22,18 @@ module.exports = (sequelize, DataTypes) => {
 
   Request.afterCreate(async (request) => {
     const book = await request.getBook();
-    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.createRequest, { ...request.dataValues, Book: book });
+    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.createRequest, {
+      ...request.dataValues,
+      Book: book,
+    });
   });
 
   Request.afterUpdate(async (request) => {
     const book = await request.getBook();
-    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.updateRequest, { ...request.dataValues, Book: book });
+    sendNotificationMessage(PUSHER_CHANNEL_WAREHOUSE, messageType.updateRequest, {
+      ...request.dataValues,
+      Book: book,
+    });
   });
 
   return Request;

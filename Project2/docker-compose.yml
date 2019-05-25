@@ -10,11 +10,24 @@ services:
     ports:
       - 80:80
     depends_on:
+      - store-webapp
       - store-server
-
-  # Client
+      - warehouse-server
 
   # Store
+  store-webapp:
+    image: store-webapp
+    command: yarn start
+    build: ./store/webapp
+    volumes:
+      - ./store/webapp:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: store-webapp
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - store-server
+
   store-server:
     image: store-server
     command: npm run dev
@@ -64,7 +77,7 @@ services:
       - POSTGRES_PASSWORD=tdin
       - POSTGRES_DB=warehouse
 
-  # RabbitMQA
+  # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

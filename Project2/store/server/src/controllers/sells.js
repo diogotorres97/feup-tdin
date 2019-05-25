@@ -60,7 +60,11 @@ const create = async (quantity, bookId, clientId) => {
   });
 
   // print a receipt
-  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.printInvoice, { ...sell.dataValues, Book: book, Client: client });
+  sendNotificationMessage(PUSHER_CHANNEL_STORE, messageType.printInvoice, {
+    ...sell.dataValues,
+    Book: book,
+    Client: client,
+  });
 
   return { ...sell.dataValues, Book: book, Client: client };
 };
