@@ -3,10 +3,8 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
-import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import './CreateOrderPage.scss';
-import { Link, NavLink, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -261,6 +259,32 @@ class CreateOrderPage extends Component {
                                             min="1" max="100"
                                             margin="normal"
                                             variant="outlined"
+
+                                        />
+                                    </Grid>
+
+
+                                </Grid>
+
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="row"
+                                    alignItems="center"
+                                    justify="center"
+                                >
+                                    <Grid item xs={2}>
+                                        <p>Total:</p>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <TextField
+                                            id="outlined-number"
+                                            label="Total"
+                                            value={this.state.quantity * (this.state.selectedBook.price ? this.state.selectedBook.price : 0)}
+                                            name="total"
+                                            margin="normal"
+                                            variant="outlined"
+                                            disabled
 
                                         />
                                     </Grid>

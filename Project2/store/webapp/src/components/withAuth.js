@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import AuthHelperMethods from "./AuthHelperMethods";
 
 /* A higher order component is frequently written as a function that returns a class. */

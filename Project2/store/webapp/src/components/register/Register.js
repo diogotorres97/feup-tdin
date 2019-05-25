@@ -1,16 +1,12 @@
-import Login from '../login/Login';
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import './Register.scss';
 import TextField from 'material-ui/TextField';
-import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
-import axios from 'axios';
+import { Form } from 'reactstrap';
 import AuthHelperMethods from '../AuthHelperMethods';
 import { Link, Redirect } from 'react-router-dom';
-
-const configs = require('../../utils/Utils').configs;
 
 class Register extends Component {
     Auth = new AuthHelperMethods();

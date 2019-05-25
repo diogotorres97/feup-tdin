@@ -2,14 +2,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
-import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import './App.scss';
 import Order from '../order/Order';
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 /* Once the 'Authservice' and 'withAuth' componenets are created, import them into App.js */

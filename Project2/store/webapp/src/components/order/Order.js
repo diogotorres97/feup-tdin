@@ -1,18 +1,9 @@
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
-import { Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
 import './Order.scss';
-import { Link, NavLink, Redirect } from 'react-router-dom';
-import OrdersMethods from '../OrdersMethods';
 
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 
 class Order extends Component {
     state = {
