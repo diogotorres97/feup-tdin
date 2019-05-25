@@ -1,2 +1,27 @@
+/*
+* OVERRIDE BOOTSTRAP VARIABLES
+*/
+/*
+* VARIABLES
+*/
 .register {
-  margin: 15; }
+  text-align: center; }
+  .register .link {
+    background-color: #3FB4CC;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    text-transform: uppercase; }
+  .register .link:hover {
+    background-color: #32D4BE; }
+  .register .textLogin {
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-bottom: 0.5em; }
+  .register .box-form {
+    margin-top: 2em; }
+  .register .form-item {
+    margin-top: 1em; }
+  .register .form-submit {
+    margin-top: 1em;
+    margin-bottom: 2em; }

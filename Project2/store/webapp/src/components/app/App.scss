@@ -1,3 +1,41 @@
-.App{
-    margin: 15
+@import '../../styles/_variables';
+
+.App {
+    text-align: center;
+    .listOrders{
+        margin-top: 1em;
+    }
+    
+
+    .btnLogout{
+        height: 50%;
+        align-self: center;
+    }
+
+    .content{
+        align-content: center;
+    }
+
+      .link {
+          background-color: $light-blue;
+          color: white;
+          padding: 1em 1.5em;
+          text-decoration: none;
+          text-transform: uppercase;
+          margin-top: 1em;
+      }
+
+      .link:hover {
+          background-color: $super-light-blue;
+      }
+
+      .gridList {
+          max-width: 1200px;
+          max-height: 450px;
+          text-align: left;
+          margin: 0 auto !important;
+          background-color: #F4F4F4;
+          padding: 0 1em 1em 1em;
+
+      }
 }

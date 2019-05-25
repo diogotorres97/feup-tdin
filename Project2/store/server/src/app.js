@@ -15,6 +15,10 @@ const webSockets = require('./services/websockets/pusher');
 const app = express();
 const routes = require('./routes/index');
 
+const cors = require('cors');
+
+app.use(cors());
+
 // Log requests to the console.
 app.use(logger('dev'));
 
