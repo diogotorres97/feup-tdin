@@ -3,8 +3,6 @@ const { User } = require('../models');
 const {
   clientsController,
   booksController,
-  ordersController,
-  sellsController,
 } = require('../controllers');
 
 const initializeUsers = async () => {
@@ -17,7 +15,6 @@ const initializeUsers = async () => {
   ]);
 };
 
-// TODO: associate userId
 const initializeClients = async () => {
   await Promise.all([
     clientsController.create('john', 'porto', 'john@store.com'),
@@ -35,14 +32,6 @@ const initializeBooks = async () => {
     booksController.create('Twilight', 'Stephenie Meyer', 9.99, 5),
   ]);
 };
-
-const initializeOrders = async () => {
-
-};
-
-const initializeSells = async () => {
-};
-
 
 const initializeDatabase = async () => {
   await initializeUsers();
