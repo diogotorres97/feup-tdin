@@ -1,40 +1,40 @@
 @import '../../styles/_variables';
 
 .login {
-    text-align: center;
+  text-align: center;
 
-    .link {
-        background-color: $light-blue;
-        color: white;
-        padding: 1em 1.5em;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
+  .link {
+    background-color: $light-blue;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
-    .link:hover {
-        background-color: $super-light-blue;
-    }
+  .link:hover {
+    background-color: $super-light-blue;
+  }
 
-    .textSignup {
-        text-transform: uppercase;
-        font-weight: bold;
-        padding-bottom: 0.5em;
-    }
+  .textSignup {
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-bottom: 0.5em;
+  }
 
-    .box-form {
-        margin-top: 2em;
-    }
+  .box-form {
+    margin-top: 2em;
+  }
 
-    .form-item {
-        margin-top: 1em;
-    }
+  .form-item {
+    margin-top: 1em;
+  }
 
-    .form-submit{
-        margin-bottom: 2em;
-    }
+  .form-submit {
+    margin-bottom: 2em;
+  }
 
-    .errorMessage {
-        margin-top: 0.5em;
-        color: red;
-    }
+  .errorMessage {
+    margin-top: 0.5em;
+    color: red;
+  }
 }

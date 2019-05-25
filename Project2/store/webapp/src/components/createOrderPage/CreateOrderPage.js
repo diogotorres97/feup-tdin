@@ -2,9 +2,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './CreateOrderPage.scss';
-import { Redirect } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -23,7 +23,9 @@ import withAuth from '../withAuth';
 
 function importAll(r) {
     let images = {};
-    r.keys().map((item, index) => { images[index] = r(item); });
+    r.keys().forEach((item, index) => {
+        images[index] = r(item);
+    });
     return images;
 }
 
@@ -35,10 +37,10 @@ class CreateOrderPage extends Component {
     Client = new ClientsMethods();
     Auth = new AuthHelperMethods();
     Book = new BooksMethods();
-    
+
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             order: Object,
             loaded: false,
@@ -50,23 +52,23 @@ class CreateOrderPage extends Component {
             quantity: 1,
             selectedBook: Object,
             books: []
-        }
-        this._selectBook = this._selectBook.bind(this)
+        };
+        this._selectBook = this._selectBook.bind(this);
         this._createOrder = this._createOrder.bind(this)
     }
 
     _handleLogout = () => {
-        this.Auth.logout()
+        this.Auth.logout();
         this.setState({
             toLogin: true
         });
-    }
+    };
 
     _handleHome = () => {
         this.setState({
             toHome: true
         });
-    }
+    };
 
     _handleChange = (e) => {
         this.setState(
@@ -74,17 +76,17 @@ class CreateOrderPage extends Component {
                 [e.target.name]: e.target.value
             }
         )
-    }
+    };
 
     _selectBook = (book) => {
         this.setState({
             selectedBook: book
         })
-    }
+    };
 
-    _createOrder(){
-        if(!this.state.client){
-            if (this.state.clientName && this.state.clientAddress){
+    _createOrder() {
+        if (!this.state.client) {
+            if (this.state.clientName && this.state.clientAddress) {
                 this.Client.createClient(this.state.clientName, this.state.clientAddress)
                     .then(res => {
 
@@ -100,9 +102,9 @@ class CreateOrderPage extends Component {
 
                         console.log(err);
                     });
-                }
             }
-        if (this.state.selectedBook.id && this.state.client){
+        }
+        if (this.state.selectedBook.id && this.state.client) {
             this.Order.createOrder(this.state.client.id, this.state.quantity, this.state.selectedBook.id)
                 .then(res => {
 
@@ -118,22 +120,22 @@ class CreateOrderPage extends Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.Client.getClient()
             .then(res => {
 
                 if (res.data !== "") {
-                    
+
                     this.setState({
                         client: res.data
                     })
-                } 
+                }
 
             })
             .catch(err => {
 
                 console.log(err);
-            })
+            });
 
         this.Book.getBooks()
             .then(res => {
@@ -147,7 +149,7 @@ class CreateOrderPage extends Component {
                         newBooks.push(book);
                     }
 
-                    
+
                     this.setState({
                         books: newBooks
                     })
@@ -171,7 +173,7 @@ class CreateOrderPage extends Component {
 
     render() {
         if (this.state.toLogin === true) {
-            return <Redirect to='/login' />
+            return <Redirect to='/login'/>
         }
 
         if (this.state.toHome === true) {
@@ -182,37 +184,39 @@ class CreateOrderPage extends Component {
         if (this.props.confirm) {
             name = "Create order for: " + this.props.confirm.user.email;
         }
-        
+
         if (this.state.loaded === true) {
             return (
                 <div>
-                   
+
                     <React.Fragment>
 
                         <MuiThemeProvider>
                             <div className="page">
                                 <AppBar className="appBar"
-                                    title={name}
-                                    showMenuIconButton={false}>
+                                        title={name}
+                                        showMenuIconButton={false}>
                                     <RaisedButton className="btnLogout" onClick={this._handleHome}>Home</RaisedButton>
-                                    <RaisedButton className="btnLogout" onClick={this._handleLogout}>Logout</RaisedButton>
+                                    <RaisedButton className="btnLogout"
+                                                  onClick={this._handleLogout}>Logout</RaisedButton>
                                 </AppBar>
-                                
 
 
                                 <GridList cellHeight={180} className="gridList">
-                                    <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+                                    <GridListTile key="Subheader" cols={2} style={{height: 'auto'}}>
                                         <ListSubheader component="div">Book List</ListSubheader>
                                     </GridListTile>
                                     {this.state.books.map(book => (
                                         <GridListTile key={book.id}>
-                                            <img src={book.img} alt={book.title} />
+                                            <img src={book.img} alt={book.title}/>
                                             <GridListTileBar
                                                 title={book.title}
                                                 subtitle={<span>by: {book.author}</span>}
                                                 actionIcon={
                                                     <IconButton onClick={() => this._selectBook(book)}>
-                                                        <span style={{color:"white"}}>{book.price}€</span><AddCircleIcon className="actionIcon" />
+                                                        <span
+                                                            style={{color: "white"}}>{book.price}€</span><AddCircleIcon
+                                                        className="actionIcon"/>
                                                     </IconButton>
                                                 }
                                             />
@@ -291,64 +295,65 @@ class CreateOrderPage extends Component {
 
 
                                 </Grid>
-                                {this.state.client ? null:
+                                {this.state.client ? null :
                                     <div className="clientSection">
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        direction="row"
-                                        alignItems="center"
-                                        justify="center"
-                                    >
-                                        <Grid item xs={2}>
-                                            <p>Client Name:</p>
+                                        <Grid
+                                            container
+                                            spacing={0}
+                                            direction="row"
+                                            alignItems="center"
+                                            justify="center"
+                                        >
+                                            <Grid item xs={2}>
+                                                <p>Client Name:</p>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    id="outlined-clientName"
+                                                    label="Name"
+                                                    value={this.state.clientName}
+                                                    name="clientName"
+                                                    onChange={this._handleChange}
+                                                    type="text"
+                                                    className="textName"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                />
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                id="outlined-clientName"
-                                                label="Name"
-                                                value={this.state.clientName}
-                                                name="clientName"
-                                                onChange={this._handleChange}
-                                                type="text"
-                                                className="textName"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
+                                        <Grid
+                                            container
+                                            spacing={0}
+                                            direction="row"
+                                            alignItems="center"
+                                            justify="center"
+                                        >
+                                            <Grid item xs={2}>
+                                                <p>Client Address:</p>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    id="outlined-clientAddress"
+                                                    label="Address"
+                                                    value={this.state.clientAddress}
+                                                    name="clientAddress"
+                                                    onChange={this._handleChange}
+                                                    type="text"
+                                                    className="textAddress"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                />
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        direction="row"
-                                        alignItems="center"
-                                        justify="center"
-                                    >
-                                        <Grid item xs={2}>
-                                            <p>Client Address:</p>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                id="outlined-clientAddress"
-                                                label="Address"
-                                                value={this.state.clientAddress}
-                                                name="clientAddress"
-                                                onChange={this._handleChange}
-                                                type="text"
-                                                className="textAddress"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        </Grid>
-                                    </Grid>
                                     </div>}
-                                <RaisedButton className="btnCreate" onClick={this._createOrder} color="red">Create</RaisedButton>
+                                <RaisedButton className="btnCreate" onClick={this._createOrder}
+                                              color="red">Create</RaisedButton>
 
                             </div>
                         </MuiThemeProvider>
                     </React.Fragment>
                 </div>
-                
+
             );
         } else {
             return null;

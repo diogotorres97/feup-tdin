@@ -1,41 +1,42 @@
 @import '../../styles/_variables';
 
 .App {
-    text-align: center;
-    .listOrders{
-        margin-top: 1em;
-    }
-    
+  text-align: center;
 
-    .btnLogout{
-        height: 50%;
-        align-self: center;
-    }
+  .listOrders {
+    margin-top: 1em;
+  }
 
-    .content{
-        align-content: center;
-    }
 
-      .link {
-          background-color: $light-blue;
-          color: white;
-          padding: 1em 1.5em;
-          text-decoration: none;
-          text-transform: uppercase;
-          margin-top: 1em;
-      }
+  .btnLogout {
+    height: 50%;
+    align-self: center;
+  }
 
-      .link:hover {
-          background-color: $super-light-blue;
-      }
+  .content {
+    align-content: center;
+  }
 
-      .gridList {
-          max-width: 1200px;
-          max-height: 450px;
-          text-align: left;
-          margin: 0 auto !important;
-          background-color: #F4F4F4;
-          padding: 0 1em 1em 1em;
+  .link {
+    background-color: $light-blue;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-top: 1em;
+  }
 
-      }
+  .link:hover {
+    background-color: $super-light-blue;
+  }
+
+  .gridList {
+    max-width: 1200px;
+    max-height: 450px;
+    text-align: left;
+    margin: 0 auto !important;
+    background-color: #F4F4F4;
+    padding: 0 1em 1em 1em;
+
+  }
 }

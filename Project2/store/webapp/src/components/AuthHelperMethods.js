@@ -1,5 +1,6 @@
 import decode from 'jwt-decode'
 import axios from 'axios';
+
 const configs = require('../utils/Utils').configs;
 
 
@@ -9,12 +10,13 @@ export default class AuthHelperMethods {
         //THIS LINE IS ONLY USED WHEN YOU'RE IN PRODUCTION MODE!
         this.domain = domain || "http://localhost:3000"; // API server domain
     }
+
     login = (email, password) => {
         let apiBaseUrl = configs.SERVER_HOST;
         let payload = {
             "email": email,
             "password": password
-        }
+        };
 
         // Get a token from api server using the fetch api
         return axios.post(apiBaseUrl + '/login', payload)
@@ -35,7 +37,7 @@ export default class AuthHelperMethods {
         let payload = {
             "email": email,
             "password": password
-        }
+        };
 
         // Get a token from api server using the fetch api
         return axios.post(apiBaseUrl + '/signup', payload)
