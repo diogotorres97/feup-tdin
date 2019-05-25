@@ -10,7 +10,9 @@ services:
     ports:
       - 80:80
     depends_on:
+      - store-webapp
       - store-server
+      - warehouse-server
 
   # Store
   store-webapp:
