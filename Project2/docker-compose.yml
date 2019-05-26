@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    restart: on-failure
+    container_name: nginx
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 80:80
+    depends_on:
+      - store-webapp
+      - store-server
+      - warehouse-server
+
+  # Store
+  store-webapp:
+    image: store-webapp
+    command: npm run start
+    build: ./store/webapp
+    volumes:
+      - ./store/webapp:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: store-webapp
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - store-server
+
+  store-server:
+    image: store-server
+    command: npm run dev
+    build: ./store/server
+    volumes:
+      - ./store/server:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: store-server
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - store-psqldb
+      - rabbitmq
+
+  store-psqldb:
+    image: postgres:11-alpine
+    container_name: store-psqldb
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=tdin
+      - POSTGRES_PASSWORD=tdin
+      - POSTGRES_DB=store
+
+  # Warehouse
+  warehouse-server:
+    image: warehouse-server
+    command: npm run dev
+    build: ./warehouse/server
+    volumes:
+      - ./warehouse/server:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: warehouse-server
+    environment:
+      ENVIRONMENT: development
+    depends_on:
+      - warehouse-psqldb
+      - rabbitmq
+
+  warehouse-psqldb:
+    image: postgres:11-alpine
+    container_name: warehouse-psqldb
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=tdin
+      - POSTGRES_PASSWORD=tdin
+      - POSTGRES_DB=warehouse
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
