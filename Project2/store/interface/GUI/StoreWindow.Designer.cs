@@ -80,7 +80,7 @@
             // 
             // btnStatistics
             // 
-            this.btnStatistics.Location = new System.Drawing.Point(672, 33);
+            this.btnStatistics.Location = new System.Drawing.Point(598, 35);
             this.btnStatistics.Name = "btnStatistics";
             this.btnStatistics.Size = new System.Drawing.Size(191, 40);
             this.btnStatistics.TabIndex = 5;
@@ -90,7 +90,7 @@
             // 
             // btnNotifications
             // 
-            this.btnNotifications.Location = new System.Drawing.Point(898, 33);
+            this.btnNotifications.Location = new System.Drawing.Point(824, 35);
             this.btnNotifications.Name = "btnNotifications";
             this.btnNotifications.Size = new System.Drawing.Size(191, 40);
             this.btnNotifications.TabIndex = 6;
@@ -183,7 +183,7 @@
             // 
             // btnAllOrders
             // 
-            this.btnAllOrders.Location = new System.Drawing.Point(449, 33);
+            this.btnAllOrders.Location = new System.Drawing.Point(375, 35);
             this.btnAllOrders.Name = "btnAllOrders";
             this.btnAllOrders.Size = new System.Drawing.Size(191, 40);
             this.btnAllOrders.TabIndex = 12;
@@ -193,7 +193,7 @@
             // 
             // btnAllSells
             // 
-            this.btnAllSells.Location = new System.Drawing.Point(223, 33);
+            this.btnAllSells.Location = new System.Drawing.Point(149, 35);
             this.btnAllSells.Name = "btnAllSells";
             this.btnAllSells.Size = new System.Drawing.Size(191, 40);
             this.btnAllSells.TabIndex = 11;
